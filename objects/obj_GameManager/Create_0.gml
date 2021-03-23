@@ -1,0 +1,1 @@
+open_two_windows();
