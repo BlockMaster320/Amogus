@@ -1,1 +1,2 @@
-open_two_windows();
+inGame = false;
+/*open_two_windows();*/

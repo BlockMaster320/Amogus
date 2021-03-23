@@ -1,7 +1,17 @@
 {
   "resources": [
+    {"id":{"name":"obj_AmogusClient","path":"objects/obj_AmogusClient/obj_AmogusClient.yy",},"order":5,},
+    {"id":{"name":"obj_Client","path":"objects/obj_Client/obj_Client.yy",},"order":3,},
+    {"id":{"name":"scr_Buttons","path":"scripts/scr_Buttons/scr_Buttons.yy",},"order":1,},
+    {"id":{"name":"obj_Menu","path":"objects/obj_Menu/obj_Menu.yy",},"order":1,},
     {"id":{"name":"ExecuteShell","path":"extensions/ExecuteShell/ExecuteShell.yy",},"order":0,},
     {"id":{"name":"obj_GameManager","path":"objects/obj_GameManager/obj_GameManager.yy",},"order":0,},
+    {"id":{"name":"scr_StringInput","path":"scripts/scr_StringInput/scr_StringInput.yy",},"order":2,},
+    {"id":{"name":"scr_Constants","path":"scripts/scr_Constants/scr_Constants.yy",},"order":0,},
+    {"id":{"name":"obj_Server","path":"objects/obj_Server/obj_Server.yy",},"order":2,},
+    {"id":{"name":"scr_MessageCreate","path":"scripts/scr_MessageCreate/scr_MessageCreate.yy",},"order":4,},
+    {"id":{"name":"obj_Amogus","path":"objects/obj_Amogus/obj_Amogus.yy",},"order":4,},
+    {"id":{"name":"scr_MessageReceive","path":"scripts/scr_MessageReceive/scr_MessageReceive.yy",},"order":3,},
     {"id":{"name":"scr_MultipleWindows","path":"scripts/scr_MultipleWindows/scr_MultipleWindows.yy",},"order":1,},
     {"id":{"name":"rm_Game","path":"rooms/rm_Game/rm_Game.yy",},"order":0,},
   ],
