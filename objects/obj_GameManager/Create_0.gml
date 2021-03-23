@@ -1,1 +1,1 @@
-open_two_windows();
+//open_two_windows();

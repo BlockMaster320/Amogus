@@ -2,7 +2,11 @@
   "resources": [
     {"id":{"name":"ExecuteShell","path":"extensions/ExecuteShell/ExecuteShell.yy",},"order":0,},
     {"id":{"name":"obj_GameManager","path":"objects/obj_GameManager/obj_GameManager.yy",},"order":0,},
+    {"id":{"name":"sAmogus","path":"sprites/sAmogus/sAmogus.yy",},"order":0,},
     {"id":{"name":"scr_MultipleWindows","path":"scripts/scr_MultipleWindows/scr_MultipleWindows.yy",},"order":1,},
+    {"id":{"name":"oAmogus","path":"objects/oAmogus/oAmogus.yy",},"order":1,},
+    {"id":{"name":"sTileset","path":"sprites/sTileset/sTileset.yy",},"order":1,},
+    {"id":{"name":"tlEnvironment","path":"tilesets/tlEnvironment/tlEnvironment.yy",},"order":0,},
     {"id":{"name":"rm_Game","path":"rooms/rm_Game/rm_Game.yy",},"order":0,},
   ],
   "Options": [
