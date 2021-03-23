@@ -9,5 +9,9 @@ function MovementInput()	{
 }
 
 function UIinput()	{
+		
+}
+
+function OndrejKouleIMeanFunkce()	{
 	
 }
