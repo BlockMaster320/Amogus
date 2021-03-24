@@ -14,3 +14,6 @@ enum menu
 }
 
 #macro CURSOR_BLINK_SPEED 20
+
+//Amogus
+#macro TL_SIZE 16

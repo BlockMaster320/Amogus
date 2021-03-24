@@ -26,21 +26,21 @@ switch (menuState)
 		draw_text_transformed_colour(_guiWidth * 0.5, _buttonY + _buttonSpacing * 1, "IP Adress", 1, 1, 0, c_white, c_white, c_white, c_white, 1);
 		text_field(_buttonX, _buttonY + _buttonSpacing, _buttonWidth, _buttonHeight, true, 1);
 		_buttonSpacing += _buttonHeight + 10;
-		button(_buttonX, _buttonY + _buttonSpacing, _buttonWidth, _buttonHeight, "Join Game", true);
+		if button(_buttonX, _buttonY + _buttonSpacing, _buttonWidth, _buttonHeight, "Join Game", true)
 		{
 			instance_create_layer(0, 0, "Managers", obj_Client);
 			menuState = menu.lobby;
 		}
 
 		_buttonSpacing += _buttonHeight + 30;
-		button(_buttonX, _buttonY + _buttonSpacing, _buttonWidth, _buttonHeight, "Create Game", true);
+		if button(_buttonX, _buttonY + _buttonSpacing, _buttonWidth, _buttonHeight, "Create Game", true)
 		{
 			instance_create_layer(0, 0, "Managers", obj_Server);
-			var _amogusLocal = instance_create_layer(0, 0, "Amogus", obj_AmogusLocal);
+			var _amogusLocal = instance_create_layer(0, 0, "Amogus", oAmogusLocal);
 			with (_amogusLocal)
 			{
 				clientId = obj_Server.clientIdCount ++;
-				username = textFieldArray[0];
+				username = other.textFieldArray[0];
 			}
 			menuState = menu.lobby; 
 		}
