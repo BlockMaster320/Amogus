@@ -11,7 +11,11 @@ switch (_type)
 		var _socket = async_load[? "socket"];
 		var _clientId = clientIdCount ++;
 		var _amogusClient = instance_create_layer(0, 0, "Amogus", obj_AmogusClient);
-		_amogusClient.clientId = _clientId;
+		with (_amogusClient)
+		{
+			clientSocket = _socket;
+			clientId = _clientId;
+		}
 		clientMap[? _socket] = _amogusClient;
 		
 		//Send Connected Client Its clientId
@@ -23,8 +27,11 @@ switch (_type)
 		//Send Message to Create all the Amoguses on the Connected Client's Side
 		with (obj_Amogus)
 		{
-			message_amogus_create(other.serverBuffer, clientId, username);
-			network_send_packet(_socket, other.serverBuffer, buffer_tell(other.serverBuffer));
+			if (clientSocket != _socket)
+			{
+				message_amogus_create(other.serverBuffer, clientId, username);
+				network_send_packet(_socket, other.serverBuffer, buffer_tell(other.serverBuffer));
+			}
 		}
 	}
 	break;
