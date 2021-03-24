@@ -1,6 +1,6 @@
 #region Camera
-targetX = clamp(oAmogus.x - (guiW/2),0,rW - guiW)
-targetY = clamp(oAmogus.y - (guiH/2),0,rH - guiH)
+targetX = clamp(oAmogusLocal.x - (guiW/2),0,rW - guiW)
+targetY = clamp(oAmogusLocal.y - (guiH/2),0,rH - guiH)
         
 x = lerp(x,targetX,.15)
 y = lerp(y,targetY,.15)

@@ -1,2 +1,2 @@
-inGame = false;
-/*open_two_windows();*/
+inGame = true;
+open_two_windows();

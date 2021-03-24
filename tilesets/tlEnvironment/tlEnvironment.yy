@@ -1,5 +1,4 @@
 {
-  "name": "tlEnvironment",
   "spriteId": {
     "name": "sTileset",
     "path": "sprites/sTileset/sTileset.yy",
@@ -439,6 +438,7 @@
     "path": "folders/Tile Sets.yy",
   },
   "resourceVersion": "1.0",
+  "name": "tlEnvironment",
   "tags": [],
   "resourceType": "GMTileSet",
 }
