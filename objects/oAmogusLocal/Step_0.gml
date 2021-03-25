@@ -1,5 +1,9 @@
 if (obj_GameManager.inGame)
 {
+	//Set the Tile Map
+	if (tilemap == noone)
+		tilemap = layer_tilemap_get_id("Walls");
+	
 	MovementInput()
 
 	/*var move = (right - left != 0) or (up - down != 0)

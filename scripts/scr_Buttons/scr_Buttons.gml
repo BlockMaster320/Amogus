@@ -34,11 +34,12 @@ function button(_x, _y, _width, _height, _text, _isAbled)
 	}
 
 	//Draw the Button Text
+	var _textAlpha = (_isAbled) ? 1 : 0.5;
 	draw_set_halign(fa_center);
 	draw_set_valign(fa_middle);
 	var _textX = _x1 + (_x2 - _x1) * 0.5;
 	var _textY = _y1 + (_y2 - _y1) * 0.5;
-	draw_text_transformed_colour(_textX, _textY, _text, 1, 1, 0, c_white, c_white, c_white, c_white, 1);
+	draw_text_transformed_colour(_textX, _textY, _text, 1, 1, 0, c_white, c_white, c_white, c_white, _textAlpha);
 	draw_set_halign(fa_left);
 	draw_set_valign(fa_top);
 	
