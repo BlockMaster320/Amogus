@@ -37,8 +37,12 @@ isImpostor = false;
 alarm[0] = POSITION_UPDATE;
 
 #region Resize screen
-//application_surface_draw_enable(false)
+application_surface_draw_enable(false)
 global.monitorW = window_get_width()
 global.monitorH = window_get_height()
 #endregion
 
+//Interactables
+interactableObject = noone;
+interactableStruct = noone;
+interactionCooldown = false;

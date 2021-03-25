@@ -1,0 +1,1 @@
+draw_sprite(interactableStruct.sprite, 0, x, y);
