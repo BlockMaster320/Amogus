@@ -3,8 +3,8 @@
     {"id":{"name":"obj_AmogusClient","path":"objects/obj_AmogusClient/obj_AmogusClient.yy",},"order":5,},
     {"id":{"name":"obj_Client","path":"objects/obj_Client/obj_Client.yy",},"order":3,},
     {"id":{"name":"scr_Buttons","path":"scripts/scr_Buttons/scr_Buttons.yy",},"order":1,},
+    {"id":{"name":"rm_Game","path":"rooms/rm_Game/rm_Game.yy",},"order":1,},
     {"id":{"name":"obj_Menu","path":"objects/obj_Menu/obj_Menu.yy",},"order":1,},
-    {"id":{"name":"rm_GameTest","path":"rooms/rm_GameTest/rm_GameTest.yy",},"order":1,},
     {"id":{"name":"ExecuteShell","path":"extensions/ExecuteShell/ExecuteShell.yy",},"order":0,},
     {"id":{"name":"obj_GameManager","path":"objects/obj_GameManager/obj_GameManager.yy",},"order":0,},
     {"id":{"name":"rm_Menu","path":"rooms/rm_Menu/rm_Menu.yy",},"order":0,},
@@ -36,8 +36,8 @@
     "children": [],
   },
   "RoomOrderNodes": [
-    {"roomId":{"name":"rm_GameTest","path":"rooms/rm_GameTest/rm_GameTest.yy",},},
     {"roomId":{"name":"rm_Menu","path":"rooms/rm_Menu/rm_Menu.yy",},},
+    {"roomId":{"name":"rm_Game","path":"rooms/rm_Game/rm_Game.yy",},},
   ],
   "Folders": [
     {"folderPath":"folders/Sprites.yy","order":0,"resourceVersion":"1.0","name":"Sprites","tags":[],"resourceType":"GMFolder",},
