@@ -9,3 +9,4 @@ clientBuffer = buffer_create(256, buffer_grow, 1);
 
 //Create a Map of Clients
 clientMap = ds_map_create();
+clientIdMap = ds_map_create();

@@ -21,7 +21,7 @@ hsp = 0
 vsp = 0
 
 tilemap = noone
-tilemap = layer_tilemap_get_id("Walls")
+/*tilemap = layer_tilemap_get_id("Walls")*/
 
 #macro off 10
 lightSurf = surface_create(guiW + off*2,guiH + off*2)
@@ -31,6 +31,10 @@ darkenSurf = surface_create(guiW + off*2,guiH + off*2)
 clientSocket = noone;
 clientId = noone;
 username = noone;
+
+gameStartSetup = true;
+isImpostor = false;
+alarm[0] = POSITION_UPDATE;
 
 #region Resize screen
 //application_surface_draw_enable(false)

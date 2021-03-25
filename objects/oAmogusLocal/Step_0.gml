@@ -1,5 +1,12 @@
 if (obj_GameManager.inGame)
 {
+	//Set the Tile Map
+	if (gameStartSetup)
+	{
+		tilemap = layer_tilemap_get_id("Walls");
+		camera_set_view_size(cam, guiW, guiH);
+	}
+	
 	MovementInput()
 
 	/*var move = (right - left != 0) or (up - down != 0)

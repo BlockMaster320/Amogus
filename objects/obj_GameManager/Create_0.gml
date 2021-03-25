@@ -1,2 +1,3 @@
-inGame = true;
-//open_two_windows();
+inGame = false;
+serverSide = noone;
+open_two_windows();
