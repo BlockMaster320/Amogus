@@ -11,11 +11,6 @@ if (obj_GameManager.inGame)
 	MovementInput();
 	if (interactableObject == noone)
 	{
-		/*var move = (right - left != 0) or (up - down != 0)
-		var dir = point_direction(0,0,right - left,down - up)		//NEFUN
-		hsp = lengthdir_x(move * spd,dir)							//GUJE
-		vsp = lengthdir_y(move * spd,dir)*/
-
 		hsp = (right - left) * spd
 		vsp = (down - up) * spd
 
@@ -30,6 +25,7 @@ if (obj_GameManager.inGame)
 			hsp = 0
 		}
 		x += hsp
+
 
 		if (vsp > 0) bboxSide = bbox_bottom; else bboxSide = bbox_top
 		if (tilemap_get_at_pixel(tilemap,bbox_left,bboxSide + round(vsp)) != 0 or
