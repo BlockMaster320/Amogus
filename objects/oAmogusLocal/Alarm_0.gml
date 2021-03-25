@@ -8,7 +8,7 @@ if (obj_GameManager.inGame)
 			network_send_packet(clientSocket, _serverBuffer, buffer_tell(_serverBuffer));
 	}
 	
-	else
+	else if (obj_GameManager.serverSide == false)
 	{
 		var _clientBuffer = obj_Client.clientBuffer;
 		message_position(_clientBuffer, clientId, x, y);
