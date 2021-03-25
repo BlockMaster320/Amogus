@@ -18,3 +18,10 @@ enum menu
 
 //Amogus
 #macro TL_SIZE 16
+
+//Interactable
+enum interactable
+{
+	emergencyButton
+	
+}
