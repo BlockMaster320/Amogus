@@ -7,13 +7,11 @@ if (obj_GameManager.inGame)
 		camera_set_view_size(cam, guiW, guiH);
 	}
 	
-	MovementInput()
+	//MovementInput()
+	UIinput()
 
-	/*var move = (right - left != 0) or (up - down != 0)
-	var dir = point_direction(0,0,right - left,down - up)		//NEFUN
-	hsp = lengthdir_x(move * spd,dir)							//GUJE
-	vsp = lengthdir_y(move * spd,dir)*/
-
+	if (false)
+	{
 	hsp = (right - left) * spd
 	vsp = (down - up) * spd
 
@@ -39,6 +37,7 @@ if (obj_GameManager.inGame)
 	}
 	y += vsp
 	#endregion
+	}
 	
 	#region Camera
 	targetX = clamp(x - (guiW/2),0,rW - guiW)

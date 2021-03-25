@@ -1,5 +1,6 @@
 {
   "resources": [
+    {"id":{"name":"fntName","path":"fonts/fntName/fntName.yy",},"order":0,},
     {"id":{"name":"obj_AmogusClient","path":"objects/obj_AmogusClient/obj_AmogusClient.yy",},"order":5,},
     {"id":{"name":"obj_Client","path":"objects/obj_Client/obj_Client.yy",},"order":3,},
     {"id":{"name":"scr_Buttons","path":"scripts/scr_Buttons/scr_Buttons.yy",},"order":1,},

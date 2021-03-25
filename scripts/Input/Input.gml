@@ -9,9 +9,9 @@ function MovementInput()	{
 }
 
 function UIinput()	{
-	
-}
-
-function OndrejKouleIMeanFunkce()	{
-	
+	mX = mouse_x
+	mY = mouse_y
+	LMBpress = mouse_check_button_pressed(mb_left)
+	LMBrelease = mouse_check_button_released(mb_left)
+	LMB = mouse_check_button(mb_left)
 }

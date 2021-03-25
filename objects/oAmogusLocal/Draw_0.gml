@@ -2,12 +2,6 @@
 if (obj_GameManager.inGame)
 {
 	/*draw_text_transformed_colour(100, 100, username, 1, 1, 0, c_white, c_white, c_white, c_white, 1);*/
-	draw_set_halign(fa_center);
-	draw_set_valign(fa_bottom);
-	var _spriteHeight = sprite_get_height(sAmogus);
-	draw_text_transformed_colour(x, y - _spriteHeight * 0.5 - 10, username, 1, 1, 0, c_white, c_white, c_white, c_white, 1);
-	draw_set_halign(fa_left);
-	draw_set_valign(fa_top);
 	
 	#region Light
 	if (!surface_exists(lightSurf)) lightSurf = surface_create(guiW + off*2,guiH + off*2)
@@ -90,11 +84,10 @@ if (obj_GameManager.inGame)
 	draw_set_alpha(1)
 	//gpu_set_blendmode(bm_normal)
 	
-	var surf = lightSurf
-	surface_set_target(surf)
+	surface_set_target(lightSurf)
 	//draw_clear()
-	//gpu_set_blendmode_ext(bm_dest_color, bm_inv_src_alpha)
-	gpu_set_blendmode_ext(bm_dest_alpha,bm_inv_src_alpha)
+	gpu_set_blendmode_ext(bm_dest_color, bm_inv_src_alpha)
+	//gpu_set_blendmode_ext(bm_dest_alpha,bm_inv_src_alpha)
 	//shader_set(shAlphaDist)
 	var tX = targetX
 	var tY = targetY
@@ -110,7 +103,6 @@ if (obj_GameManager.inGame)
 	shader_set(shAlpha)
 	draw_surface(lightSurf,targetX-off,targetY-off)
 	shader_reset()
-	
 	
 	/*x = realX
 	y = realY*/
