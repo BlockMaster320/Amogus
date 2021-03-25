@@ -38,8 +38,16 @@ alarm[0] = POSITION_UPDATE;
 
 #region Resize screen
 application_surface_draw_enable(false)
-global.monitorW = window_get_width()
-global.monitorH = window_get_height()
+monitorW = window_get_width()
+monitorH = window_get_height()
+#endregion
+
+#region Tasky
+enum TASK
+{
+	wires
+}
+currentTask = TASK.wires
 #endregion
 
 //Interactables

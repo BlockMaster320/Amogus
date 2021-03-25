@@ -1,5 +1,6 @@
 {
   "resources": [
+    {"id":{"name":"fntName","path":"fonts/fntName/fntName.yy",},"order":0,},
     {"id":{"name":"obj_AmogusClient","path":"objects/obj_AmogusClient/obj_AmogusClient.yy",},"order":2,},
     {"id":{"name":"obj_Client","path":"objects/obj_Client/obj_Client.yy",},"order":1,},
     {"id":{"name":"scr_Buttons","path":"scripts/scr_Buttons/scr_Buttons.yy",},"order":2,},
@@ -45,6 +46,7 @@
     {"roomId":{"name":"rm_GameTest","path":"rooms/rm_GameTest/rm_GameTest.yy",},},
     {"roomId":{"name":"rm_Game","path":"rooms/rm_Game/rm_Game.yy",},},
     {"roomId":{"name":"rm_Menu","path":"rooms/rm_Menu/rm_Menu.yy",},},
+    {"roomId":{"name":"rm_Game","path":"rooms/rm_Game/rm_Game.yy",},},
   ],
   "Folders": [
     {"folderPath":"folders/Sprites.yy","order":0,"resourceVersion":"1.0","name":"Sprites","tags":[],"resourceType":"GMFolder",},
