@@ -32,4 +32,14 @@ if (obj_GameManager.inGame)
 	}
 	y += vsp
 	#endregion
+	
+	#region Camera
+	targetX = clamp(x - (guiW/2),0,rW - guiW)
+	targetY = clamp(y - (guiH/2),0,rH - guiH)
+        
+	camX = lerp(camX,targetX,.15)
+	camY = lerp(camY,targetY,.15)
+
+	camera_set_view_pos(cam,camX,camY)
+	#endregion
 }
