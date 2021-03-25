@@ -1,5 +1,5 @@
 #region Resize screen
-//application_surface_draw_enable(false)
+application_surface_draw_enable(false)
 monitorW = window_get_width()
 monitorH = window_get_height()
 #endregion

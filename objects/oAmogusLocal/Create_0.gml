@@ -50,7 +50,7 @@ enum TASK
 currentTask = TASK.wires
 #endregion
 
-
-
-
-
+//Interactables
+interactableObject = noone;
+interactableStruct = noone;
+interactionCooldown = false;

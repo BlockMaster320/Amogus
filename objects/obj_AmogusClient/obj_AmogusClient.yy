@@ -31,8 +31,8 @@
   "properties": [],
   "overriddenProperties": [],
   "parent": {
-    "name": "Objects",
-    "path": "folders/Objects.yy",
+    "name": "Networking",
+    "path": "folders/Objects/Networking.yy",
   },
   "resourceVersion": "1.0",
   "name": "obj_AmogusClient",

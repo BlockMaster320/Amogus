@@ -18,7 +18,7 @@ if (obj_GameManager.inGame)
 	draw_set_font(fntName)
 	var _spriteHeight = sprite_get_height(sAmogus);
 	gpu_set_tex_filter(true)
-	usernam = "RekŠrek"
+	//usernam = "RekŠrek"
 	draw_text_transformed(x, y - _spriteHeight * 0.5 - 5, username, 0.2, 0.2, 0);
 	gpu_set_tex_filter(false)
 	draw_set_halign(fa_left);
