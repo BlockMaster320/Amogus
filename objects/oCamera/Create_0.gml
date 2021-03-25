@@ -1,7 +1,7 @@
 #region Resize screen
-application_surface_draw_enable(false)
-monitorW = window_get_width()
-monitorH = window_get_height()
+//application_surface_draw_enable(false)
+global.monitorW = window_get_width()
+global.monitorH = window_get_height()
 #endregion
 
 #region Camera
@@ -16,6 +16,8 @@ targetY = 0
 rW = room_width
 rH = room_height
 
-#macro guiW 560
-#macro guiH 315
+#macro guiW 320
+#macro guiH 180
+
+camera_set_view_size(cam,guiW,guiH)
 #endregion
