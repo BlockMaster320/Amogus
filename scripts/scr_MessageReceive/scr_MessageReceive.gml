@@ -21,15 +21,38 @@ function message_receive_server(_socket, _buffer)
 		}
 		break;
 		
+		case messages.gameMeeting:
+		{
+			//Send a Message to Start a Meeting to All Clients
+			var _clientId = buffer_read(_buffer, buffer_u8);	//amogus who started the meetin - can be use later
+			message_game_meeting(serverBuffer, _clientId);
+			with (obj_AmogusClient)
+				network_send_packet(clientSocket, other.serverBuffer, buffer_tell(other.serverBuffer));
+			
+			 transition(menu.meeting, noone, true);
+		}
+		break;
+		
+		case messages.vote:
+		{
+			var _voterId = buffer_read(_buffer, buffer_u8);
+			var _votedId = buffer_read(_buffer, buffer_u8);
+			
+			//Set the Voter's hasVoted to true && Add the Voter to Voted's voteArray
+			with (clientIdMap[? _voterId])
+				hasVoted = true;
+			with (clientIdMap[? _votedId])
+				array_push(voteArray, _voterId);
+			
+			//Send the Message to All Amoguses
+			message_vote(serverBuffer, _voterId, _votedId);
+			with (obj_AmogusClient)
+				network_send_packet(clientSocket, other.serverBuffer, buffer_tell(other.serverBuffer));
+		}
+		break;
+		
 		case messages.position:	//update position of amogus
 		{
-			//Send Message to Update Amogus's Position to All the Clients
-			with (obj_AmogusClient)
-			{
-				if (clientSocket != _socket)
-					network_send_packet(clientSocket, serverBuffer, buffer_tell(serverBuffer));
-			}
-			
 			//Update the Amogus's Local Position
 			var _clientId = buffer_read(_buffer, buffer_u8);
 			var _x = buffer_read(_buffer, buffer_u16);
@@ -43,6 +66,14 @@ function message_receive_server(_socket, _buffer)
 				targetX = _x;
 				targetY = _y;
 				positionUpdateTimer = 0;
+			}
+			
+			//Send Message to Update Amogus's Position to All the Clients
+			message_position(serverBuffer, _clientId, _x, _y);
+			with (obj_AmogusClient)
+			{
+				if (clientSocket != _socket)
+					network_send_packet(clientSocket, other.serverBuffer, buffer_tell(other.serverBuffer));
 			}
 		}
 		break;
@@ -74,6 +105,37 @@ function message_receive_client(_socket, _buffer)
 		}
 		break;
 		
+		case messages.gameMeeting:	//start a meeting
+		{
+			transition(menu.meeting, noone, true);
+			var _clientId = buffer_read(_buffer, buffer_u8);	//amogus who started the meetin - can be use later
+		}
+		break;
+		
+		case messages.vote:
+		{
+			var _voterId = buffer_read(_buffer, buffer_u8);
+			var _votedId = buffer_read(_buffer, buffer_u8);
+			
+			//Set the Voter's hasVoted to true && Add the Voter to Voted's voteArray
+			with (clientIdMap[? _voterId])
+				hasVoted = true;
+			with (clientIdMap[? _votedId])
+				array_push(voteArray, _voterId);
+		}
+		break;
+		
+		case messages.throwOut:	//throw out voted amogus
+		{
+			var _throwOutAmogusId = buffer_read(_buffer, buffer_s8);
+			if (_throwOutAmogusId == noone)
+				obj_Menu.thrownOutAmogus = noone;
+			else
+				obj_Menu.thrownOutAmogus = clientIdMap[? _throwOutAmogusId];
+			transition(menu.throwOut, noone, false);
+		}
+		break;
+		
 		case messages.amogusCreate:	//create amogusClient
 		{
 			var _clientId = buffer_read(_buffer, buffer_u8);
@@ -93,16 +155,32 @@ function message_receive_client(_socket, _buffer)
 		
 		case messages.gameStart:	//start the game
 		{
-			//Set Up the Game
-			obj_GameManager.inGame = true;
-			obj_Menu.menuState = noone;
-			room_goto(rm_Game);
+			var _impostorId = buffer_read(_buffer, buffer_s8);
+			var _continuation = buffer_read(_buffer, buffer_bool);
 			
-			//Set the Impostor
-			var _impostorId = buffer_read(_buffer, buffer_u8);
-			show_debug_message(_impostorId);
-			var _amogusImpostor = clientIdMap[? _impostorId];
-			_amogusImpostor.isImpostor = true;
+			if (!_continuation)
+			{
+				//Set the Impostor
+				var _amogusImpostor = clientIdMap[? _impostorId];
+				_amogusImpostor.isImpostor = true;
+			
+				//Start the Game
+				var _transitionFunction = function() {obj_GameManager.inGame = true; room_goto(rm_Game);};
+				transition(noone, _transitionFunction, true);
+			}
+			else
+				transition(noone, noone, true);
+			
+			game_setup();
+				
+		}
+		break;
+		
+		case messages.gameEnd:	//end the game
+		{
+			var _winnerSide = buffer_read(_buffer, buffer_bool);
+			transition(menu.gameEnd, noone, true); 
+			obj_Menu.winnerSide = _winnerSide;
 		}
 		break;
 		
@@ -112,7 +190,10 @@ function message_receive_client(_socket, _buffer)
 			var _x = buffer_read(_buffer, buffer_u16);
 			var _y = buffer_read(_buffer, buffer_u16);
 			
-			var _amogusClient = clientMap[? _clientId];
+			var _amogusClient = clientIdMap[? _clientId];
+			if (is_undefined(_amogusClient))
+				break;
+			
 			with (_amogusClient)
 			{
 				originalX = x;

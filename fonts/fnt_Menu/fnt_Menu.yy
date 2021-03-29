@@ -279,7 +279,7 @@
     "path": "folders/Fonts.yy",
   },
   "resourceVersion": "1.0",
-  "name": "fntName",
+  "name": "fnt_Menu",
   "tags": [],
   "resourceType": "GMFont",
 }

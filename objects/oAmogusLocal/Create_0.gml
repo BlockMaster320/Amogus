@@ -27,30 +27,29 @@ tilemap = noone
 lightSurf = surface_create(guiW + off*2,guiH + off*2)
 darkenSurf = surface_create(guiW + off*2,guiH + off*2)
 
-//Networking
-clientSocket = noone;
-clientId = noone;
-username = noone;
-
-gameStartSetup = true;
-isImpostor = false;
-alarm[0] = POSITION_UPDATE;
-
 #region Resize screen
 application_surface_draw_enable(false)
 monitorW = window_get_width()
 monitorH = window_get_height()
 #endregion
 
-#region Tasky
-enum TASK
-{
-	wires
-}
-currentTask = TASK.wires
-#endregion
-
 //Interactables
 interactableObject = noone;
 interactableStruct = noone;
-interactionCooldown = false;
+interactableInRange = noone;
+
+//Amogus Properties
+isAlive = true;
+isImpostor = false;
+
+//Networking
+clientSocket = noone;
+clientId = noone;
+username = noone;
+
+gameStartSetup = true;
+alarm[0] = POSITION_UPDATE;
+
+//Meeting
+hasVoted = false;
+voteArray = [];	//array storing IDs of aoguses who voted for the amogus
