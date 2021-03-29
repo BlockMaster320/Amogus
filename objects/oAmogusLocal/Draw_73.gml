@@ -23,4 +23,15 @@ if (obj_GameManager.inGame)
 	gpu_set_tex_filter(false)
 	draw_set_halign(fa_left);
 	draw_set_valign(fa_top);
+	
+	//Draw Interaction Text
+	if (interactableInRange != noone)
+	{
+		draw_set_halign(fa_center);
+		draw_set_font(fntName)
+		var _spriteHeight = sprite_get_height(spr_ButtonTest);
+		draw_text_transformed_colour(interactableInRange.x, interactableInRange.y + _spriteHeight * 0.5 + 10,
+									 "Press E to interact", 0.2, 0.2, 0, c_white, c_white, c_white, c_white, 1);
+		draw_set_valign(fa_top);
+	}
 }

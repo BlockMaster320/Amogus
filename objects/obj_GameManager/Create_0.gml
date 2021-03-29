@@ -1,3 +1,7 @@
+//Randomize the Game
+randomize();
+
 inGame = false;
 serverSide = noone;
-//open_two_windows();
+interactableIdCount = 0;
+open_two_windows();

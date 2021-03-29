@@ -108,29 +108,4 @@ if (obj_GameManager.inGame)
 	/*x = realX
 	y = realY*/
 	#endregion
-	
-	
-	//Search for Interactables
-	MovementInput();
-	if (interactableObject == noone && interactionCooldown)
-	{
-		with (obj_Interactable)
-		{
-			if (amogus == noone && point_distance(x, y, other.x, other.y) < interactableStruct.distance)
-			{
-				draw_set_halign(fa_center);
-				var _spriteHeight = sprite_get_height(sAmogus);
-				draw_text_transformed_colour(x, y + _spriteHeight * 0.5 + 10, "Press E to interact", 1, 1, 0, c_white, c_white, c_white, c_white, 1);
-				draw_set_valign(fa_top);
-			
-				if (other.buttonInteract)
-				{
-					other.interactableObject = self;
-					other.interactableStruct = interactableStruct;
-					amogus = other;
-				}
-			}
-		}
-	}
-	interactionCooldown = false;
 }

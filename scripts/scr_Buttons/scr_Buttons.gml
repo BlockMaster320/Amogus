@@ -1,6 +1,6 @@
 /// Function for drawing && interacting with a button.
 
-function button(_x, _y, _width, _height, _text, _isAbled)
+function button(_x, _y, _width, _height, _text, _type, _isAbled)
 {
 	//Set Return Value
 	var _returnValue = false;
@@ -11,20 +11,23 @@ function button(_x, _y, _width, _height, _text, _isAbled)
 	var _x2 = _x + _width;
 	var _y2 = _y + _height;
 	
+	var _colour1 = (_type == buttonType.menu) ? c_dkgrey : c_grey;
+	var _colour2 = (_type == buttonType.menu) ? c_grey : c_ltgrey;
+	
 	//Check Wheter the Button is Clickable
 	if (_isAbled)
 	{
 		//Check Wheter the Button is Selected
 		var _mouseWindowX = window_mouse_get_x();
 		var _mouseWindowY = window_mouse_get_y();
-		if (point_in_rectangle(_mouseWindowX, _mouseWindowY, _x1, _y1, _x2, _y2))
+		if (point_in_rectangle(_mouseWindowX, _mouseWindowY, _x1, _y1, _x2, _y2) && obj_Menu.transitionProgress < 0.5)
 		{
-			draw_rectangle_colour(_x1, _y1, _x2, _y2, c_gray, c_gray, c_gray, c_gray, false);	//draw selected button
+			draw_rectangle_colour(_x1, _y1, _x2, _y2, _colour2, _colour2, _colour2, _colour2, false);	//draw selected button
 			if (mouse_check_button_pressed(mb_left))
 				_returnValue = true;
 		}
 		else
-			draw_rectangle_colour(_x1, _y1, _x2, _y2, c_dkgray, c_dkgray, c_dkgray, c_dkgray, false);	//draw not selected button
+			draw_rectangle_colour(_x1, _y1, _x2, _y2, _colour1, _colour1, _colour1, _colour1, false);	//draw not selected button
 	}
 	else
 	{

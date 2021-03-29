@@ -4,6 +4,10 @@ enum messages	//values representing types of network messages
 	connect,
 	amogusCreate,
 	gameStart,
+	gameEnd,
+	gameMeeting,
+	vote,
+	throwOut,
 	position
 }
 #macro POSITION_UPDATE 3
@@ -12,9 +16,20 @@ enum messages	//values representing types of network messages
 enum menu
 {
 	mainMenu,
-	lobby
+	lobby,
+	meeting,
+	throwOut,
+	gameEnd
 }
+
+enum buttonType
+{
+	menu,
+	vote
+}
+
 #macro CURSOR_BLINK_SPEED 25
+#macro TRANSITION_SPEED 0.014
 
 //Amogus
 #macro TL_SIZE 16
@@ -22,6 +37,6 @@ enum menu
 //Interactable
 enum interactable
 {
-	emergencyButton
-	
+	emergencyButton,
+	taskSUSUSS
 }

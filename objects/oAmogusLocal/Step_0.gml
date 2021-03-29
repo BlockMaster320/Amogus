@@ -9,7 +9,7 @@ if (obj_GameManager.inGame)
 	
 	//Movement
 	MovementInput();
-	if (interactableObject == noone)
+	if (interactableObject == noone && obj_Menu.menuState == noone)
 	{
 		hsp = (right - left) * spd
 		vsp = (down - up) * spd
@@ -37,20 +37,9 @@ if (obj_GameManager.inGame)
 		}
 		y += vsp
 	}
-	else
-	{
-		if (buttonInteract)
-		{
-			interactableObject.amogus = noone;
-			interactableObject = noone;
-			interactableStruct = noone;
-			interactionCooldown = true;
-		}
-	}
 	#endregion
 	
 	#region Camera
-	show_debug_message(x);
 	targetX = clamp(x - (guiW/2),0,rW - guiW)
 	targetY = clamp(y - (guiH/2),0,rH - guiH)
         
@@ -59,4 +48,32 @@ if (obj_GameManager.inGame)
 
 	camera_set_view_pos(cam,camX,camY)
 	#endregion
+	
+	//Search for Interactables
+	MovementInput();
+	if (interactableObject == noone /*&& !isImpostor*/)
+	{
+		interactableInRange = noone;
+		with (obj_Interactable)
+		{
+			if (amogus == noone && point_distance(x, y, other.x, other.y) < interactableStruct.distance)
+			{
+				other.interactableInRange = self;
+				if (other.buttonInteract)
+				{
+					other.interactableObject = self;
+					other.interactableStruct = interactableStruct;
+					amogus = other;
+				}
+			}
+		}
+	}
+	
+	//Exit an Interactable
+	else if (interactableObject != noone && buttonInteract)
+	{
+			interactableObject.amogus = noone;
+			interactableObject = noone;
+			interactableStruct = noone;
+	}
 }

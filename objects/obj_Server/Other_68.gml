@@ -17,6 +17,7 @@ switch (_type)
 			clientId = _clientId;
 		}
 		clientMap[? _socket] = _amogusClient;
+		clientIdMap[? _clientId] = _amogusClient;
 		
 		//Send Connected Client Its clientId
 		buffer_seek(serverBuffer, buffer_seek_start, 0);
