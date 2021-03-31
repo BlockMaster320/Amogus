@@ -20,6 +20,7 @@ function draw_amogus_table(_x, _y, _meeting)
 	for (var _i = 0; _i < instance_number(obj_Amogus); _i ++)
 	{
 		var _amogus = instance_find(obj_Amogus, _i);
+		var _isAlive = _amogus.isAlive;
 		var _infoX = _x + _infoSpacingX - (_infoSpacingX * 2 + _infoWidth) * (_i % 2 == 0);
 		var _infoY = _y + (_infoHeight + _infoSpacingY) * (_i div 2);
 		
@@ -32,7 +33,7 @@ function draw_amogus_table(_x, _y, _meeting)
 		//Emergeny Meeting Voting
 		if (_meeting)
 		{
-			if (!_amogus.hasVoted)
+			if (!_amogus.hasVoted && _isAlive)
 				_everyoneVoted = false;
 			
 			//Set Voting Button Properties
@@ -42,37 +43,41 @@ function draw_amogus_table(_x, _y, _meeting)
 			var _buttonY = _infoY + _infoHeight - _buttonHeight - _textPadding;
 			
 			//Vote for a Amogus
-			if (button(_buttonX, _buttonY, _buttonWidth, _buttonHeight, "Vote", buttonType.vote, true)
-				&& !oAmogusLocal.hasVoted)
+			if (_isAlive)
 			{
-				var _voterId =  oAmogusLocal.clientId
-				oAmogusLocal.hasVoted = true;
-				
-				//Send Message to All Amoguses
-				if (obj_GameManager.serverSide)
+				var _isAbled = oAmogusLocal.isAlive;
+				if (button(_buttonX, _buttonY, _buttonWidth, _buttonHeight, "Vote", buttonType.vote, _isAbled)
+					&& !oAmogusLocal.hasVoted)
 				{
-					with (_amogus)
-						array_push(voteArray, _voterId);
+					var _voterId =  oAmogusLocal.clientId;
+					oAmogusLocal.hasVoted = true;
+				
+					//Send Message to All Amoguses
+					if (obj_GameManager.serverSide)
+					{
+						with (_amogus)
+							array_push(voteArray, _voterId);
 					
-					var _serverBuffer = obj_Server.serverBuffer;
-					message_vote(_serverBuffer, _voterId, _amogus.clientId);
-					with (obj_AmogusClient)
-						network_send_packet(clientSocket, _serverBuffer, buffer_tell(_serverBuffer));
-				}
+						var _serverBuffer = obj_Server.serverBuffer;
+						message_vote(_serverBuffer, _voterId, _amogus.clientId);
+						with (obj_AmogusClient)
+							network_send_packet(clientSocket, _serverBuffer, buffer_tell(_serverBuffer));
+					}
 				
-				//Send Message to the Server
-				else if (obj_GameManager.serverSide == false)
-				{
-					var _clientBuffer = obj_Client.clientBuffer;
-					message_vote(_clientBuffer, _voterId, _amogus.clientId);
-					network_send_packet(obj_Client.client, _clientBuffer, buffer_tell(_clientBuffer));
+					//Send Message to the Server
+					else if (obj_GameManager.serverSide == false)
+					{
+						var _clientBuffer = obj_Client.clientBuffer;
+						message_vote(_clientBuffer, _voterId, _amogus.clientId);
+						network_send_packet(obj_Client.client, _clientBuffer, buffer_tell(_clientBuffer));
+					}
 				}
-			}
 			
-			if (_amogus.hasVoted)
-			{
-				draw_text_transformed_colour(_infoX + _textPadding, _infoY + _textPadding * 2 + _textHeight, "VOTED",
-											 1, 1, 0, c_red, c_red, c_red, c_red, 1);
+				if (_amogus.hasVoted)
+				{
+					draw_text_transformed_colour(_infoX + _textPadding, _infoY + _textPadding * 2 + _textHeight, "VOTED",
+												 1, 1, 0, c_red, c_red, c_red, c_red, 1);
+				}
 			}
 		}
 	}
@@ -112,23 +117,34 @@ function draw_amogus_table(_x, _y, _meeting)
 }
 
 /// Function triggering a transition between 2 menu states.
-function transition(transitionMenuState, _transitionFunction, _smooth)
+function transition(transitionMenuState, _transitionFunction, _closing)
 {
 	with (obj_Menu)
-	{
+	{/*
 		if (_smooth)
-		{
+		{*/
 			transitionProgress = 1;
 			transitionMenu = transitionMenuState;
 			transitionFunction = _transitionFunction;
-		}
+			transitionClosing = _closing;
+		/*}
 		else
 		{
 			menuState = transitionMenuState;
 			menuStateTimer = get_menuState_timer(menuState);
 			if (_transitionFunction != noone)
 				_transitionFunction();
-		}
+		}*/
+	}
+}
+
+/// Function triggering a warning.
+function warning(_warningType)
+{
+	with (obj_Menu)
+	{
+		warningType = _warningType;
+		warningProgress = 1;
 	}
 }
 
@@ -195,7 +211,15 @@ function game_setup()
 	{
 		x = obj_Menu.spawnX + lengthdir_x(random(30), random(360));
 		y = obj_Menu.spawnY + lengthdir_y(random(30), random(360));
+		
+		hasVoted = false;
+		voteArray = [];
+		
+		interactableObject = noone;
+		interactableStruct = noone;
+		interactableInRange = noone;
 	}
+	obj_Menu.thrownOutAmogus = noone;
 	
 	/*
 	var _serverBuffer = obj_Server.serverBuffer;

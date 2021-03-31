@@ -18,6 +18,7 @@ if (interactableObject != noone)
 				with (obj_AmogusClient)
 					network_send_packet(clientSocket, _serverBuffer, buffer_tell(_serverBuffer));
 				
+				warning(warningType.meeting);
 				transition(menu.meeting, noone, true);
 			}
 			

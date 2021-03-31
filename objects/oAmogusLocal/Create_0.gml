@@ -41,6 +41,7 @@ interactableInRange = noone;
 //Amogus Properties
 isAlive = true;
 isImpostor = false;
+avatarId = 0;
 
 //Networking
 clientSocket = noone;

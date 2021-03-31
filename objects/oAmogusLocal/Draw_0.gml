@@ -91,10 +91,20 @@ if (obj_GameManager.inGame)
 	//shader_set(shAlphaDist)
 	var tX = targetX
 	var tY = targetY
+	
+	draw_set_halign(fa_center);
+	draw_set_valign(fa_bottom);
+	draw_set_font(fntName)
+	draw_set_colour(c_red);
+	var _spriteHeight = sprite_get_height(sAmogus);
+	/*gpu_set_tex_filter(true)*/
 	with (obj_AmogusClient)
 	{
 		//shader_set_uniform_f(other.u_dist,point_distance(x,y,other.x,other.y))
-		draw_sprite(sAmogus,image_index,x-tX,y-tY)
+		draw_sprite(sAmogus,image_index,x-tX + off,y-tY + off)
+		gpu_set_tex_filter(true)
+		draw_text_transformed(x - tX + off, y - tY + off - _spriteHeight * 0.5 - 5, username, 0.2, 0.2, 0);
+		gpu_set_tex_filter(!true)
 	}
 	//shader_reset()
 	gpu_set_blendmode(bm_normal)
