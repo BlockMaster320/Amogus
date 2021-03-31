@@ -20,8 +20,8 @@ surface_set_target(textSurf)
 	gpu_set_blendmode_ext(bm_dest_alpha, bm_inv_src_alpha)
 	with (obj_AmogusClient)
 	{
-		nameOffX = (x - tX) * (wW / guiW)
-		nameOffY = (y - tY) * (wH / guiH)
+		nameOffX = (x - tX - 10) * (wW / guiW)
+		nameOffY = (y - tY - 30) * (wH / guiH)
 		draw_text_transformed(nameOffX, nameOffY, username, textSize, textSize, 0);
 		//draw_text_transformed(100, 100, username, 1, 1, 0);
 	}
@@ -36,12 +36,6 @@ shader_set(shIsText)
 draw_surface(textSurf,0,0)
 shader_reset()
 #endregion
-
-//Tasky ach jo
-function movable()
-{
-	
-}
 
 if (interactableObject != noone)
 {
@@ -73,4 +67,7 @@ if (interactableObject != noone)
 		}
 		break;
 	}
+	case interactable.camera:
+		
+		break
 }

@@ -38,5 +38,5 @@ enum buttonType
 enum interactable
 {
 	emergencyButton,
-	taskSUSUSS
+	camera
 }
