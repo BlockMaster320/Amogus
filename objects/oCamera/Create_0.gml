@@ -1,7 +1,7 @@
 #region Resize screen
 application_surface_draw_enable(false)
-monitorW = window_get_width()
-monitorH = window_get_height()
+windowW = window_get_width()
+windowH = window_get_height()
 #endregion
 
 #region Camera

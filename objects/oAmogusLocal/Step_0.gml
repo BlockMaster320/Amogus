@@ -4,6 +4,8 @@ if (obj_GameManager.inGame)
 	if (gameStartSetup)
 	{
 		tilemap = layer_tilemap_get_id("Walls");
+		//layer_shader(layer_get_id("Walls"),shVignete)
+		
 		camera_set_view_size(cam, guiW, guiH);
 	}
 	

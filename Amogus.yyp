@@ -1,6 +1,6 @@
 {
   "resources": [
-    {"id":{"name":"fntName","path":"fonts/fntName/fntName.yy",},"order":0,},
+    {"id":{"name":"fntTextUI","path":"fonts/fntTextUI/fntTextUI.yy",},"order":0,},
     {"id":{"name":"obj_AmogusClient","path":"objects/obj_AmogusClient/obj_AmogusClient.yy",},"order":2,},
     {"id":{"name":"obj_Client","path":"objects/obj_Client/obj_Client.yy",},"order":1,},
     {"id":{"name":"scr_Buttons","path":"scripts/scr_Buttons/scr_Buttons.yy",},"order":2,},
@@ -9,6 +9,8 @@
     {"id":{"name":"obj_Menu","path":"objects/obj_Menu/obj_Menu.yy",},"order":1,},
     {"id":{"name":"rm_GameTest","path":"rooms/rm_GameTest/rm_GameTest.yy",},"order":2,},
     {"id":{"name":"ExecuteShell","path":"extensions/ExecuteShell/ExecuteShell.yy",},"order":0,},
+    {"id":{"name":"shDarken","path":"shaders/shDarken/shDarken.yy",},"order":3,},
+    {"id":{"name":"fntName","path":"fonts/fntName/fntName.yy",},"order":2,},
     {"id":{"name":"obj_GameManager","path":"objects/obj_GameManager/obj_GameManager.yy",},"order":0,},
     {"id":{"name":"scr_Menu","path":"scripts/scr_Menu/scr_Menu.yy",},"order":3,},
     {"id":{"name":"fnt_Menu","path":"fonts/fnt_Menu/fnt_Menu.yy",},"order":1,},
@@ -29,6 +31,7 @@
     {"id":{"name":"shAlpha","path":"shaders/shAlpha/shAlpha.yy",},"order":1,},
     {"id":{"name":"scr_MultipleWindows","path":"scripts/scr_MultipleWindows/scr_MultipleWindows.yy",},"order":1,},
     {"id":{"name":"scr_Interactable","path":"scripts/scr_Interactable/scr_Interactable.yy",},"order":0,},
+    {"id":{"name":"shIsText","path":"shaders/shIsText/shIsText.yy",},"order":2,},
     {"id":{"name":"oAmogusLocal","path":"objects/oAmogusLocal/oAmogusLocal.yy",},"order":2,},
     {"id":{"name":"spr_BackgroundSpace","path":"sprites/spr_BackgroundSpace/spr_BackgroundSpace.yy",},"order":4,},
     {"id":{"name":"sTileset","path":"sprites/sTileset/sTileset.yy",},"order":1,},
@@ -79,7 +82,7 @@
   ],
   "IncludedFiles": [],
   "MetaData": {
-    "IDEVersion": "2.3.1.542",
+    "IDEVersion": "2.3.2.556",
   },
   "resourceVersion": "1.4",
   "name": "Amogus",

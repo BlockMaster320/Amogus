@@ -6,6 +6,7 @@ if (obj_GameManager.inGame)
 	#region Light
 	if (!surface_exists(lightSurf)) lightSurf = surface_create(guiW + off*2,guiH + off*2)
 	if (!surface_exists(darkenSurf)) darkenSurf = surface_create(guiW + off*2,guiH + off*2)
+	if (!surface_exists(textSurf)) textSurf = surface_create(windowW,windowH)
 	
 	/*var realX = x
 	var realY = y
@@ -18,15 +19,15 @@ if (obj_GameManager.inGame)
 	surface_set_target(lightSurf)
 		draw_clear_alpha(c_black,0)
 		
-		//draw_circle_color(x-targetX,y-targetY,100,c_grey,c_black,0)
+		//draw_circle_color(x-targetX,y-targetY,100,c_black,c_gray,0)
 		draw_sprite(sLight,0,x-surfOffX,y-surfOffY)
 		
 		#region Shadows
 		draw_set_color(c_white)
 		gpu_set_blendmode(bm_subtract)
-		for (var i = -7; i < 7; i++)
+		for (var i = -8; i < 8; i++)
 		{
-		    for (var j = -6; j < 6; j++)
+		    for (var j = -7; j < 7; j++)
 			{
 				var plX = x - targetX + off
 				var plY = y - targetY + off
@@ -67,45 +68,17 @@ if (obj_GameManager.inGame)
 					draw_vertex(x5,y5)
 					draw_vertex(bbLeft,bbBott)
 					draw_primitive_end()
+					
+					draw_rectangle_color(bbLeft,bbTop,bbRight-1,bbBott-1,c_white,c_white,c_white,c_white,0)
 				}
 			}
 		}
 		#endregion
 	surface_reset_target()
 	
-	
-	/*gpu_set_blendmode(bm_add)
-	draw_surface(lightSurf,targetX,targetY)
-	gpu_set_blendmode(bm_normal)*/
-	
-	gpu_set_blendmode(bm_add)
-	draw_set_alpha(0.4)
-	draw_surface(lightSurf,targetX-off,targetY-off)
-	draw_set_alpha(1)
-	//gpu_set_blendmode(bm_normal)
-	
-	surface_set_target(lightSurf)
-	//draw_clear()
-	gpu_set_blendmode_ext(bm_dest_color, bm_inv_src_alpha)
-	//gpu_set_blendmode_ext(bm_dest_alpha,bm_inv_src_alpha)
-	//shader_set(shAlphaDist)
-	var tX = targetX
-	var tY = targetY
-	with (obj_AmogusClient)
-	{
-		//shader_set_uniform_f(other.u_dist,point_distance(x,y,other.x,other.y))
-		draw_sprite(sAmogus,image_index,x-tX,y-tY)
-	}
-	//shader_reset()
 	gpu_set_blendmode(bm_normal)
-	surface_reset_target()
-	
-	shader_set(shAlpha)
+	shader_set(shDarken)
 	draw_surface(lightSurf,targetX-off,targetY-off)
 	shader_reset()
-	
-	
-	/*x = realX
-	y = realY*/
 	#endregion
 }
