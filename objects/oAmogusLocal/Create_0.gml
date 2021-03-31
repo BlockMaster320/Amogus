@@ -1,3 +1,9 @@
+#region Resize screen
+application_surface_draw_enable(false)
+windowW = window_get_width()
+windowH = window_get_height()
+#endregion
+
 #region Camera
 camX = 0
 camY = 0
@@ -26,12 +32,7 @@ tilemap = noone
 #macro off 10
 lightSurf = surface_create(guiW + off*2,guiH + off*2)
 darkenSurf = surface_create(guiW + off*2,guiH + off*2)
-
-#region Resize screen
-application_surface_draw_enable(false)
-monitorW = window_get_width()
-monitorH = window_get_height()
-#endregion
+textSurf = surface_create(windowW,windowH)
 
 //Interactables
 interactableObject = noone;
