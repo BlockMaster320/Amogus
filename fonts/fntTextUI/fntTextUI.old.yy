@@ -1117,7 +1117,7 @@
     "path": "folders/Fonts.yy",
   },
   "resourceVersion": "1.0",
-  "name": "fntName",
+  "name": "fntTextUI",
   "tags": [],
   "resourceType": "GMFont",
 }

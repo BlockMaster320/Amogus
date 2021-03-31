@@ -61,7 +61,7 @@ switch (menuState)
 		
 		draw_set_halign(fa_center);
 		draw_set_valign(fa_middle);
-		draw_set_font(fntName);
+		draw_set_font(fntTextUI);
 		draw_text_transformed_colour(_selectionX, _selectionY, "Select your Amogus",
 									 0.5, 0.5, 0, c_white, c_white, c_white, c_white, 1);
 		draw_set_font(fnt_Menu);
@@ -147,7 +147,7 @@ switch (menuState)
 		var _timerY = _guiHeight - 100;
 		
 		draw_circle_sector(_timerX, _timerY, 45, menuStateTimer / _meetingTimer, 30, c_dkgrey);
-		draw_set_font(fntName);
+		draw_set_font(fntTextUI);
 		draw_set_halign(fa_center);
 		draw_set_valign(fa_middle);
 		draw_text_transformed_colour(_timerX, _timerY, _secondsLeft,
@@ -168,7 +168,7 @@ switch (menuState)
 		}
 		
 		draw_set_halign(fa_center);
-		draw_set_font(fntName);
+		draw_set_font(fntTextUI);
 		draw_text_transformed_colour(_guiWidth * 0.5, _guiHeight * 0.8, _text, 1, 1, 0,
 										c_white, c_white, c_white, c_white, 1);
 		
@@ -198,7 +198,7 @@ switch (menuState)
 			_text = "Impostors won the game.";
 		
 		draw_rectangle_colour(0, 0, _guiWidth, _guiHeight, c_black, c_black, c_black, c_black, false);
-		draw_set_font(fntName)
+		draw_set_font(fntTextUI)
 		draw_set_halign(fa_center);
 		draw_text_transformed_colour(_guiWidth * 0.5, _guiHeight * 0.6, _text, 1, 1, 0,
 									 c_white, c_white, c_white, c_white, 1);

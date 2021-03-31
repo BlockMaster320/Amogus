@@ -46,5 +46,5 @@ enum warningType
 enum interactable
 {
 	emergencyButton,
-	taskSUSUSS
+	camera
 }
