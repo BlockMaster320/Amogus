@@ -30,7 +30,7 @@ switch (_type)
 		{
 			if (clientSocket != _socket)
 			{
-				message_amogus_create(other.serverBuffer, clientId, username);
+				message_amogus_create(other.serverBuffer, clientId, username, avatarId);
 				network_send_packet(_socket, other.serverBuffer, buffer_tell(other.serverBuffer));
 			}
 		}
