@@ -39,7 +39,6 @@ enum warningType
 #macro WARNING_SPEED 0.012
 
 //Amogus
-#macro AVATAR_NUMBER 3
 #macro TL_SIZE 16
 
 //Interactable

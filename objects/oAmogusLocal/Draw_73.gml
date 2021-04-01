@@ -8,7 +8,26 @@ if (obj_GameManager.inGame)
 	var tY = targetY - off
 	with (obj_AmogusClient)
 	{
-		draw_sprite(sAmogus,image_index,x-tX,y-tY)
+		//Animate && Draw the Amogus
+		var _speed = other.animationSpeed;
+		var _frame = 0;
+		if (animationProgress div (2 * _speed)) _frame = 1;
+		if (animationProgress div (5 * _speed)) _frame = 0;
+		if (animationProgress div (7 * _speed)) _frame = 2;
+		animationProgress = (animationProgress + 1) % (10 * _speed);
+		
+		var _hsp = targetX - originalX;
+		var _vsp = targetY - originalY;
+		if (_hsp != 0)
+			sideFacing = sign(_hsp);
+		else if (_vsp == 0)
+			animationProgress = 0;
+	
+		var _jumpOffset = 0;
+		if (_frame == 1) _jumpOffset = 5;
+		else if (_frame == 2) _jumpOffset = 3;
+		draw_sprite_ext(spr_Body, bodyId * 3 + _frame, x - tX, y - tY - _jumpOffset, sideFacing, 1, 0, c_white, 1);
+		draw_sprite_ext(spr_Head, headId, x - tX, y - tY - _jumpOffset, sideFacing, 1, 0, c_white, 1);
 	}
 
 	gpu_set_blendmode(bm_normal)
@@ -18,9 +37,25 @@ if (obj_GameManager.inGame)
 	draw_surface(lightSurf,targetX-off,targetY-off)
 	shader_reset()
 	
-	draw_self()
-
-
+	//Animate && Draw the Amogus
+	var _speed = animationSpeed;
+	var _frame = 0;
+	if (animationProgress div (2 * _speed)) _frame = 1;
+	if (animationProgress div (5 * _speed)) _frame = 0;
+	if (animationProgress div (7 * _speed)) _frame = 2;
+	animationProgress = (animationProgress + 1) % (10 * _speed);
+	
+	if (hsp != 0)
+		sideFacing = sign(hsp);
+	else if (vsp == 0)
+		animationProgress = 0;
+	
+	var _jumpOffset = 0;
+	if (_frame == 1) _jumpOffset = 5;
+	else if (_frame == 2) _jumpOffset = 3;
+	draw_sprite_ext(spr_Body, bodyId * 3 + _frame, x, y - _jumpOffset, sideFacing, 1, 0, c_white, 1);
+	draw_sprite_ext(spr_Head, headId, x, y - _jumpOffset, sideFacing, 1, 0, c_white, 1);
+	
 	surface_set_target(darkenSurf)
 		draw_clear(c_white)
 		draw_circle_color(x-targetX+off,y-targetY+off,150,c_black,c_white,0)

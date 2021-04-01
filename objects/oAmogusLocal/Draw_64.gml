@@ -20,7 +20,7 @@ surface_set_target(textSurf)
 	gpu_set_blendmode_ext(bm_dest_alpha, bm_inv_src_alpha)
 	with (obj_AmogusClient)
 	{
-		nameOffX = (x - tX - 10) * (wW / guiW)
+		nameOffX = (x - tX - 30) * (wW / guiW)
 		nameOffY = (y - tY - 30) * (wH / guiH)
 		draw_text_transformed(nameOffX, nameOffY, username, textSize, textSize, 0);
 		//draw_text_transformed(100, 100, username, 1, 1, 0);
