@@ -20,6 +20,13 @@ rH = room_height
 #macro guiH 180
 
 camera_set_view_size(cam,guiW,guiH)
+
+enum CAMERA
+{
+	followPlayer,
+	onCam
+}
+camState = CAMERA.followPlayer
 #endregion
 
 spd = 1
@@ -39,9 +46,12 @@ interactableObject = noone;
 interactableStruct = noone;
 interactableInRange = noone;
 
+inMenu = false
+
 //Amogus Properties
 isAlive = true;
 isImpostor = false;
+avatarId = 0;
 
 //Networking
 clientSocket = noone;

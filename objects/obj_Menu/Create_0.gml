@@ -2,6 +2,8 @@
 menuState = menu.mainMenu;
 menuStateTimer = 0;
 
+selectedAvatarId = 0;
+
 //Text Fields
 charSet = "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM_-/.,&0123456789";
 textField = noone;
@@ -22,8 +24,13 @@ alarm[0] = CURSOR_BLINK_SPEED;	//alarm that makes the textCursor blink
 
 //Transition
 transitionProgress = 0;
+transitionClosing = false;
 transitionMenu = noone;
 transitionFunction = noone;
+
+//Warning
+warningProgress = 0;
+warningType = noone;
 
 //Meeting
 thrownOutAmogus = noone;

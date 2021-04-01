@@ -8,11 +8,15 @@ function message_receive_server(_socket, _buffer)
 		case messages.connect:
 		{
 			var _username = buffer_read(_buffer, buffer_string);
+			var _avatarId = buffer_read(_buffer, buffer_u8);
 			with(_amogusClient)
+			{
 				username = _username;
+				avatarId = _avatarId;
+			}
 				
 			//Send Message to Create the Amogus on Other Clients' Sides
-			message_amogus_create(serverBuffer, _amogusClient.clientId, _amogusClient.username);
+			message_amogus_create(serverBuffer, _amogusClient.clientId, _amogusClient.username, _amogusClient.avatarId);
 			with (obj_AmogusClient)
 			{
 				if (clientSocket != _socket)
@@ -95,20 +99,23 @@ function message_receive_client(_socket, _buffer)
 			{
 				clientId = _clientId;
 				username = _username;
+				avatarId = obj_Menu.selectedAvatarId;
 			}
 			clientIdMap[? _clientId] = _amogusLocal;
 			
 			buffer_seek(clientBuffer, buffer_seek_start, 0);
 			buffer_write(clientBuffer, buffer_u8, messages.connect);
-			buffer_write(clientBuffer, buffer_string, _username);
+			buffer_write(clientBuffer, buffer_string, _amogusLocal.username);
+			buffer_write(clientBuffer, buffer_u8, _amogusLocal.avatarId);
 			network_send_packet(client, clientBuffer, buffer_tell(clientBuffer));
 		}
 		break;
 		
 		case messages.gameMeeting:	//start a meeting
 		{
+			warning(warningType.meeting);
 			transition(menu.meeting, noone, true);
-			var _clientId = buffer_read(_buffer, buffer_u8);	//amogus who started the meetin - can be use later
+			var _clientId = buffer_read(_buffer, buffer_u8);	//amogus who started the meeting - can be use later
 		}
 		break;
 		

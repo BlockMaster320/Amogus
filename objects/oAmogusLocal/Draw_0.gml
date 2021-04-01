@@ -1,12 +1,15 @@
 //Draw Amogus
+if (!surface_exists(darkenSurf)) darkenSurf = surface_create(guiW + off*2,guiH + off*2)
+if (!surface_exists(textSurf)) textSurf = surface_create(windowW,windowH)
+if (!surface_exists(lightSurf)) lightSurf = surface_create(guiW + off*2,guiH + off*2)
+
 if (obj_GameManager.inGame)
 {
 	/*draw_text_transformed_colour(100, 100, username, 1, 1, 0, c_white, c_white, c_white, c_white, 1);*/
 	
+	if (camState = CAMERA.followPlayer)
+	{
 	#region Light
-	if (!surface_exists(lightSurf)) lightSurf = surface_create(guiW + off*2,guiH + off*2)
-	if (!surface_exists(darkenSurf)) darkenSurf = surface_create(guiW + off*2,guiH + off*2)
-	if (!surface_exists(textSurf)) textSurf = surface_create(windowW,windowH)
 	
 	/*var realX = x
 	var realY = y
@@ -18,14 +21,13 @@ if (obj_GameManager.inGame)
 	
 	surface_set_target(lightSurf)
 		draw_clear_alpha(c_black,0)
-		
 		//draw_circle_color(x-targetX,y-targetY,100,c_black,c_gray,0)
 		draw_sprite(sLight,0,x-surfOffX,y-surfOffY)
 		
 		#region Shadows
 		draw_set_color(c_white)
 		gpu_set_blendmode(bm_subtract)
-		for (var i = -8; i < 8; i++)
+		for (var i = -9; i < 9; i++)
 		{
 		    for (var j = -7; j < 7; j++)
 			{
@@ -81,4 +83,11 @@ if (obj_GameManager.inGame)
 	draw_surface(lightSurf,targetX-off,targetY-off)
 	shader_reset()
 	#endregion
+	}
+	else
+	{
+		surface_set_target(lightSurf)
+			draw_clear_alpha(c_black,0)
+		surface_reset_target()
+	}
 }

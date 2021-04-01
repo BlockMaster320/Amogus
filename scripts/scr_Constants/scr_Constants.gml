@@ -28,10 +28,18 @@ enum buttonType
 	vote
 }
 
+enum warningType
+{
+	meeting,
+	body
+}
+
 #macro CURSOR_BLINK_SPEED 25
 #macro TRANSITION_SPEED 0.014
+#macro WARNING_SPEED 0.012
 
 //Amogus
+#macro AVATAR_NUMBER 3
 #macro TL_SIZE 16
 
 //Interactable

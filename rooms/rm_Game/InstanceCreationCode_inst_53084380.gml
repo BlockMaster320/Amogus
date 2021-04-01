@@ -1,1 +1,1 @@
-type = interactable.camera;
+type = interactable.emergencyButton;

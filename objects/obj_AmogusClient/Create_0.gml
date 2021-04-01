@@ -6,6 +6,7 @@ username = noone;
 //Amogus Properties
 isAlive = true;
 isImpostor = false;
+avatarId = 0;
 
 //Meeting
 hasVoted = false;

@@ -12,7 +12,9 @@ function Interactable(_type) constructor
 		break;
 		
 		case interactable.camera:
-			//roomPos = 
-			break;
+		{
+			
+		}
+		break
 	}
 }

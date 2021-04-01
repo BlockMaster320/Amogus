@@ -4,8 +4,8 @@ var _guiWidth = display_get_gui_width();
 var _guiHeight = display_get_gui_height();
 
 //Set Button Size
-var _buttonWidth = 150;
-var _buttonHeight = 45;
+var _buttonWidth = _guiWidth * 0.1;
+var _buttonHeight = _guiHeight * 0.05;
 var _buttonSpacing = 0;
 
 switch (menuState)
@@ -49,9 +49,32 @@ switch (menuState)
 			{
 				clientId = obj_Server.clientIdCount ++;
 				username = other.textFieldArray[0];
+				avatarId = other.selectedAvatarId;
 			}
 			obj_Server.clientIdMap[? _amogusLocal.clientId] = _amogusLocal;
 		}
+		
+		//Avatar Selection
+		var _selectionX = _guiWidth * 0.3;
+		var _selectionY = _guiHeight * 0.5;
+		var _selectionSpacing = 0;
+		
+		draw_set_halign(fa_center);
+		draw_set_valign(fa_middle);
+		draw_set_font(fntTextUI);
+		draw_text_transformed_colour(_selectionX, _selectionY, "Select your Amogus",
+									 0.5, 0.5, 0, c_white, c_white, c_white, c_white, 1);
+		draw_set_font(fnt_Menu);
+		_selectionSpacing += 45;
+		
+		if arrow_button(_selectionX - 70, _selectionY + _selectionSpacing, 180, true, 2)
+			selectedAvatarId --;
+		if arrow_button(_selectionX + 70, _selectionY + _selectionSpacing, 0, true, 2)
+			selectedAvatarId ++;
+		selectedAvatarId = wrap(selectedAvatarId, 0, AVATAR_NUMBER);
+		var _avatar = id_get_avatar(selectedAvatarId);
+		draw_text_transformed_colour(_selectionX, _selectionY + _selectionSpacing, _avatar.name,
+									 1, 1, 0, c_white, c_white, c_white, c_white, 1);
 	}
 	break;
 	
@@ -183,45 +206,73 @@ switch (menuState)
 	break;
 }
 
+//Draw a Warning
+if (warningProgress > 0)
+{
+	var _progress = clamp(warningProgress * 2, 0, 1);
+	var _curveChannel = animcurve_get_channel(ac_Transition, 0);
+	var _curveValue = animcurve_channel_evaluate(_curveChannel, _progress);
+	var _scale = _curveValue;
+	
+	switch (warningType)
+	{
+		case warningType.meeting:
+		{
+			draw_sprite_ext(spr_Meeting, 0, _guiWidth * 0.5, _guiHeight * 0.5, 4 * _scale, 4 * _scale, 0, c_white, 1);
+			
+		}
+		break;
+	}
+	
+	warningProgress -= WARNING_SPEED;
+}
+
 //Transition Between 2 Menu States
-if (transitionProgress > 0)
+if (transitionProgress > 0 && warningProgress <= 0)
 {
 	if (transitionProgress > 0.5)
 		var _progress = 1 - (transitionProgress * 2 - 1);
 	else
 		var _progress = transitionProgress * 2;
 	
-	var _curveChannel = animcurve_get_channel(ac_Transition, 0);
-	var _curveValue = animcurve_channel_evaluate(_curveChannel, _progress);
-	_progress = _curveValue;
-	/*_progress = - 1.01 * sqr(_progress - 1) + 1.01;*/
+	draw_set_alpha(_progress);
+	draw_rectangle_colour(0, 0, _guiWidth, _guiHeight, c_black, c_black, c_black, c_black, false);
+	draw_set_alpha(1);
 	
-	var _diagonalLength = sqrt(sqr(_guiWidth * 0.5) + sqr(_guiHeight * 0.5));
-	var _transitionLength = _diagonalLength * _progress;
-	var _flip = false;
-	
-	repeat (2)
+	if (transitionClosing)
 	{
-		var _angle = darcsin((_guiHeight * 0.5) / _diagonalLength) + 180 * _flip;
+		var _curveChannel = animcurve_get_channel(ac_Transition, 0);
+		var _curveValue = animcurve_channel_evaluate(_curveChannel, _progress);
+		_progress = _curveValue;
+		/*_progress = - 1.01 * sqr(_progress - 1) + 1.01;*/
 	
-		var _point1X = _guiWidth * 0.5 + lengthdir_x(_diagonalLength, _angle);
-		var _point1Y = _guiHeight * 0.5 + lengthdir_y(_diagonalLength, _angle);
-		var _point2X = _guiWidth * 0.5 + lengthdir_x(_diagonalLength - _transitionLength, _angle);
-		var _point2Y = _guiHeight * 0.5 + lengthdir_y(_diagonalLength - _transitionLength, _angle);
+		var _diagonalLength = sqrt(sqr(_guiWidth * 0.5) + sqr(_guiHeight * 0.5));
+		var _transitionLength = _diagonalLength * _progress;
+		var _flip = false;
 	
-		var _x1 = _point1X + lengthdir_x(700, _angle + 90);
-		var _y1 = _point1Y + lengthdir_y(700, _angle + 90);
-		var _x2 = _point1X + lengthdir_x(700, _angle - 90);
-		var _y2 = _point1Y + lengthdir_y(700, _angle - 90);
-		var _x3 = _point2X + lengthdir_x(700, _angle + 90);
-		var _y3 = _point2Y + lengthdir_y(700, _angle + 90);
-		var _x4 = _point2X + lengthdir_x(700, _angle - 90);
-		var _y4 = _point2Y + lengthdir_y(700, _angle - 90);
+		repeat (2)
+		{
+			var _angle = darcsin((_guiHeight * 0.5) / _diagonalLength) + 180 * _flip;
 	
-		draw_triangle_color(_x1, _y1, _x2, _y2, _x3, _y3, c_dkgray, c_dkgray, c_dkgray, false);
-		draw_triangle_color(_x4, _y4, _x2, _y2, _x3, _y3, c_dkgray, c_dkgray, c_dkgray, false);
+			var _point1X = _guiWidth * 0.5 + lengthdir_x(_diagonalLength, _angle);
+			var _point1Y = _guiHeight * 0.5 + lengthdir_y(_diagonalLength, _angle);
+			var _point2X = _guiWidth * 0.5 + lengthdir_x(_diagonalLength - _transitionLength, _angle);
+			var _point2Y = _guiHeight * 0.5 + lengthdir_y(_diagonalLength - _transitionLength, _angle);
+	
+			var _x1 = _point1X + lengthdir_x(700, _angle + 90);
+			var _y1 = _point1Y + lengthdir_y(700, _angle + 90);
+			var _x2 = _point1X + lengthdir_x(700, _angle - 90);
+			var _y2 = _point1Y + lengthdir_y(700, _angle - 90);
+			var _x3 = _point2X + lengthdir_x(700, _angle + 90);
+			var _y3 = _point2Y + lengthdir_y(700, _angle + 90);
+			var _x4 = _point2X + lengthdir_x(700, _angle - 90);
+			var _y4 = _point2Y + lengthdir_y(700, _angle - 90);
+	
+			draw_triangle_color(_x1, _y1, _x2, _y2, _x3, _y3, c_dkgray, c_dkgray, c_dkgray, false);
+			draw_triangle_color(_x4, _y4, _x2, _y2, _x3, _y3, c_dkgray, c_dkgray, c_dkgray, false);
 		
-		_flip = true;
+			_flip = true;
+		}
 	}
 	
 	if (transitionProgress < 0.5 && menuState != transitionMenu)
