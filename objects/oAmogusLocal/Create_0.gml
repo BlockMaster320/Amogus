@@ -20,6 +20,13 @@ rH = room_height
 #macro guiH 180
 
 camera_set_view_size(cam,guiW,guiH)
+
+enum CAMERA
+{
+	followPlayer,
+	onCam
+}
+camState = CAMERA.followPlayer
 #endregion
 
 spd = 1
@@ -38,6 +45,8 @@ textSurf = surface_create(windowW,windowH)
 interactableObject = noone;
 interactableStruct = noone;
 interactableInRange = noone;
+
+inMenu = false
 
 //Amogus Properties
 isAlive = true;
