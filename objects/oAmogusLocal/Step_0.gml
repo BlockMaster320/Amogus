@@ -8,7 +8,8 @@ if (obj_GameManager.inGame)
 	}
 	
 	//Movement
-	MovementInput();
+	MovementInput(!inMenu);
+	UIinput(inMenu)
 	if (interactableObject == noone && obj_Menu.menuState == noone)
 	{
 		hsp = (right - left) * spd
@@ -40,9 +41,12 @@ if (obj_GameManager.inGame)
 	#endregion
 	
 	#region Camera
-	targetX = clamp(x - (guiW/2),0,rW - guiW)
-	targetY = clamp(y - (guiH/2),0,rH - guiH)
-        
+	if (camState = CAMERA.followPlayer)
+	{
+		targetX = clamp(x - (guiW/2),0,rW - guiW)
+		targetY = clamp(y - (guiH/2),0,rH - guiH)
+	}
+    
 	camX = lerp(camX,targetX,.15)
 	camY = lerp(camY,targetY,.15)
 
@@ -50,30 +54,32 @@ if (obj_GameManager.inGame)
 	#endregion
 	
 	//Search for Interactables
-	MovementInput();
 	if (interactableObject == noone /*&& !isImpostor*/)
 	{
 		interactableInRange = noone;
-		with (obj_Interactable)
+		var nearestInteractable = instance_nearest(x,y,obj_Interactable)
+		if (point_distance(x, y, nearestInteractable.x, nearestInteractable.y) < nearestInteractable.interactableStruct.distance && nearestInteractable.amogus == noone)
 		{
-			if (amogus == noone && point_distance(x, y, other.x, other.y) < interactableStruct.distance)
+			interactableInRange = nearestInteractable;
+			if (buttonInteract)
 			{
-				other.interactableInRange = self;
-				if (other.buttonInteract)
+				interactableObject = nearestInteractable;
+				interactableStruct = nearestInteractable.interactableStruct;
+				interactableObject.amogus = self;
+				inMenu = true
+					
+				//Interact "create" event
+				switch (interactableObject.type)
 				{
-					other.interactableObject = self;
-					other.interactableStruct = interactableStruct;
-					amogus = other;
+					case interactable.camera:
+						camState = CAMERA.onCam
+						camX = interactableStruct.camPosX
+						camY = interactableStruct.camPosY
+						targetX = camX
+						targetY = camY
+						break
 				}
 			}
 		}
-	}
-	
-	//Exit an Interactable
-	else if (interactableObject != noone && buttonInteract)
-	{
-			interactableObject.amogus = noone;
-			interactableObject = noone;
-			interactableStruct = noone;
 	}
 }

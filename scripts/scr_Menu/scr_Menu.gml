@@ -231,3 +231,11 @@ function game_setup()
 		network_send_packet(clientSocket, _serverBuffer, buffer_tell(_serverBuffer));
 	}*/
 }
+
+function ExitMenu()
+{
+	inMenu = false
+	interactableObject.amogus = noone;
+	interactableObject = noone
+	interactableStruct = noone;
+}
