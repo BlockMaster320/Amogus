@@ -233,8 +233,6 @@ function game_setup()
 	}*/
 }
 
-function ExitMenu()
-{
 
 function ExitMenu(taskCompleted_)
 {
@@ -249,5 +247,4 @@ function ExitMenu(taskCompleted_)
 	interactableObject.amogus = noone;
 	interactableObject = noone
 	interactableStruct = noone;
-}
 }
