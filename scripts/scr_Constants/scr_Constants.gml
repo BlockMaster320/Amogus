@@ -1,5 +1,3 @@
-randomize()
-
 //Networking
 enum messages	//values representing types of network messages
 {
