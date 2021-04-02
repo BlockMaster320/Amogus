@@ -1,2 +1,0 @@
-# Amogus
-sus
