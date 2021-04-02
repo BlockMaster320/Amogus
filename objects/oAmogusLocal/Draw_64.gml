@@ -8,7 +8,8 @@ draw_set_color(c_white)	//BREAINDEAD
 var nameOffX = (x - camX) * (windowW / guiW)
 var nameOffY = (y - camY - 20) * (windowH / guiH)
 var textSize = windowH / guiH / 10
-draw_text_transformed(nameOffX, nameOffY + 10, username, textSize, textSize, 0);
+var _name = id_get_name(nameId);
+draw_text_transformed(nameOffX, nameOffY + 10, _name, textSize, textSize, 0);
 	
 surface_set_target(textSurf)
 	draw_clear_alpha(c_black,0)
@@ -26,7 +27,8 @@ surface_set_target(textSurf)
 		if (other.tilemap != noone && tilemap_get_at_pixel(other.tilemap,x - offX, y - offY)) offY = -8
 		nameOffX = (x - tX - offX) * (wW / guiW)
 		nameOffY = (y - tY - offY) * (wH / guiH)
-		draw_text_transformed(nameOffX, nameOffY, username, textSize, textSize, 0);
+		var _name = id_get_name(nameId);
+		draw_text_transformed(nameOffX, nameOffY, _name, textSize, textSize, 0);
 		//draw_text_transformed(100, 100, username, 1, 1, 0);
 	}
 	draw_set_halign(fa_left);

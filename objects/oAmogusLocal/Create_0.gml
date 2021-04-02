@@ -62,7 +62,7 @@ animationSpeed = 4;	//higher => slower
 //Networking
 clientSocket = noone;
 clientId = noone;
-username = noone;
+nameId = 0;
 
 gameStartSetup = true;
 alarm[0] = POSITION_UPDATE;
