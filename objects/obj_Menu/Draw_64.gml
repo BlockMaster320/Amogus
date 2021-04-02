@@ -15,14 +15,26 @@ switch (menuState)
 		//Draw Menu Text Fields && Buttons
 		var _buttonX = _guiWidth * 0.5 - _buttonWidth * 0.5;
 		var _buttonY = _guiHeight * 0.5;
+		_arrowSpacing = 75;
 		
-		//Username Text Field
+		//Name Selection
 		draw_set_halign(fa_center);
 		draw_set_valign(fa_bottom);
-		draw_text_transformed_colour(_guiWidth * 0.5, _buttonY, "Username", 1, 1, 0, c_white, c_white, c_white, c_white, 1);
-		text_field(_buttonX, _buttonY, _buttonWidth, _buttonHeight, true, 0);
+		draw_text_transformed_colour(_guiWidth * 0.5, _buttonY, "Choose your Name", 1, 1, 0, c_white, c_white, c_white, c_white, 1);
+		
+		draw_set_halign(fa_center);
+		draw_set_valign(fa_middle);
+		var _name = id_get_name(selectedNameId);
+		draw_text_transformed_colour(_guiWidth * 0.5, _buttonY + 20, _name, 1, 1, 0, c_white, c_white, c_white, c_white, 1);
+		
+		if arrow_button(_guiWidth * 0.5 + _arrowSpacing, _buttonY + 20, 0, true, 2)
+			selectedNameId ++;
+		if arrow_button(_guiWidth * 0.5 - _arrowSpacing, _buttonY + 20, 180, true, 2)
+			selectedNameId --;
+		selectedNameId = wrap(selectedNameId, 0, NAME_NUMBER);
+		/*text_field(_buttonX, _buttonY, _buttonWidth, _buttonHeight, true, 0);*/
 		_buttonSpacing += _buttonHeight + 35;
-
+		
 		//Join an Existing Server
 		draw_set_halign(fa_center);
 		draw_set_valign(fa_bottom);
@@ -48,7 +60,8 @@ switch (menuState)
 			with (_amogusLocal)
 			{
 				clientId = obj_Server.clientIdCount ++;
-				username = other.textFieldArray[0];
+				/*username = other.textFieldArray[0];*/
+				nameId = other.selectedNameId;
 				headId = other.selectedHeadId;
 				bodyId = other.selectedBodyId;
 			}
@@ -69,7 +82,7 @@ switch (menuState)
 		draw_set_font(fnt_Menu);
 		_selectionSpacing += 35;
 		
-		var _headName = avatarHead_get_name(selectedHeadId);	//head selection
+		var _headName = id_get_head(selectedHeadId);	//head selection
 		draw_text_transformed_colour(_selectionX, _selectionY + _selectionSpacing, _headName,
 									 1, 1, 0, c_white, c_white, c_white, c_white, 1);
 		if arrow_button(_selectionX - _arrowSpacing, _selectionY + _selectionSpacing, 180, true, 2)
@@ -175,10 +188,11 @@ switch (menuState)
 		var _text = "No amogus has been voted out."
 		if (thrownOutAmogus != noone)
 		{
+			var _name = id_get_name(thrownOutAmogus.nameId);
 			if (thrownOutAmogus.isImpostor)
-				_text = string(thrownOutAmogus.username) + " was an IMPOSTOR."
+				_text = string(_name) + " was an IMPOSTOR."
 			else
-				_text = string(thrownOutAmogus.username) + " wasn't an IMPOSTOR... retards."
+				_text = string(_name) + " wasn't an IMPOSTOR... retards."
 		}
 		
 		draw_set_halign(fa_center);
