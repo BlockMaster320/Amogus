@@ -235,8 +235,19 @@ function game_setup()
 
 function ExitMenu()
 {
+
+function ExitMenu(taskCompleted_)
+{
 	inMenu = false
+	if (taskCompleted_)
+	{
+		var type = interactableObject.interactableStruct.type
+		interactableObject.interactableStruct = noone
+		interactableObject.interactableStruct = new Interactable(type)
+		taskCompleted = false
+	}
 	interactableObject.amogus = noone;
 	interactableObject = noone
 	interactableStruct = noone;
+}
 }
