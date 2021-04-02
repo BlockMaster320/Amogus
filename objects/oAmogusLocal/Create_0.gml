@@ -47,6 +47,7 @@ interactableStruct = noone;
 interactableInRange = noone;
 
 inMenu = false
+taskCompleted = false
 
 //Amogus Properties
 isAlive = true;
