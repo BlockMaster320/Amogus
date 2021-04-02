@@ -1,7 +1,7 @@
 {
   "spriteId": {
-    "name": "sAmogus",
-    "path": "sprites/sAmogus/sAmogus.yy",
+    "name": "spr_Body",
+    "path": "sprites/spr_Body/spr_Body.yy",
   },
   "solid": false,
   "visible": true,

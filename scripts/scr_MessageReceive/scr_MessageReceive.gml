@@ -8,15 +8,17 @@ function message_receive_server(_socket, _buffer)
 		case messages.connect:
 		{
 			var _username = buffer_read(_buffer, buffer_string);
-			var _avatarId = buffer_read(_buffer, buffer_u8);
+			var _headId = buffer_read(_buffer, buffer_u8);
+			var _bodyId = buffer_read(_buffer, buffer_u8);
 			with(_amogusClient)
 			{
 				username = _username;
-				avatarId = _avatarId;
+				headId = _headId;
+				bodyId = _bodyId;
 			}
 				
 			//Send Message to Create the Amogus on Other Clients' Sides
-			message_amogus_create(serverBuffer, _amogusClient.clientId, _amogusClient.username, _amogusClient.avatarId);
+			message_amogus_create(serverBuffer, _amogusClient.clientId, _amogusClient.username, _amogusClient.headId, _amogusClient.bodyId);
 			with (obj_AmogusClient)
 			{
 				if (clientSocket != _socket)
@@ -99,14 +101,16 @@ function message_receive_client(_socket, _buffer)
 			{
 				clientId = _clientId;
 				username = _username;
-				avatarId = obj_Menu.selectedAvatarId;
+				headId = obj_Menu.selectedHeadId;
+				bodyId = obj_Menu.selectedBodyId;
 			}
 			clientIdMap[? _clientId] = _amogusLocal;
 			
 			buffer_seek(clientBuffer, buffer_seek_start, 0);
 			buffer_write(clientBuffer, buffer_u8, messages.connect);
 			buffer_write(clientBuffer, buffer_string, _amogusLocal.username);
-			buffer_write(clientBuffer, buffer_u8, _amogusLocal.avatarId);
+			buffer_write(clientBuffer, buffer_u8, _amogusLocal.headId);
+			buffer_write(clientBuffer, buffer_u8, _amogusLocal.bodyId);
 			network_send_packet(client, clientBuffer, buffer_tell(clientBuffer));
 		}
 		break;
@@ -147,6 +151,8 @@ function message_receive_client(_socket, _buffer)
 		{
 			var _clientId = buffer_read(_buffer, buffer_u8);
 			var _username = buffer_read(_buffer, buffer_string);
+			var _headId = buffer_read(_buffer, buffer_u8);
+			var _bodyId = buffer_read(_buffer, buffer_u8);
 			
 			var _amogusClient = instance_create_layer(0, 0, "Amogus", obj_AmogusClient);
 			with (_amogusClient)
@@ -154,6 +160,9 @@ function message_receive_client(_socket, _buffer)
 				clientSocket = _socket;
 				clientId = _clientId;
 				username = _username;
+				
+				headId = _headId;
+				bodyId = _bodyId;
 			}
 			clientMap[? _socket] = _amogusClient;
 			clientIdMap[? _clientId] = _amogusClient;

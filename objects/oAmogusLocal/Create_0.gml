@@ -51,7 +51,13 @@ inMenu = false
 //Amogus Properties
 isAlive = true;
 isImpostor = false;
-avatarId = 0;
+headId = 0;
+bodyId = 0;
+
+//Animation
+sideFacing = 1;	//-1 - left, 1 - right
+animationProgress = 0;
+animationSpeed = 4;	//higher => slower
 
 //Networking
 clientSocket = noone;

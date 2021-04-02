@@ -2,7 +2,6 @@
 draw_set_halign(fa_center);
 draw_set_valign(fa_bottom);
 draw_set_font(fntName)
-var _spriteHeight = sprite_get_height(sAmogus);
 draw_set_color(c_white)	//BREAINDEAD
 
 var nameOffX = (x - camX) * (windowW / guiW)
@@ -22,8 +21,8 @@ surface_set_target(textSurf)
 	with (obj_AmogusClient)
 	{
 		var offX = 10
-		var offY = 25
-		if (tilemap_get_at_pixel(other.tilemap,x - offX, y - offY)) offY = -8
+		var offY = 28
+		if (other.tilemap != noone && tilemap_get_at_pixel(other.tilemap,x, y - offY) && other.camState = CAMERA.followPlayer) offY = -8
 		nameOffX = (x - tX - offX) * (wW / guiW)
 		nameOffY = (y - tY - offY) * (wH / guiH)
 		draw_text_transformed(nameOffX, nameOffY, username, textSize, textSize, 0);

@@ -2,7 +2,8 @@
 menuState = menu.mainMenu;
 menuStateTimer = 0;
 
-selectedAvatarId = 0;
+selectedHeadId = 0;
+selectedBodyId = 0;
 
 //Text Fields
 charSet = "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM_-/.,&0123456789";

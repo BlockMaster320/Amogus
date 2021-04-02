@@ -4,8 +4,8 @@ var _guiWidth = display_get_gui_width();
 var _guiHeight = display_get_gui_height();
 
 //Set Button Size
-var _buttonWidth = _guiWidth * 0.1;
-var _buttonHeight = _guiHeight * 0.05;
+var _buttonWidth = _guiWidth * 0.13;
+var _buttonHeight = _guiHeight * 0.065;
 var _buttonSpacing = 0;
 
 switch (menuState)
@@ -49,32 +49,46 @@ switch (menuState)
 			{
 				clientId = obj_Server.clientIdCount ++;
 				username = other.textFieldArray[0];
-				avatarId = other.selectedAvatarId;
+				headId = other.selectedHeadId;
+				bodyId = other.selectedBodyId;
 			}
 			obj_Server.clientIdMap[? _amogusLocal.clientId] = _amogusLocal;
 		}
 		
 		//Avatar Selection
-		var _selectionX = _guiWidth * 0.3;
+		var _selectionX = _guiWidth * 0.25;
 		var _selectionY = _guiHeight * 0.5;
 		var _selectionSpacing = 0;
+		var _arrowSpacing = 100;
 		
 		draw_set_halign(fa_center);
 		draw_set_valign(fa_middle);
 		draw_set_font(fntTextUI);
-		draw_text_transformed_colour(_selectionX, _selectionY, "Select your Amogus",
+		draw_text_transformed_colour(_selectionX, _selectionY, "Customize your Amogus",
 									 0.5, 0.5, 0, c_white, c_white, c_white, c_white, 1);
 		draw_set_font(fnt_Menu);
-		_selectionSpacing += 45;
+		_selectionSpacing += 35;
 		
-		if arrow_button(_selectionX - 70, _selectionY + _selectionSpacing, 180, true, 2)
-			selectedAvatarId --;
-		if arrow_button(_selectionX + 70, _selectionY + _selectionSpacing, 0, true, 2)
-			selectedAvatarId ++;
-		selectedAvatarId = wrap(selectedAvatarId, 0, AVATAR_NUMBER);
-		var _avatar = id_get_avatar(selectedAvatarId);
-		draw_text_transformed_colour(_selectionX, _selectionY + _selectionSpacing, _avatar.name,
+		var _headName = avatarHead_get_name(selectedHeadId);	//head selection
+		draw_text_transformed_colour(_selectionX, _selectionY + _selectionSpacing, _headName,
 									 1, 1, 0, c_white, c_white, c_white, c_white, 1);
+		if arrow_button(_selectionX - _arrowSpacing, _selectionY + _selectionSpacing, 180, true, 2)
+			selectedHeadId --;
+		if arrow_button(_selectionX + _arrowSpacing, _selectionY + _selectionSpacing, 0, true, 2)
+			selectedHeadId ++;
+		selectedHeadId = wrap(selectedHeadId, 0, sprite_get_number(spr_Head));
+		
+		_selectionSpacing += 150;	//body selection
+		if arrow_button(_selectionX - _arrowSpacing, _selectionY + _selectionSpacing, 180, true, 2)
+			selectedBodyId --;
+		if arrow_button(_selectionX + _arrowSpacing, _selectionY + _selectionSpacing, 0, true, 2)
+			selectedBodyId ++;
+		selectedBodyId = wrap(selectedBodyId, 0, sprite_get_number(spr_Body) div 3);
+		
+		draw_sprite_ext(spr_Body, selectedBodyId * 3, _selectionX + 10, _selectionY + _selectionSpacing + 25,
+						7, 7, 0, c_white, 1);
+		draw_sprite_ext(spr_Head, selectedHeadId, _selectionX + 10, _selectionY + _selectionSpacing + 25,
+						7, 7, 0, c_white, 1);
 	}
 	break;
 	
@@ -259,14 +273,14 @@ if (transitionProgress > 0 && warningProgress <= 0)
 			var _point2X = _guiWidth * 0.5 + lengthdir_x(_diagonalLength - _transitionLength, _angle);
 			var _point2Y = _guiHeight * 0.5 + lengthdir_y(_diagonalLength - _transitionLength, _angle);
 	
-			var _x1 = _point1X + lengthdir_x(700, _angle + 90);
-			var _y1 = _point1Y + lengthdir_y(700, _angle + 90);
-			var _x2 = _point1X + lengthdir_x(700, _angle - 90);
-			var _y2 = _point1Y + lengthdir_y(700, _angle - 90);
-			var _x3 = _point2X + lengthdir_x(700, _angle + 90);
-			var _y3 = _point2Y + lengthdir_y(700, _angle + 90);
-			var _x4 = _point2X + lengthdir_x(700, _angle - 90);
-			var _y4 = _point2Y + lengthdir_y(700, _angle - 90);
+			var _x1 = _point1X + lengthdir_x(_guiWidth, _angle + 90);
+			var _y1 = _point1Y + lengthdir_y(_guiWidth, _angle + 90);
+			var _x2 = _point1X + lengthdir_x(_guiWidth, _angle - 90);
+			var _y2 = _point1Y + lengthdir_y(_guiWidth, _angle - 90);
+			var _x3 = _point2X + lengthdir_x(_guiWidth, _angle + 90);
+			var _y3 = _point2Y + lengthdir_y(_guiWidth, _angle + 90);
+			var _x4 = _point2X + lengthdir_x(_guiWidth, _angle - 90);
+			var _y4 = _point2Y + lengthdir_y(_guiWidth, _angle - 90);
 	
 			draw_triangle_color(_x1, _y1, _x2, _y2, _x3, _y3, c_dkgray, c_dkgray, c_dkgray, false);
 			draw_triangle_color(_x4, _y4, _x2, _y2, _x3, _y3, c_dkgray, c_dkgray, c_dkgray, false);
