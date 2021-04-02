@@ -2,6 +2,7 @@
 menuState = menu.mainMenu;
 menuStateTimer = 0;
 
+selectedNameId = 0;
 selectedHeadId = 0;
 selectedBodyId = 0;
 

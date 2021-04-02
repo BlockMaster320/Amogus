@@ -27,7 +27,8 @@ function draw_amogus_table(_x, _y, _meeting)
 		draw_rectangle_colour(_infoX, _infoY, _infoX + _infoWidth, _infoY + _infoHeight,
 								c_dkgrey, c_dkgrey, c_dkgrey, c_dkgrey, false);
 		
-		draw_text_transformed_colour(_infoX + _textPadding, _infoY + _textPadding, _amogus.username,
+		var _name = id_get_name(_amogus.nameId);
+		draw_text_transformed_colour(_infoX + _textPadding, _infoY + _textPadding, _name,
 										1, 1, 0, c_white, c_white, c_white, c_white, 1);
 		
 		//Emergeny Meeting Voting
@@ -232,6 +233,9 @@ function game_setup()
 	}*/
 }
 
+function ExitMenu()
+{
+
 function ExitMenu(taskCompleted_)
 {
 	inMenu = false
@@ -245,4 +249,5 @@ function ExitMenu(taskCompleted_)
 	interactableObject.amogus = noone;
 	interactableObject = noone
 	interactableStruct = noone;
+}
 }
