@@ -24,6 +24,7 @@
     {"id":{"name":"scr_StringInput","path":"scripts/scr_StringInput/scr_StringInput.yy",},"order":6,},
     {"id":{"name":"scr_Constants","path":"scripts/scr_Constants/scr_Constants.yy",},"order":1,},
     {"id":{"name":"obj_Server","path":"objects/obj_Server/obj_Server.yy",},"order":0,},
+    {"id":{"name":"shOnCam","path":"shaders/shOnCam/shOnCam.yy",},"order":4,},
     {"id":{"name":"scr_Avatar","path":"scripts/scr_Avatar/scr_Avatar.yy",},"order":9,},
     {"id":{"name":"shDarken","path":"shaders/shDarken/shDarken.yy",},"order":2,},
     {"id":{"name":"sCameraView","path":"sprites/sCameraView/sCameraView.yy",},"order":11,},

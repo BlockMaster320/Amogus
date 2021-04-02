@@ -3,7 +3,7 @@ if (obj_GameManager.inGame)
 	surface_set_target(lightSurf)
 	//draw_clear()
 	//gpu_set_blendmode_ext(bm_dest_color, bm_inv_src_alpha)
-	gpu_set_blendmode_ext(bm_dest_alpha,bm_inv_src_alpha)
+	if (camState = CAMERA.followPlayer) gpu_set_blendmode_ext(bm_dest_alpha,bm_inv_src_alpha)
 	var tX = targetX - off
 	var tY = targetY - off
 	with (obj_AmogusClient)
