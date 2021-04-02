@@ -78,6 +78,12 @@ if (obj_GameManager.inGame)
 						targetX = camX
 						targetY = camY
 						break
+					case interactable.wires:
+						wiresSurf = surface_create(windowW,windowH)
+						surface_set_target(wiresSurf)
+							draw_clear_alpha(c_black,0)
+						surface_reset_target()
+						break
 				}
 			}
 		}

@@ -1,3 +1,5 @@
+randomize()
+
 //Networking
 enum messages	//values representing types of network messages
 {
@@ -40,10 +42,12 @@ enum warningType
 
 //Amogus
 #macro TL_SIZE 16
+#macro windowToGui window_get_width() / guiW
 
 //Interactable
 enum interactable
 {
 	emergencyButton,
-	camera
+	camera,
+	wires
 }
