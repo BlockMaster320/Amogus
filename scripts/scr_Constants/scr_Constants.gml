@@ -37,6 +37,7 @@ enum warningType
 #macro CURSOR_BLINK_SPEED 25
 #macro TRANSITION_SPEED 0.014
 #macro WARNING_SPEED 0.012
+#macro NAME_NUMBER 3
 
 //Amogus
 #macro TL_SIZE 16

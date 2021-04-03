@@ -1,7 +1,7 @@
 //Networking
 clientSocket = noone;
 clientId = noone;
-username = noone;
+nameId = 0;
 
 //Amogus Properties
 isAlive = true;

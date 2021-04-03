@@ -7,18 +7,18 @@ function message_receive_server(_socket, _buffer)
 	{
 		case messages.connect:
 		{
-			var _username = buffer_read(_buffer, buffer_string);
+			var _nameId = buffer_read(_buffer, buffer_u8);
 			var _headId = buffer_read(_buffer, buffer_u8);
 			var _bodyId = buffer_read(_buffer, buffer_u8);
 			with(_amogusClient)
 			{
-				username = _username;
+				nameId = _nameId;
 				headId = _headId;
 				bodyId = _bodyId;
 			}
 				
 			//Send Message to Create the Amogus on Other Clients' Sides
-			message_amogus_create(serverBuffer, _amogusClient.clientId, _amogusClient.username, _amogusClient.headId, _amogusClient.bodyId);
+			message_amogus_create(serverBuffer, _amogusClient.clientId, _amogusClient.nameId, _amogusClient.headId, _amogusClient.bodyId);
 			with (obj_AmogusClient)
 			{
 				if (clientSocket != _socket)
@@ -95,12 +95,11 @@ function message_receive_client(_socket, _buffer)
 		case messages.connect:
 		{
 			var _clientId = buffer_read(_buffer, buffer_u8);
-			var _username = obj_Menu.textFieldArray[0];
 			var _amogusLocal = instance_create_layer(0, 0, "Amogus", oAmogusLocal);
 			with (_amogusLocal)
 			{
 				clientId = _clientId;
-				username = _username;
+				nameId = obj_Menu.selectedNameId;
 				headId = obj_Menu.selectedHeadId;
 				bodyId = obj_Menu.selectedBodyId;
 			}
@@ -108,7 +107,7 @@ function message_receive_client(_socket, _buffer)
 			
 			buffer_seek(clientBuffer, buffer_seek_start, 0);
 			buffer_write(clientBuffer, buffer_u8, messages.connect);
-			buffer_write(clientBuffer, buffer_string, _amogusLocal.username);
+			buffer_write(clientBuffer, buffer_u8, _amogusLocal.nameId);
 			buffer_write(clientBuffer, buffer_u8, _amogusLocal.headId);
 			buffer_write(clientBuffer, buffer_u8, _amogusLocal.bodyId);
 			network_send_packet(client, clientBuffer, buffer_tell(clientBuffer));
@@ -150,7 +149,7 @@ function message_receive_client(_socket, _buffer)
 		case messages.amogusCreate:	//create amogusClient
 		{
 			var _clientId = buffer_read(_buffer, buffer_u8);
-			var _username = buffer_read(_buffer, buffer_string);
+			var _nameId = buffer_read(_buffer, buffer_u8);
 			var _headId = buffer_read(_buffer, buffer_u8);
 			var _bodyId = buffer_read(_buffer, buffer_u8);
 			
@@ -159,7 +158,7 @@ function message_receive_client(_socket, _buffer)
 			{
 				clientSocket = _socket;
 				clientId = _clientId;
-				username = _username;
+				nameId = _nameId;
 				
 				headId = _headId;
 				bodyId = _bodyId;

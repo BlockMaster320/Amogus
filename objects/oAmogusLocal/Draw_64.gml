@@ -7,7 +7,8 @@ draw_set_color(c_white)	//BREAINDEAD
 var nameOffX = (x - camX) * windowToGui
 var nameOffY = (y - camY - 20) * windowToGui
 var textSize = windowToGui / 10
-draw_text_transformed(nameOffX, nameOffY + 10, username, textSize, textSize, 0);
+var _name = id_get_name(nameId);
+draw_text_transformed(nameOffX, nameOffY + 10, _name, textSize, textSize, 0);
 	
 surface_set_target(textSurf)
 	draw_clear_alpha(c_black,0)
@@ -25,8 +26,9 @@ surface_set_target(textSurf)
 		if (other.tilemap != noone && tilemap_get_at_pixel(other.tilemap,x, y - offY) && other.camState = CAMERA.followPlayer) offY = -8
 		nameOffX = (x - tX - offX) * windowToGui
 		nameOffY = (y - tY - offY) * windowToGui
-		draw_text_transformed(nameOffX, nameOffY, username, textSize, textSize, 0);
-		//draw_text_transformed(100, 100, username, 1, 1, 0);
+    var _name = id_get_name(nameId);
+		draw_text_transformed(nameOffX, nameOffY, _name, textSize, textSize, 0);
+		//draw_text_transformed(100, 100, _name, 1, 1, 0);
 	}
 	draw_set_halign(fa_left);
 	draw_set_valign(fa_top);
