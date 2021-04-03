@@ -22,7 +22,7 @@ if (obj_GameManager.inGame)
 	surface_set_target(lightSurf)
 		draw_clear_alpha(c_black,0)
 		//draw_circle_color(x-targetX,y-targetY,100,c_black,c_gray,0)
-		draw_sprite(sLight,0,x-surfOffX,y-surfOffY)
+		if (global.lightsOn) draw_sprite(sLight,0,x-surfOffX,y-surfOffY)
 		
 		#region Shadows
 		draw_set_color(c_white)

@@ -53,8 +53,8 @@ if (obj_GameManager.inGame)
 	var _jumpOffset = 0;
 	if (_frame == 1) _jumpOffset = 5;
 	else if (_frame == 2) _jumpOffset = 3;
-	draw_sprite_ext(spr_Body, bodyId * 3 + _frame, x, y - _jumpOffset, sideFacing, 1, 0, c_white, 1);
-	draw_sprite_ext(spr_Head, headId, x, y - _jumpOffset, sideFacing, 1, 0, c_white, 1);
+	draw_sprite_ext(spr_Body, bodyId * 3 + _frame, x, y - _jumpOffset, sideFacing, 1, 0, c_white, playerAlpha);
+	draw_sprite_ext(spr_Head, headId, x, y - _jumpOffset, sideFacing, 1, 0, c_white, playerAlpha);
 	
 	if (camState = CAMERA.followPlayer)
 	{
@@ -64,7 +64,8 @@ if (obj_GameManager.inGame)
 			//draw_surface(lightSurf,targetX+off,targetY+off)
 		surface_reset_target()
 		gpu_set_blendmode(bm_subtract)
-		draw_set_alpha(.05)
+		if (global.lightsOn) draw_set_alpha(.05)
+		else draw_set_alpha(.5)
 		draw_surface(darkenSurf,targetX - off,targetY - off)
 		draw_set_alpha(1)
 		gpu_set_blendmode(bm_normal)

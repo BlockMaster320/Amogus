@@ -1,4 +1,5 @@
-type = interactable.camera;
+type = interactable.sliderCatch
+/*type = interactable.camera;
 interactableStruct = new Interactable(type);
 interactableStruct.camPosX = 390
-interactableStruct.camPosY = 65
+interactableStruct.camPosY = 65*/

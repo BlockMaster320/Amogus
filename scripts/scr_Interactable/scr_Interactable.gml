@@ -5,10 +5,27 @@ function Interactable(_type) constructor
 	distance = 30;
 	switch (_type)
 	{
+		case interactable.lights:
+		{
+			var xOff = 40
+			var yOff = 30
+			rowCount = 3
+			collCount = 2
+			clickOffset = 5
+			for (var i = rowCount-1; i >= 0; i--)
+			{
+				for (var j = collCount-1; j >= 0; j--)
+				{
+					switchPositions[i,j] = [(xOff * j) - (xOff * collCount / 2), (yOff * i) - (yOff * rowCount / 2), false]	//x, y, active
+				}
+			}
+		}
+		break
+		
 		case interactable.wires:
 		{
-			xOff = 50
-			yOff = 15
+			var xOff = 50
+			var yOff = 15
 			wireCount = irandom_range(2,6)	//+1
 			wireRadius = 4
 			for (var i = wireCount; i > -1; i--)
@@ -36,5 +53,37 @@ function Interactable(_type) constructor
 			//show_debug_message(wirePositions)
 		}
 		break;
+		
+		case interactable.vent:
+		{
+			//ventPositions
+		}
+		break
+		
+		case interactable.shooter:
+		{
+			xRandomRange = 50
+			yRandomRange = 30
+			targetPositionX = irandom_range(-50,50)
+			targetPositionY = irandom_range(-30,30)
+			resetCooldownDef = 30
+			resetCooldown = resetCooldownDef
+			succesfulShots = 0
+			minimumShots = irandom_range(6,15)
+		}
+		break
+		
+		case interactable.sliderCatch:
+		{
+			yOff = 20
+			sliderCount = irandom_range(2,6)
+			sliderLength = 160
+			for (var i = sliderCount-1; i >= 0; i--)
+			{
+			    sliderPositions[i] = [0,(yOff * i) - (yOff * (sliderCount - 1) / 2),false]	//x, y, active
+				handlePositions[i] = [choose(-sliderLength / 2,sliderLength / 2),(yOff * i) - (yOff * (sliderCount - 1) / 2),false]
+			}
+		}
+		break
 	}
 }

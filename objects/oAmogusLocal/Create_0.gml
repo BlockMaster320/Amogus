@@ -49,6 +49,10 @@ interactableInRange = noone;
 inMenu = false
 taskCompleted = false
 
+global.lightsOn = true
+
+playerAlpha = 1
+
 //Amogus Properties
 isAlive = true;
 isImpostor = false;

@@ -48,5 +48,9 @@ enum interactable
 {
 	emergencyButton,
 	camera,
-	wires
+	lights,
+	wires,
+	vent,
+	shooter,
+	sliderCatch
 }
