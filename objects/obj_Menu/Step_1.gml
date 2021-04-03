@@ -1,0 +1,1 @@
+buttonIsSelected = false;

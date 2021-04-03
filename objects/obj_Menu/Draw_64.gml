@@ -1,12 +1,44 @@
 //Set Draw Properties
-draw_set_font(fnt_Menu);
+draw_set_font(fnt_Menu1);
 var _guiWidth = display_get_gui_width();
 var _guiHeight = display_get_gui_height();
+var _headerScale = 1.1;
 
 //Set Button Size
-var _buttonWidth = _guiWidth * 0.13;
-var _buttonHeight = _guiHeight * 0.065;
+var _buttonWidth = _guiWidth * 0.15;
+var _buttonHeight = _guiHeight * 0.10;
 var _buttonSpacing = 0;
+
+var _fieldWidth = _guiWidth * 0.15;
+var _fieldHeight = _guiHeight * 0.08;
+/*
+var _buttonWidth = 205;
+var _buttonHeight = 78;
+var _buttonSpacing = 0;
+
+var _fieldWidth = 205;
+var _fieldHeight = 61;*/
+
+//Switch to Fullscreen
+if (keyboard_check_pressed(ord("F")))
+{
+	window_set_fullscreen(!window_get_fullscreen());
+	alarm[1] = 10;
+}
+
+//Create Surfaces
+if (!surface_exists(surfaceText))
+	surfaceText = surface_create(_guiWidth, _guiHeight);
+if (!surface_exists(surfaceUI))
+	surfaceUI = surface_create(guiW, guiH);
+	
+surface_set_target(surfaceText);
+draw_clear_alpha(c_black, 0);
+surface_reset_target();
+surface_set_target(surfaceUI);
+draw_clear_alpha(c_black, 0);
+surface_reset_target();
+surface_set_target(surfaceText);
 
 switch (menuState)
 {
@@ -17,14 +49,28 @@ switch (menuState)
 		var _buttonY = _guiHeight * 0.5;
 		_arrowSpacing = 75;
 		
+		//Draw Game Logo
+		surface_reset_target();
+		surface_set_target(surfaceUI);
+		draw_sprite(spr_Logo, 0, guiW * 0.5, guiH * 0.05);
+		
+		//Draw Middle Panel
+		var _panelOffset = _guiWidth * 0.07;
+		var _panelX = _buttonX - _panelOffset;
+		var _panelY = _buttonY - 50;
+		draw_sprite_stretched(spr_Panel, 0, _panelX * guiToUI, _panelY * guiToUI, (_buttonWidth + _panelOffset * 2) * guiToUI, (_guiHeight - _panelY)  * guiToUI);
+		surface_reset_target();
+		surface_set_target(surfaceText);
+		
 		//Name Selection
 		draw_set_halign(fa_center);
 		draw_set_valign(fa_bottom);
-		draw_text_transformed_colour(_guiWidth * 0.5, _buttonY, "Choose your Name", 1, 1, 0, c_white, c_white, c_white, c_white, 1);
+		draw_text_transformed_colour(_guiWidth * 0.5, _buttonY, "USERNAME", _headerScale, _headerScale, 0, c_white, c_white, c_white, c_white, 1);
 		
 		draw_set_halign(fa_center);
 		draw_set_valign(fa_middle);
 		var _name = id_get_name(selectedNameId);
+		draw_set_font(fnt_Menu2);
 		draw_text_transformed_colour(_guiWidth * 0.5, _buttonY + 20, _name, 1, 1, 0, c_white, c_white, c_white, c_white, 1);
 		
 		if arrow_button(_guiWidth * 0.5 + _arrowSpacing, _buttonY + 20, 0, true, 2)
@@ -33,15 +79,16 @@ switch (menuState)
 			selectedNameId --;
 		selectedNameId = wrap(selectedNameId, 0, NAME_NUMBER);
 		/*text_field(_buttonX, _buttonY, _buttonWidth, _buttonHeight, true, 0);*/
-		_buttonSpacing += _buttonHeight + 35;
+		_buttonSpacing += _buttonHeight + 10;
 		
 		//Join an Existing Server
 		draw_set_halign(fa_center);
 		draw_set_valign(fa_bottom);
-		draw_text_transformed_colour(_guiWidth * 0.5, _buttonY + _buttonSpacing * 1, "IP Adress", 1, 1, 0, c_white, c_white, c_white, c_white, 1);
-		text_field(_buttonX, _buttonY + _buttonSpacing, _buttonWidth, _buttonHeight, true, 1);
-		_buttonSpacing += _buttonHeight + 10;
-		if (button(_buttonX, _buttonY + _buttonSpacing, _buttonWidth, _buttonHeight, "Join Game", buttonType.menu, true))
+		draw_set_font(fnt_Menu1);
+		draw_text_transformed_colour(_guiWidth * 0.5, _buttonY + _buttonSpacing * 1, "IP ADRESS", _headerScale, _headerScale, 0, c_white, c_white, c_white, c_white, 1);
+		text_field(_buttonX, _buttonY + _buttonSpacing, _fieldWidth, _fieldHeight, true, 1);
+		_buttonSpacing += _buttonHeight + 0;
+		if (button(_buttonX, _buttonY + _buttonSpacing, _buttonWidth, _buttonHeight, "JOIN GAME", buttonType.menu, true, false))
 		{
 			instance_create_layer(0, 0, "Managers", obj_Client);
 			obj_GameManager.serverSide = false;
@@ -50,7 +97,7 @@ switch (menuState)
 		
 		//Create a Server
 		_buttonSpacing += _buttonHeight + 30;
-		if (button(_buttonX, _buttonY + _buttonSpacing, _buttonWidth, _buttonHeight, "Create Game", buttonType.menu, true))
+		if (button(_buttonX, _buttonY + _buttonSpacing, _buttonWidth, _buttonHeight, "CREATE GAME", buttonType.menu, true, false))
 		{
 			instance_create_layer(0, 0, "Managers", obj_Server);
 			obj_GameManager.serverSide = true;
@@ -69,19 +116,19 @@ switch (menuState)
 		}
 		
 		//Avatar Selection
-		var _selectionX = _guiWidth * 0.25;
+		var _selectionX = _guiWidth * 0.18;
 		var _selectionY = _guiHeight * 0.5;
 		var _selectionSpacing = 0;
-		var _arrowSpacing = 100;
+		var _arrowSpacing = 120;
 		
 		draw_set_halign(fa_center);
 		draw_set_valign(fa_middle);
-		draw_set_font(fntTextUI);
-		draw_text_transformed_colour(_selectionX, _selectionY, "Customize your Amogus",
-									 0.5, 0.5, 0, c_white, c_white, c_white, c_white, 1);
-		draw_set_font(fnt_Menu);
+		draw_set_font(fnt_Menu1);
+		draw_text_transformed_colour(_selectionX, _selectionY, "CUSTOMIZE YOUR AMOGUS",
+									 _headerScale, _headerScale, 0, c_white, c_white, c_white, c_white, 1);
 		_selectionSpacing += 35;
 		
+		draw_set_font(fnt_Menu2);
 		var _headName = id_get_head(selectedHeadId);	//head selection
 		draw_text_transformed_colour(_selectionX, _selectionY + _selectionSpacing, _headName,
 									 1, 1, 0, c_white, c_white, c_white, c_white, 1);
@@ -102,6 +149,14 @@ switch (menuState)
 						7, 7, 0, c_white, 1);
 		draw_sprite_ext(spr_Head, selectedHeadId, _selectionX + 10, _selectionY + _selectionSpacing + 25,
 						7, 7, 0, c_white, 1);
+		
+		surface_reset_target();
+		surface_set_target(surfaceUI);
+		var _cylinderWidth = sprite_get_width(spr_AmogusSelection);
+		var _cylinderY = _selectionY + _selectionSpacing + 40;
+		draw_sprite_stretched(spr_AmogusSelection, 0, _selectionX * guiToUI, _cylinderY * guiToUI, _cylinderWidth, (_guiHeight - _cylinderY) * guiToUI);	//draw not selected button
+		surface_reset_target();
+		surface_set_target(surfaceText);
 	}
 	break;
 	
@@ -111,10 +166,11 @@ switch (menuState)
 		draw_amogus_table(_guiWidth * 0.5, 100, false);
 		
 		//Draw Start the Game Button
+		_buttonWidth += 10;
 		var _buttonX = _guiWidth * 0.5 - _buttonWidth * 0.5;
 		var _buttonY = _guiHeight * 0.65;
 		var _isAbled = obj_GameManager.serverSide;
-		if (button(_buttonX, _buttonY, _buttonWidth, _buttonHeight, "Start the game", buttonType.menu, _isAbled))
+		if (button(_buttonX, _buttonY, _buttonWidth, _buttonHeight, "START THE GAME", buttonType.menu, _isAbled, false))
 		{
 			//Start the Game
 			var _transitionFunction = function() {obj_GameManager.inGame = true; room_goto(rm_Game);};
@@ -156,6 +212,7 @@ switch (menuState)
 			repeat (floor(current_time * 0.005) % 4)
 				_textDots += ".";
 			
+			draw_set_font(fnt_Menu2);
 			draw_text_transformed_colour(_guiWidth * 0.5 - string_width(_text) * 0.5, _buttonY + _buttonHeight + 15, _text + _textDots,
 										 1, 1, 0, c_white, c_white, c_white, c_white, 1);
 		}
@@ -234,6 +291,17 @@ switch (menuState)
 	break;
 }
 
+//Set Cursor Sprite
+if (buttonIsSelected)
+	window_set_cursor(cr_handpoint);
+else
+	window_set_cursor(cr_default);
+
+//Draw the Surfaces
+surface_reset_target();
+draw_surface_stretched(surfaceUI, 0, 0, _guiWidth, _guiHeight);
+draw_surface(surfaceText, 0, 0);
+
 //Draw a Warning
 if (warningProgress > 0)
 {
@@ -247,6 +315,13 @@ if (warningProgress > 0)
 		case warningType.meeting:
 		{
 			draw_sprite_ext(spr_Meeting, 0, _guiWidth * 0.5, _guiHeight * 0.5, 4 * _scale, 4 * _scale, 0, c_white, 1);
+			
+		}
+		break;
+		
+		case warningType.body:
+		{
+			draw_sprite_ext(spr_BodyReport, 0, _guiWidth * 0.5, _guiHeight * 0.5, 4 * _scale, 4 * _scale, 0, c_white, 1);
 			
 		}
 		break;

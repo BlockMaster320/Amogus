@@ -1008,7 +1008,7 @@
     "path": "folders/Fonts.yy",
   },
   "resourceVersion": "1.0",
-  "name": "fnt_Menu",
+  "name": "fntName",
   "tags": [],
   "resourceType": "GMFont",
 }

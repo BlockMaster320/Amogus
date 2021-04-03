@@ -1,6 +1,6 @@
 /// Function for drawing && interacting with a button.
 
-function button(_x, _y, _width, _height, _text, _type, _isAbled)
+function button(_x, _y, _width, _height, _text, _type, _isAbled, _small)
 {
 	//Set Return Value
 	var _returnValue = false;
@@ -11,37 +11,59 @@ function button(_x, _y, _width, _height, _text, _type, _isAbled)
 	var _x2 = _x + _width;
 	var _y2 = _y + _height;
 	
+	/*
 	var _colour1 = (_type == buttonType.menu) ? c_dkgrey : c_grey;
-	var _colour2 = (_type == buttonType.menu) ? c_grey : c_ltgrey;
+	var _colour2 = (_type == buttonType.menu) ? c_grey : c_ltgrey;*/
 	
-	//Check Wheter the Button is Clickable
+	//Draw the Button
+	draw_set_font(fnt_Menu1);
+	surface_reset_target();
+	surface_set_target(surfaceUI);
+	
+	var _sprite = (_small) ? spr_ButtonSmall : spr_Button;
+	
 	if (_isAbled)
 	{
 		//Check Wheter the Button is Selected
 		var _mouseWindowX = window_mouse_get_x();
 		var _mouseWindowY = window_mouse_get_y();
-		if (point_in_rectangle(_mouseWindowX, _mouseWindowY, _x1, _y1, _x2, _y2) && obj_Menu.transitionProgress < 0.5)
+		if (point_in_rectangle(_mouseWindowX, _mouseWindowY, _x1, _y1, _x2, _y2))
 		{
-			draw_rectangle_colour(_x1, _y1, _x2, _y2, _colour2, _colour2, _colour2, _colour2, false);	//draw selected button
-			if (mouse_check_button_pressed(mb_left))
-				_returnValue = true;
+			buttonIsSelected = true;
+			if (obj_Menu.transitionProgress < 0.5)
+			{
+				draw_sprite_stretched(_sprite, 1, _x1 * guiToUI, _y1 * guiToUI, _width * guiToUI, _height * guiToUI);	//draw selected button
+				/*draw_rectangle_colour(_x1, _y1, _x2, _y2, _colour2, _colour2, _colour2, _colour2, false);*/
+				if (mouse_check_button_pressed(mb_left))
+					_returnValue = true;
+			}
+			
+			if (obj_Menu.transitionProgress >= 0.5 || mouse_check_button(mb_left))
+			{
+				draw_sprite_stretched(_sprite, 2, _x1 * guiToUI, _y1 * guiToUI, _width * guiToUI, _height * guiToUI);	//draw not pressed button
+				_y1 += 5;
+				_y2 += 5;
+			}
 		}
 		else
-			draw_rectangle_colour(_x1, _y1, _x2, _y2, _colour1, _colour1, _colour1, _colour1, false);	//draw not selected button
+			draw_sprite_stretched(_sprite, 0, _x1 * guiToUI, _y1 * guiToUI, _width * guiToUI, _height * guiToUI);	//draw not selected button
+			/*draw_rectangle_colour(_x1, _y1, _x2, _y2, _colour1, _colour1, _colour1, _colour1, false);*/
 	}
 	else
-	{
-		draw_set_alpha(0.5);
-		draw_rectangle_colour(_x1, _y1, _x2, _y2, c_dkgray, c_dkgray, c_dkgray, c_dkgray, false);	//draw not abled button
-		draw_set_alpha(1);
-	}
+		draw_sprite_stretched_ext(_sprite, 0, _x1 * guiToUI, _y1 * guiToUI, _width * guiToUI, _height * guiToUI, c_dkgrey, 1);	//draw not abled button
+		/*draw_rectangle_colour(_x1, _y1, _x2, _y2, c_dkgray, c_dkgray, c_dkgray, c_dkgray, false);*/
+	
+	surface_reset_target();
+	surface_set_target(surfaceText);
 
 	//Draw the Button Text
+	var _offsetY = 0;
+	if (_small) _offsetY = 0;
 	var _textAlpha = (_isAbled) ? 1 : 0.5;
 	draw_set_halign(fa_center);
 	draw_set_valign(fa_middle);
 	var _textX = _x1 + (_x2 - _x1) * 0.5;
-	var _textY = _y1 + (_y2 - _y1) * 0.5;
+	var _textY = _y1 + (_y2 - _y1) * 0.5 - 10 + _offsetY;
 	draw_text_transformed_colour(_textX, _textY, _text, 1, 1, 0, c_white, c_white, c_white, c_white, _textAlpha);
 	draw_set_halign(fa_left);
 	draw_set_valign(fa_top);
@@ -93,6 +115,7 @@ function arrow_button(_x, _y, _direction, _isAbled, _scale)
 		//Check Wheter the Button is Selected
 		if (point_in_rectangle(_mouseWindowX, _mouseWindowY, _rectangleLeftX, _rectangleTopY, _rectangleRightX, _rectangleBottomY))
 		{
+			buttonIsSelected = true;
 			draw_sprite_ext(spr_Arrow, 1, _x, _y, _scaleX * _scale, _scale, _drawDirection, c_white, 1)	//draw selected arrow
 			if (mouse_check_button_pressed(mb_left))
 				_returnValue = true;
@@ -116,6 +139,9 @@ function text_field(_x, _y, _width, _height, _isAbled, _index)
 	var _y1 = _y;
 	var _x2 = _x + _width;
 	var _y2 = _y + _height;
+	
+	draw_set_font(fnt_Menu2);
+	surface_reset_target();
 	
 	//Check Wheter the Field is Clickable
 	if (_isAbled)
@@ -142,8 +168,14 @@ function text_field(_x, _y, _width, _height, _isAbled, _index)
 		}
 		
 		//Draw the Text Field
-		draw_rectangle_colour(_x1, _y1, _x2, _y2, c_dkgray, c_dkgray, c_dkgray, c_dkgray, false);	//the text field box
+		surface_set_target(surfaceUI);
+		draw_sprite_stretched(spr_TextField, 0, _x1 * guiToUI, _y1 * guiToUI, _width * guiToUI, _height * guiToUI);	//draw not selected button
+		surface_reset_target();
+		surface_set_target(surfaceText);
+		/*draw_rectangle_colour(_x1, _y1, _x2, _y2, c_dkgray, c_dkgray, c_dkgray, c_dkgray, false);*/	//the text field box
 		var _textY = _y1 + (_y2 - _y1) * 0.5;	//set the text Y origin
+		_x1 += 10;
+		_x2 -= 10;
 		
 		//Update the String if the Text Field is Active
 		var _string = (textField == _index) ? textFieldArray[_index] : textFieldPassiveArray[_index];
@@ -215,7 +247,7 @@ function text_field(_x, _y, _width, _height, _isAbled, _index)
 			if (keyboard_check_pressed(vk_enter))
 				text_field_deactivate(_index, _x2 - _x1);
 		}
-		else _textAlpha = 0.5;
+		else _textAlpha = 0.9;
 		
 		//Draw the Text
 		draw_set_halign(fa_left);
@@ -223,12 +255,13 @@ function text_field(_x, _y, _width, _height, _isAbled, _index)
 		draw_text_transformed_colour(_x1 + 5, _textY, _stringPart, 1, 1, 0, c_white, c_white, c_white, c_white, _textAlpha);	//draw the string
 		draw_set_valign(fa_top);
 	}
+	/*
 	else
 	{
 		draw_set_alpha(0.5);
 		draw_rectangle_colour(_x1, _y1, _x2, _y2, c_dkgray, c_dkgray, c_dkgray, c_dkgray, false);	//draw not abled text field box
 		draw_set_alpha(1);
-	}
+	}*/
 }
 
 /// Function for deactivating a text field.

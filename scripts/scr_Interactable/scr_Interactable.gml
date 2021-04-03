@@ -36,5 +36,13 @@ function Interactable(_type) constructor
 			//show_debug_message(wirePositions)
 		}
 		break;
+		
+		case interactable.body:
+		{
+			clientId = noone;
+			headId = 0;
+			bodyId = 0;
+		}
+		break;
 	}
 }

@@ -54,7 +54,7 @@ if (obj_GameManager.inGame)
 	#endregion
 	
 	//Search for Interactables
-	if (interactableObject == noone /*&& !isImpostor*/)
+	if (interactableObject == noone && isAlive /*&& !isImpostor*/)
 	{
 		interactableInRange = noone;
 		var nearestInteractable = instance_nearest(x,y,obj_Interactable)
