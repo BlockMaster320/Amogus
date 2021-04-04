@@ -49,3 +49,12 @@ thrownOutAmogus = noone;
 spawnX = 550;
 spawnY = 150;
 winnerSide = noone;
+
+//Sound
+soundDelay = -1
+soundID = noone
+menuStatePrev = noone
+meetingSoundPlayed = false
+caller = noone
+audio_play_sound(sndAmbience,0,1)
+audio_sound_gain(sndAmbience,0,0)

@@ -35,7 +35,10 @@ function button(_x, _y, _width, _height, _text, _type, _isAbled, _small)
 				draw_sprite_stretched(_sprite, 1, _x1 * guiToUI, _y1 * guiToUI, _width * guiToUI, _height * guiToUI);	//draw selected button
 				/*draw_rectangle_colour(_x1, _y1, _x2, _y2, _colour2, _colour2, _colour2, _colour2, false);*/
 				if (mouse_check_button_pressed(mb_left))
+				{
+					audio_play_sound(sndButton,0,0)
 					_returnValue = true;
+				}
 			}
 			
 			if (obj_Menu.transitionProgress >= 0.5 || mouse_check_button(mb_left))
@@ -118,7 +121,10 @@ function arrow_button(_x, _y, _direction, _isAbled, _scale)
 			buttonIsSelected = true;
 			draw_sprite_ext(spr_Arrow, 1, _x, _y, _scaleX * _scale, _scale, _drawDirection, c_white, 1)	//draw selected arrow
 			if (mouse_check_button_pressed(mb_left))
+			{
 				_returnValue = true;
+				audio_play_sound(sndSucces,0,0)
+			}
 		}
 		else
 			draw_sprite_ext(spr_Arrow, 0, _x, _y, _scaleX * _scale, _scale, _drawDirection, c_white, 1)	//draw not selected arrow

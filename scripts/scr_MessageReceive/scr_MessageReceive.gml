@@ -30,7 +30,7 @@ function message_receive_server(_socket, _buffer)
 		case messages.gameMeeting:
 		{
 			//Send a Message to Start a Meeting to All Clients
-			var _clientId = buffer_read(_buffer, buffer_u8);	//amogus who started the meetin - can be use later
+			var _clientId = buffer_read(_buffer, buffer_u8);	//amogus who started the meeting - used later
 			var _isReport = buffer_read(_buffer, buffer_u8);
 			message_game_meeting(serverBuffer, _clientId, _isReport);
 			with (obj_AmogusClient)
@@ -39,6 +39,7 @@ function message_receive_server(_socket, _buffer)
 			if (_isReport) warning(warningType.body);
 			else warning(warningType.meeting);
 			transition(menu.meeting, noone, true);
+			obj_Menu.caller = clientIdMap[? _clientId].nameId
 		}
 		break;
 		
@@ -81,6 +82,13 @@ function message_receive_server(_socket, _buffer)
 				interactableStruct.headId = _amogus.headId;
 				interactableStruct.bodyId = _amogus.bodyId;
 			}
+			
+			var impostorName
+			with (obj_AmogusClient)
+			{
+				if (isImpostor) impostorName = nameId
+			}
+			if (_amogus.clientId == oAmogusLocal.clientId) Died(impostorName)
 		}
 		break;
 		
@@ -143,12 +151,14 @@ function message_receive_client(_socket, _buffer)
 		
 		case messages.gameMeeting:	//start a meeting
 		{
-			var _clientId = buffer_read(_buffer, buffer_u8);	//amogus who started the meeting - can be use later
+			var _clientId = buffer_read(_buffer, buffer_u8);	//amogus who started the meeting - used later
 			var _isReport = buffer_read(_buffer, buffer_u8);
 			
 			if (_isReport) warning(warningType.body);
 			else warning(warningType.meeting);
 			transition(menu.meeting, noone, true);
+			
+			obj_Menu.caller = clientIdMap[? _clientId].nameId
 		}
 		break;
 		
@@ -193,6 +203,15 @@ function message_receive_client(_socket, _buffer)
 				interactableStruct.headId = _amogus.headId;
 				interactableStruct.bodyId = _amogus.bodyId;
 			}
+			
+			var impostorName
+			with (obj_AmogusClient)
+			{
+				if (isImpostor) impostorName = nameId
+			}
+			//show_debug_message(amogusclient)
+			//if (_amogus == oAmogusLocal) Died(impostorName)
+			if (_amogus.clientId == oAmogusLocal.clientId) Died(impostorName)
 		}
 		break;
 		
