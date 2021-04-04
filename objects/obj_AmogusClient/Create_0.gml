@@ -9,6 +9,8 @@ isImpostor = false;
 headId = 0;
 bodyId = 0;
 
+playerAlpha = 1;
+
 //Animation
 sideFacing = 1;	//-1 - left, 1 - right
 animationProgress = 0;

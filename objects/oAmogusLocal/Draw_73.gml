@@ -28,8 +28,11 @@ if (obj_GameManager.inGame)
 			var _jumpOffset = 0;
 			if (_frame == 1) _jumpOffset = 5;
 			else if (_frame == 2) _jumpOffset = 3;
-			draw_sprite_ext(spr_Body, bodyId * 3 + _frame, x - tX, y - tY - _jumpOffset, sideFacing, 1, 0, c_white, 1);
-			draw_sprite_ext(spr_Head, headId, x - tX, y - tY - _jumpOffset, sideFacing, 1, 0, c_white, 1);
+			if (playerAlpha > 0)
+			{
+				draw_sprite_ext(spr_Body, bodyId * 3 + _frame, x - tX, y - tY - _jumpOffset, sideFacing, 1, 0, c_white, playerAlpha);
+				draw_sprite_ext(spr_Head, headId, x - tX, y - tY - _jumpOffset, sideFacing, 1, 0, c_white, playerAlpha);
+			}
 		}
 	}
 	

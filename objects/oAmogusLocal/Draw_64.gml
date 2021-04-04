@@ -21,7 +21,7 @@ surface_set_target(textSurf)
 	if (camState = CAMERA.followPlayer) gpu_set_blendmode_ext(bm_dest_alpha, bm_inv_src_alpha)
 	with (obj_AmogusClient)
 	{
-		if (isAlive)
+		if (isAlive && playerAlpha > 0)
 		{
 			var offX = 10
 			var offY = 28
@@ -63,7 +63,7 @@ if (interactableObject != noone && isAlive)
 				with (obj_AmogusClient)
 					network_send_packet(clientSocket, _serverBuffer, buffer_tell(_serverBuffer));
 				
-				warning(warningType.meeting);
+				warning(warningType.meeting, 1);
 				transition(menu.meeting, noone, true);
 			}
 			
@@ -90,7 +90,7 @@ if (interactableObject != noone && isAlive)
 				with (obj_AmogusClient)
 					network_send_packet(clientSocket, _serverBuffer, buffer_tell(_serverBuffer));
 				
-				warning(warningType.body);
+				warning(warningType.body, 1);
 				transition(menu.meeting, noone, true);
 			}
 			
@@ -139,27 +139,29 @@ if (interactableObject != noone && isAlive)
 					if (LMBpress and point_in_rectangle(mouseX,mouseY,xx - offset,yy - offset,xx + 20 * windowToGui + offset,yy + 20 * windowToGui + offset))
 					{
 						/*interactableStruct.switchPositions[i,j][2] = !interactableStruct.switchPositions[i,j][2]*/
+						//Send Message to Change the Ligth Switches
 						if (obj_GameManager.serverSide)
 						{
 							var _serverBuffer = obj_Server.serverBuffer;
-							message_amogus_create()
+							message_lights(_serverBuffer, i, j);
 							with (obj_AmogusClient)
-								network_send_packet(obj_Server.server, _serverBuffer, buffer_tell(_serverBuffer));
+								network_send_packet(clientSocket, _serverBuffer, buffer_tell(_serverBuffer));
 							
 							with (obj_Interactable)
 							{
 								if (type == interactable.lights)
-									interactableStruct.switchPositions[i,j] = !interactableStruct.switchPositions[i,j]
+									interactableStruct.switchPositions[i, j] = !interactableStruct.switchPositions[i,j]
 							}
 						}
 						else
 						{
-							var _clientBuffer = obj_Server.serverBuffer;
-							message_amogus_create()
+							var _clientBuffer = obj_Client.clientBuffer;
+							message_lights(_clientBuffer, i, j);
 							with (obj_AmogusClient)
-								network_send_packet(obj_Server.server, _serverBuffer, buffer_tell(_serverBuffer));
+								network_send_packet(clientSocket, _clientBuffer, buffer_tell(_clientBuffer));
 						}
 					}
+					
 					draw_sprite_stretched(sSwitch,pos,xx,yy,20 * windowToGui,20 * windowToGui)
 					if (pos = true) offSwitches++
 				}
@@ -352,6 +354,21 @@ if (interactableObject != noone && isAlive)
 			
 			if (exitUI)
 			{
+				//Send Message to Change Amogus's Alpha
+				if (obj_GameManager.serverSide)
+				{
+					var _serverBuffer = obj_Server.serverBuffer;
+					message_amogus_alpha(_serverBuffer, clientId, 1);
+					with (obj_AmogusClient)
+						network_send_packet(clientSocket, _serverBuffer, buffer_tell(_serverBuffer));
+				}
+				else
+				{
+					var _clientBuffer = obj_Client.clientBuffer;
+					message_amogus_alpha(_clientBuffer, clientId, 1);
+					network_send_packet(obj_Client.client, _clientBuffer, buffer_tell(_clientBuffer));
+							
+				}
 				playerAlpha = 1
 				ExitMenu(false)
 			}
@@ -529,6 +546,8 @@ if (obj_GameManager.inGame)
 								interactableStruct.headId = _amogusNearest.headId;
 								interactableStruct.bodyId = _amogusNearest.bodyId;
 							}
+							
+							check_game_end();	//check for game end
 						}
 						
 						else
