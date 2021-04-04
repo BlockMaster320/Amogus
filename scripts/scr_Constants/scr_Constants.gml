@@ -8,6 +8,7 @@ enum messages	//values representing types of network messages
 	gameMeeting,
 	vote,
 	throwOut,
+	kill,
 	position
 }
 #macro POSITION_UPDATE 3
@@ -42,11 +43,18 @@ enum warningType
 //Amogus
 #macro TL_SIZE 16
 #macro windowToGui window_get_width() / guiW
+#macro guiToWindow guiW / window_get_width()
+#macro KILL_RANGE 50
 
 //Interactable
 enum interactable
 {
 	emergencyButton,
 	camera,
-	wires
+	lights,
+	wires,
+	vent,
+	shooter,
+	sliderCatch,
+	body
 }

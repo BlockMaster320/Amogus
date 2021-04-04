@@ -54,7 +54,7 @@ if (obj_GameManager.inGame)
 	#endregion
 	
 	//Search for Interactables
-	if (interactableObject == noone /*&& !isImpostor*/)
+	if (interactableObject == noone && isAlive && !isImpostor)
 	{
 		interactableInRange = noone;
 		var nearestInteractable = instance_nearest(x,y,obj_Interactable)
@@ -83,6 +83,10 @@ if (obj_GameManager.inGame)
 						surface_set_target(wiresSurf)
 							draw_clear_alpha(c_black,0)
 						surface_reset_target()
+						break
+						
+					case interactable.vent:
+						playerAlpha = 0
 						break
 				}
 			}

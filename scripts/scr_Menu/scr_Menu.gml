@@ -2,7 +2,9 @@
 function draw_amogus_table(_x, _y, _meeting)
 {
 	//Set Draw Properties
-	draw_set_font(fnt_Menu);
+	var _guiWidth = display_get_gui_width();
+	var _guiHeight = display_get_gui_height();
+	draw_set_font(fnt_Menu2);
 	draw_set_halign(fa_left);
 	draw_set_valign(fa_top);
 	var _textHeight = string_height("Ap");	//approximation of average text height
@@ -12,7 +14,17 @@ function draw_amogus_table(_x, _y, _meeting)
 	var _infoHeight = 120;
 	var _infoSpacingX = 30;
 	var _infoSpacingY = 20;
-	var _textPadding = 10;
+	var _textPadding = 20;
+	
+	//Draw Middle Panel
+	var _panelOffset = _guiWidth * 0.07;
+	var _panelX1 = _x - _infoSpacingX - _infoWidth - _panelOffset;
+	var _panelY1 = _y - 50;
+	var _panelWidth = _infoSpacingX * 2 + _infoWidth * 2 + _panelOffset * 2;
+	var _panelHeight = _guiHeight - _panelY1;
+	surface_reset_target();
+	surface_set_target(surfaceUI);
+	draw_sprite_stretched(spr_Panel, 0, _panelX1 * guiToUI, _panelY1 * guiToUI, _panelWidth * guiToUI, _panelHeight  * guiToUI);
 	
 	var _everyoneVoted = true;
 	
@@ -24,12 +36,27 @@ function draw_amogus_table(_x, _y, _meeting)
 		var _infoX = _x + _infoSpacingX - (_infoSpacingX * 2 + _infoWidth) * (_i % 2 == 0);
 		var _infoY = _y + (_infoHeight + _infoSpacingY) * (_i div 2);
 		
-		draw_rectangle_colour(_infoX, _infoY, _infoX + _infoWidth, _infoY + _infoHeight,
-								c_dkgrey, c_dkgrey, c_dkgrey, c_dkgrey, false);
+		
+		surface_reset_target();
+		surface_set_target(surfaceUI);
+		draw_sprite_stretched(spr_TextField, 0, _infoX * guiToUI, _infoY * guiToUI, _infoWidth * guiToUI, _infoHeight * guiToUI)
+		/*draw_rectangle_colour(_infoX, _infoY, _infoX + _infoWidth, _infoY + _infoHeight,
+								c_dkgrey, c_dkgrey, c_dkgrey, c_dkgrey, false);*/
 		
 		var _name = id_get_name(_amogus.nameId);
-		draw_text_transformed_colour(_infoX + _textPadding, _infoY + _textPadding, _name,
-										1, 1, 0, c_white, c_white, c_white, c_white, 1);
+		
+		surface_reset_target();
+		surface_set_target(surfaceText);
+		draw_set_halign(fa_right);
+		draw_set_font(fnt_Menu2);
+		/*
+		var _spriteScale = 6;
+		var _guiToSprite = (sprite_get_width(spr_Body) * _spriteScale) / guiToUI;*/
+		
+		draw_text_transformed_colour(_infoX + _infoWidth - _textPadding, _infoY + _textPadding, _name,
+									 1, 1, 0, c_white, c_white, c_white, c_white, 1);
+		draw_sprite_part_ext(spr_Body, _amogus.bodyId * 3, 4, 0, 500, 21, _infoX + 7, _infoY - 20, 6, 6, c_white, 1);
+		draw_sprite_ext(spr_Head, _amogus.headId, _infoX + 62, _infoY + 78, 6, 6, 0, c_white, 1);
 		
 		//Emergeny Meeting Voting
 		if (_meeting)
@@ -38,8 +65,8 @@ function draw_amogus_table(_x, _y, _meeting)
 				_everyoneVoted = false;
 			
 			//Set Voting Button Properties
-			var _buttonWidth = 75;
-			var _buttonHeight = 45;
+			var _buttonWidth = 80;
+			var _buttonHeight = 50;
 			var _buttonX = _infoX + _infoWidth - _buttonWidth - _textPadding;
 			var _buttonY = _infoY + _infoHeight - _buttonHeight - _textPadding;
 			
@@ -47,7 +74,7 @@ function draw_amogus_table(_x, _y, _meeting)
 			if (_isAlive)
 			{
 				var _isAbled = oAmogusLocal.isAlive;
-				if (button(_buttonX, _buttonY, _buttonWidth, _buttonHeight, "Vote", buttonType.vote, _isAbled)
+				if (button(_buttonX, _buttonY, _buttonWidth, _buttonHeight, "SUS", buttonType.vote, _isAbled, true)
 					&& !oAmogusLocal.hasVoted)
 				{
 					var _voterId =  oAmogusLocal.clientId;
@@ -76,7 +103,8 @@ function draw_amogus_table(_x, _y, _meeting)
 			
 				if (_amogus.hasVoted)
 				{
-					draw_text_transformed_colour(_infoX + _textPadding, _infoY + _textPadding * 2 + _textHeight, "VOTED",
+					draw_set_halign(fa_center);
+					draw_text_transformed_colour(_infoX + _infoWidth * 0.5, _infoY + _textPadding * 2 + _textHeight, "VOTED",
 												 1, 1, 0, c_red, c_red, c_red, c_red, 1);
 				}
 			}
@@ -102,18 +130,18 @@ function draw_amogus_table(_x, _y, _meeting)
 		}
 		
 		if (!_sameNumberOfVotes)	//don't throw out anyone when there're more amoguses with the same number of votes
-		 {
+		{
 			thrownOutAmogus = _amogusGone;
 			thrownOutAmogus.isAlive = false;
-		 }
-		 transition(menu.throwOut, noone, false);
+		}
+		transition(menu.throwOut, noone, false);
 		 
-		 //Send Message to Throw Out Voted Amogus to All Amoguses
-		 var _serverBuffer = obj_Server.serverBuffer;
-		 var _thrownOutAmogusId = (thrownOutAmogus == noone) ? noone : thrownOutAmogus.clientId;
-		 message_throwOut(_serverBuffer, _thrownOutAmogusId);
-		 with (obj_AmogusClient)
-			network_send_packet(clientSocket, _serverBuffer, buffer_tell(_serverBuffer));
+		//Send Message to Throw Out Voted Amogus to All Amoguses
+		var _serverBuffer = obj_Server.serverBuffer;
+		var _thrownOutAmogusId = (thrownOutAmogus == noone) ? noone : thrownOutAmogus.clientId;
+		message_throwOut(_serverBuffer, _thrownOutAmogusId);
+		with (obj_AmogusClient)
+		network_send_packet(clientSocket, _serverBuffer, buffer_tell(_serverBuffer));
 	}
 }
 
@@ -234,11 +262,13 @@ function game_setup()
 }
 
 
-function ExitMenu(taskCompleted_)
+function ExitMenu(_taskCompleted)
 {
+	///@arg deleteMemory
 	inMenu = false
-	if (taskCompleted_)
+	if (_taskCompleted)
 	{
+		
 		var type = interactableObject.interactableStruct.type
 		interactableObject.interactableStruct = noone
 		interactableObject.interactableStruct = new Interactable(type)
@@ -247,4 +277,10 @@ function ExitMenu(taskCompleted_)
 	interactableObject.amogus = noone;
 	interactableObject = noone
 	interactableStruct = noone;
+}
+
+function ResetCameraPos()
+{
+	camX = clamp(x - (guiW/2),0,rW - guiW)
+	camY = clamp(y - (guiH/2),0,rH - guiH)
 }
