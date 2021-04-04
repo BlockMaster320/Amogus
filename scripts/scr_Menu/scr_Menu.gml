@@ -168,12 +168,13 @@ function transition(transitionMenuState, _transitionFunction, _closing)
 }
 
 /// Function triggering a warning.
-function warning(_warningType)
+function warning(_warningType, _warningSpeed)
 {
 	with (obj_Menu)
 	{
 		warningType = _warningType;
 		warningProgress = 1;
+		warningSpeed = _warningSpeed;
 	}
 }
 
@@ -186,7 +187,7 @@ function get_menuState_timer(_menuState)
 			return 30 * 60;
 			break;
 		case menu.throwOut:
-			return 4 * 60;
+			return 6 * 60;
 			break;
 		default:
 			return 0;
@@ -212,7 +213,7 @@ function check_game_end()
 	}
 	
 	var _winnerSide = noone;
-	if (_impostorCount == 0)
+	if (_impostorCount == 0 || obj_Menu.taskProgress == obj_Menu.tasksNeeded)
 		_winnerSide = 0;
 	else if (_crewmateCount <= _impostorCount)
 		_winnerSide = 1;
@@ -279,6 +280,23 @@ function ExitMenu(_taskCompleted)
 		interactableObject.interactableStruct = noone
 		interactableObject.interactableStruct = new Interactable(type)
 		taskCompleted = false
+		
+		if (obj_GameManager.serverSide)
+		{
+			obj_Menu.taskProgress ++;
+			var _serverBuffer = obj_Server.serverBuffer;
+			message_task_progress(_serverBuffer, 1);
+			with (obj_AmogusClient)
+				network_send_packet(clientSocket, _serverBuffer, buffer_tell(_serverBuffer));
+			
+			check_game_end();	//check for game end
+		}
+		else
+		{
+			var _clientBuffer = obj_Client.clientBuffer;
+			message_task_progress(_clientBuffer, 1);
+			network_send_packet(obj_Client.client, _clientBuffer, buffer_tell(_clientBuffer));
+		}
 	}
 	else audio_play_sound(sndSucces,0,0)
 	interactableObject.amogus = noone;

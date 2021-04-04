@@ -36,8 +36,8 @@ function message_receive_server(_socket, _buffer)
 			with (obj_AmogusClient)
 				network_send_packet(clientSocket, other.serverBuffer, buffer_tell(other.serverBuffer));
 			
-			if (_isReport) warning(warningType.body);
-			else warning(warningType.meeting);
+			if (_isReport) warning(warningType.body, 1);
+			else warning(warningType.meeting, 1);
 			transition(menu.meeting, noone, true);
 			obj_Menu.caller = clientIdMap[? _clientId].nameId
 		}
@@ -83,12 +83,73 @@ function message_receive_server(_socket, _buffer)
 				interactableStruct.bodyId = _amogus.bodyId;
 			}
 			
+			check_game_end();	//check for game end
+			
 			var impostorName
 			with (obj_AmogusClient)
 			{
 				if (isImpostor) impostorName = nameId
 			}
 			if (_amogus.clientId == oAmogusLocal.clientId) Died(impostorName)
+		}
+		break;
+		
+		case messages.amogusAlpha:	//change amogus's alpha
+		{
+			var _clientId = buffer_read(_buffer, buffer_u8);
+			var _alpha = buffer_read(_buffer, buffer_u8);
+			
+			message_amogus_alpha(serverBuffer, _clientId, _alpha);
+			with (obj_AmogusClient)
+				network_send_packet(clientSocket, other.serverBuffer, buffer_tell(other.serverBuffer));
+			
+			var _amogusClient = clientIdMap[? _clientId];
+			_amogusClient.playerAlpha = _alpha;
+		}
+		break;
+		
+		case messages.taskProgress:	//change the taks progress
+		{
+			var _taskProgress = buffer_read(_buffer, buffer_s8);
+			obj_Menu.taskProgress += _taskProgress;
+			
+			message_task_progress(serverBuffer, _taskProgress);
+			with (obj_AmogusClient)
+				network_send_packet(clientSocket, other.serverBuffer, buffer_tell(other.serverBuffer));
+			
+			check_game_end();	//check for game end
+		}
+		break;
+		
+		case messages.lights:	//change the light switches
+		{
+			var _i = buffer_read(_buffer, buffer_u8);
+			var _j = buffer_read(_buffer, buffer_u8);
+			
+			message_lights(serverBuffer, _i, _j);
+			with (obj_AmogusClient)
+				network_send_packet(clientSocket, other.serverBuffer, buffer_tell(other.serverBuffer));
+			
+			var _lightsOn = true;
+			with (obj_Interactable)
+			{
+				if (type == interactable.lights)
+				{
+					var rowCount = interactableStruct.rowCount;
+					var collCount = interactableStruct.collCount;
+					interactableStruct.switchPositions[_i, _j] = !interactableStruct.switchPositions[_i, _j];
+					for (var i = 0; i < rowCount; i++)
+					{
+						for (var j = 0; j < collCount; j++)
+						{
+							if (interactableStruct.switchPositions[i, j])
+								_lightsOn = false;
+						}
+					}
+					show_debug_message("\n");
+				}
+			}
+			global.lightsOn = _lightsOn;
 		}
 		break;
 		
@@ -154,8 +215,8 @@ function message_receive_client(_socket, _buffer)
 			var _clientId = buffer_read(_buffer, buffer_u8);	//amogus who started the meeting - used later
 			var _isReport = buffer_read(_buffer, buffer_u8);
 			
-			if (_isReport) warning(warningType.body);
-			else warning(warningType.meeting);
+			if (_isReport) warning(warningType.body, 1);
+			else warning(warningType.meeting, 1);
 			transition(menu.meeting, noone, true);
 			
 			obj_Menu.caller = clientIdMap[? _clientId].nameId
@@ -215,6 +276,33 @@ function message_receive_client(_socket, _buffer)
 		}
 		break;
 		
+		case messages.lights:	//change the light switches
+		{
+			var _i = buffer_read(_buffer, buffer_u8);
+			var _j = buffer_read(_buffer, buffer_u8);
+			
+			var _lightsOn = true;
+			with (obj_Interactable)
+			{
+				if (type == interactable.lights)
+				{
+					var rowCount = interactableStruct.rowCount;
+					var collCount = interactableStruct.collCount;
+					interactableStruct.switchPositions[_i, _j] = !interactableStruct.switchPositions[_i, _j];
+					for (var i = 0; i < rowCount; i++)
+					{
+						for (var j = 0; j < collCount; j++)
+						{
+							if (interactableStruct.switchPositions[i, j])
+								_lightsOn = false;
+						}
+					}
+				}
+			}
+			global.lightsOn = _lightsOn;
+		}
+		break;
+		
 		case messages.amogusCreate:	//create amogusClient
 		{
 			var _clientId = buffer_read(_buffer, buffer_u8);
@@ -237,6 +325,23 @@ function message_receive_client(_socket, _buffer)
 		}
 		break;
 		
+		case messages.amogusAlpha:	//change amogus's alpha
+		{
+			var _clientId = buffer_read(_buffer, buffer_u8);
+			var _alpha = buffer_read(_buffer, buffer_u8);
+			
+			var _amogusClient = clientIdMap[? _clientId];
+			_amogusClient.playerAlpha = _alpha;
+		}
+		break;
+		
+		case messages.taskProgress:	//change the taks progress
+		{
+			var _taskProgress = buffer_read(_buffer, buffer_s8);
+			obj_Menu.taskProgress += _taskProgress;
+		}
+		break;
+		
 		case messages.gameStart:	//start the game
 		{
 			var _impostorId = buffer_read(_buffer, buffer_s8);
@@ -255,6 +360,7 @@ function message_receive_client(_socket, _buffer)
 			else
 				transition(noone, noone, true);
 			
+			obj_Menu.tasksNeeded = ds_map_size(clientIdMap) * TASKS_PER_AMOGUS;
 			game_setup();
 				
 		}
