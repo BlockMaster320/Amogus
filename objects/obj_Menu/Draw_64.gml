@@ -238,7 +238,7 @@ switch (menuState)
 		var _barHeight = _guiHeight * 0.13;
 		var _barX = _guiWidth * 0.5 - _barWidth;
 		var _barY = _guiHeight * 0.05;
-		var _barProgress = 1 / tasksNeeded;
+		var _barProgress = taskProgress / tasksNeeded;
 		draw_sprite_stretched(spr_Bar, 0, _barX * guiToUI, _barY * guiToUI, (_barWidth * 2) * guiToUI, _barHeight * guiToUI);
 		draw_sprite_stretched(spr_BarProgress, 0, _barX * guiToUI + 3, _barY * guiToUI + 3, (_barWidth * 2 * _barProgress) * guiToUI - 6, _barHeight * guiToUI - 8);
 	}
