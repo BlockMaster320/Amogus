@@ -64,6 +64,14 @@ function message_kill(_buffer, _clientId, _interactableId)
 	buffer_write(_buffer, buffer_u8, _interactableId);
 }
 
+function message_lights(_buffer, _clientId, _interactableId)
+{
+	buffer_seek(_buffer, buffer_seek_start, 0);
+	buffer_write(_buffer, buffer_u8, messages.kill);
+	buffer_write(_buffer, buffer_u8, _clientId);
+	buffer_write(_buffer, buffer_u8, _interactableId);
+}
+
 /*
 function message_interactable_state(_buffer, _interactableId, _state)
 {

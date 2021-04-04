@@ -32,6 +32,17 @@ if (obj_GameManager.inGame)
 			draw_sprite_ext(spr_Head, headId, x - tX, y - tY - _jumpOffset, sideFacing, 1, 0, c_white, 1);
 		}
 	}
+	
+	with (obj_Interactable)
+	{
+		if (type == interactable.body)
+		{
+			/*draw_sprite(sAmogus, 0, x - sprite_get_width(sAmogus) * 0.5, y - sprite_get_width(sAmogus) * 0.5);*/
+			draw_sprite_ext(spr_Blood, 0, x + 11 - tX, y + 7 - tY, 1, 1, 0, c_white, 1); 
+			draw_sprite_ext(spr_Body, interactableStruct.bodyId * 3, x - tX, y - tY, 1, 1, - 90, c_white, 1); 
+			draw_sprite_ext(spr_Head, interactableStruct.headId, x - tX, y - tY, 1, 1, - 90, c_white, 1);
+		}
+	}
 
 	gpu_set_blendmode(bm_normal)
 	surface_reset_target()
@@ -57,8 +68,8 @@ if (obj_GameManager.inGame)
 	if (_frame == 1) _jumpOffset = 5;
 	else if (_frame == 2) _jumpOffset = 3;
 	var _alpha = (isAlive) ? 1 : 0.5;
-	draw_sprite_ext(spr_Body, bodyId * 3 + _frame, x, y - _jumpOffset, sideFacing, 1, 0, c_white, _alpha);
-	draw_sprite_ext(spr_Head, headId, x, y - _jumpOffset, sideFacing, 1, 0, c_white, _alpha);
+	draw_sprite_ext(spr_Body, bodyId * 3 + _frame, x, y - _jumpOffset, sideFacing, 1, 0, c_white, _alpha * playerAlpha);
+	draw_sprite_ext(spr_Head, headId, x, y - _jumpOffset, sideFacing, 1, 0, c_white, _alpha * playerAlpha);
 	
 	if (camState = CAMERA.followPlayer)
 	{
@@ -68,7 +79,8 @@ if (obj_GameManager.inGame)
 			//draw_surface(lightSurf,targetX+off,targetY+off)
 		surface_reset_target()
 		gpu_set_blendmode(bm_subtract)
-		draw_set_alpha(.05)
+		if (global.lightsOn) draw_set_alpha(.05)
+		else draw_set_alpha(.5)
 		draw_surface(darkenSurf,targetX - off,targetY - off)
 		draw_set_alpha(1)
 		gpu_set_blendmode(bm_normal)

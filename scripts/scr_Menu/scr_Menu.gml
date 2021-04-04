@@ -262,11 +262,13 @@ function game_setup()
 }
 
 
-function ExitMenu(taskCompleted_)
+function ExitMenu(_taskCompleted)
 {
+	///@arg deleteMemory
 	inMenu = false
-	if (taskCompleted_)
+	if (_taskCompleted)
 	{
+		
 		var type = interactableObject.interactableStruct.type
 		interactableObject.interactableStruct = noone
 		interactableObject.interactableStruct = new Interactable(type)
@@ -275,4 +277,10 @@ function ExitMenu(taskCompleted_)
 	interactableObject.amogus = noone;
 	interactableObject = noone
 	interactableStruct = noone;
+}
+
+function ResetCameraPos()
+{
+	camX = clamp(x - (guiW/2),0,rW - guiW)
+	camY = clamp(y - (guiH/2),0,rH - guiH)
 }
