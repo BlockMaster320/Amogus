@@ -3,7 +3,7 @@ if (obj_GameManager.inGame)
 	surface_set_target(lightSurf)
 	//draw_clear()
 	//gpu_set_blendmode_ext(bm_dest_color, bm_inv_src_alpha)
-	if (camState = CAMERA.followPlayer) gpu_set_blendmode_ext(bm_dest_alpha,bm_inv_src_alpha)
+	if (camState = CAMERA.followPlayer and isAlive) gpu_set_blendmode_ext(bm_dest_alpha,bm_inv_src_alpha)
 	var tX = targetX - off
 	var tY = targetY - off
 	with (obj_AmogusClient)
@@ -74,7 +74,7 @@ if (obj_GameManager.inGame)
 	draw_sprite_ext(spr_Body, bodyId * 3 + _frame, x, y - _jumpOffset, sideFacing, 1, 0, c_white, _alpha * playerAlpha);
 	draw_sprite_ext(spr_Head, headId, x, y - _jumpOffset, sideFacing, 1, 0, c_white, _alpha * playerAlpha);
 	
-	if (camState = CAMERA.followPlayer)
+	if (camState = CAMERA.followPlayer and isAlive)
 	{
 		surface_set_target(darkenSurf)
 			draw_clear(c_gray)

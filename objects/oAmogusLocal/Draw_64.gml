@@ -18,7 +18,7 @@ surface_set_target(textSurf)
 	var wH = windowH
 	var offGui = off * windowToGui
 	draw_surface_stretched_ext(lightSurf,(targetX - camX) * windowToGui - offGui,(targetY - camY) * windowToGui - offGui,windowW + offGui * 2,windowH + offGui * 2,c_black,1)
-	if (camState = CAMERA.followPlayer) gpu_set_blendmode_ext(bm_dest_alpha, bm_inv_src_alpha)
+	if (camState = CAMERA.followPlayer and isAlive) gpu_set_blendmode_ext(bm_dest_alpha, bm_inv_src_alpha)
 	with (obj_AmogusClient)
 	{
 		if (isAlive && playerAlpha > 0)
@@ -51,10 +51,14 @@ var mouseY = device_mouse_y_to_gui(0)
 
 if (interactableObject != noone && isAlive)
 {
+	if (LMBpress) audio_play_sound(sndButton,0,0)
+	
 	switch (interactableObject.type)
 	{
 		case interactable.emergencyButton:
 		{
+			obj_Menu.caller = nameId
+			
 			//Send Message to Start a Meeting to All Clients
 			if (obj_GameManager.serverSide)
 			{
@@ -82,6 +86,8 @@ if (interactableObject != noone && isAlive)
 		
 		case interactable.body:
 		{
+			obj_Menu.caller = nameId
+			
 			//Send Message to Start a Meeting to All Clients
 			if (obj_GameManager.serverSide)
 			{
@@ -245,6 +251,7 @@ if (interactableObject != noone && isAlive)
 			
 			if (LMBrelease)
 			{
+				audio_play_sound(sndButton,0,0)
 				var nearestGoal = noone
 				var smallestDist = infinity
 				var dist = infinity
@@ -277,6 +284,8 @@ if (interactableObject != noone && isAlive)
 					surface_reset_target()
 					interactableStruct.completedWires++
 					interactableStruct.wirePositions[interactableStruct.selectedWireID][3] = true
+					
+					audio_play_sound(sndSucces,0,0)
 				}
 			}
 			
@@ -354,21 +363,6 @@ if (interactableObject != noone && isAlive)
 			
 			if (exitUI)
 			{
-				//Send Message to Change Amogus's Alpha
-				if (obj_GameManager.serverSide)
-				{
-					var _serverBuffer = obj_Server.serverBuffer;
-					message_amogus_alpha(_serverBuffer, clientId, 1);
-					with (obj_AmogusClient)
-						network_send_packet(clientSocket, _serverBuffer, buffer_tell(_serverBuffer));
-				}
-				else
-				{
-					var _clientBuffer = obj_Client.clientBuffer;
-					message_amogus_alpha(_clientBuffer, clientId, 1);
-					network_send_packet(obj_Client.client, _clientBuffer, buffer_tell(_clientBuffer));
-							
-				}
 				playerAlpha = 1
 				ExitMenu(false)
 			}
@@ -386,6 +380,7 @@ if (interactableObject != noone && isAlive)
 			var offset = 10
 			if (LMBpress && point_in_rectangle(mouseX,mouseY,xx - 10 * windowToGui,yy - 10 * windowToGui,xx + 10 * windowToGui,yy + 10 * windowToGui))
 			{
+				audio_play_sound(sndSucces,0,0)
 				interactableStruct.succesfulShots++
 				interactableStruct.resetCooldown = -1
 			}
@@ -458,6 +453,7 @@ if (interactableObject != noone && isAlive)
 						LMBpress = false
 						if (targetHit)
 						{
+							audio_play_sound(sndSucces,0,0)
 							interactableStruct.handlePositions[i][2] = true
 							interactableStruct.activeSliderId++
 						}
@@ -526,6 +522,8 @@ if (obj_GameManager.inGame)
 					_killButtonSelected = true;
 					if (mouse_check_button_pressed(mb_left))
 					{
+						Killed(_amogusNearest.nameId)
+						
 						//Send Message to Kill the Amogus
 						if (obj_GameManager.serverSide)
 						{

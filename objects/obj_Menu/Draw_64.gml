@@ -238,8 +238,7 @@ switch (menuState)
 		var _barHeight = _guiHeight * 0.13;
 		var _barX = _guiWidth * 0.5 - _barWidth;
 		var _barY = _guiHeight * 0.05;
-		show_debug_message(tasksNeeded);
-		var _barProgress = taskProgress / tasksNeeded;
+		var _barProgress = 1 / tasksNeeded;
 		draw_sprite_stretched(spr_Bar, 0, _barX * guiToUI, _barY * guiToUI, (_barWidth * 2) * guiToUI, _barHeight * guiToUI);
 		draw_sprite_stretched(spr_BarProgress, 0, _barX * guiToUI + 3, _barY * guiToUI + 3, (_barWidth * 2 * _barProgress) * guiToUI - 6, _barHeight * guiToUI - 8);
 	}
@@ -296,10 +295,9 @@ switch (menuState)
 		draw_text_transformed_colour(_guiWidth * 0.5, _guiHeight * 0.8, _textPart, 1, 1, 0,
 										c_white, c_white, c_white, c_white, 1);
 		
-		//End the Throw Out Phase
-		if (menuStateTimer <= 40 && transitionProgress <= 0 && obj_GameManager.serverSide)
+		if (menuStateTimer <= 0 && transitionProgress <= 0 && obj_GameManager.serverSide)
 		{
-			if (!check_game_end())	//check for game end
+			if (!check_game_end())
 			{
 				//Send the Game Start Message to All Clients
 				with (obj_AmogusClient)
@@ -318,18 +316,19 @@ switch (menuState)
 	
 	case menu.gameEnd:
 	{
-		var _text = "CREWMATES won the game.";
+		var _text = "Crewmates won the game.";
 		if (winnerSide == 1)
-			_text = "IMPOSTORS won the game.";
+			_text = "Impostors won the game.";
 		
 		draw_rectangle_colour(0, 0, _guiWidth, _guiHeight, c_black, c_black, c_black, c_black, false);
-		draw_set_font(fnt_Menu1)
+		draw_set_font(fntTextUI)
 		draw_set_halign(fa_center);
-		draw_text_transformed_colour(_guiWidth * 0.5, _guiHeight * 0.6, _text, 2, 2, 0,
+		draw_text_transformed_colour(_guiWidth * 0.5, _guiHeight * 0.6, _text, 1, 1, 0,
 									 c_white, c_white, c_white, c_white, 1);
 	}
 	break;
 }
+menuStatePrev = menuState
 
 //Set Cursor Sprite
 if (buttonIsSelected)
@@ -346,24 +345,26 @@ draw_surface(surfaceText, 0, 0);
 //Draw a Warning
 if (warningProgress > 0)
 {
-	var _scaleProgress = clamp(warningProgress * 2, 0, 1);
+	var _progress = clamp(warningProgress * 2, 0, 1);
 	var _curveChannel = animcurve_get_channel(ac_Transition, 0);
-	var _curveValue = animcurve_channel_evaluate(_curveChannel, _scaleProgress);
+	var _curveValue = animcurve_channel_evaluate(_curveChannel, _progress);
 	var _scale = _curveValue;
 	
 	switch (warningType)
 	{
 		case warningType.meeting:
 		{
+			if (!meetingSoundPlayed) EmergencyMeeting(caller)
+			meetingSoundPlayed = true
 			draw_sprite_ext(spr_Meeting, 0, _guiWidth * 0.5, _guiHeight * 0.5, 4 * _scale, 4 * _scale, 0, c_white, 1);
-			
 		}
 		break;
 		
 		case warningType.body:
 		{
+			if (!meetingSoundPlayed) EmergencyMeeting(caller)
+			meetingSoundPlayed = true
 			draw_sprite_ext(spr_BodyReport, 0, _guiWidth * 0.5, _guiHeight * 0.5, 4 * _scale, 4 * _scale, 0, c_white, 1);
-			
 		}
 		break;
 		
@@ -394,6 +395,7 @@ if (warningProgress > 0)
 				_alpha = warningProgress * 3;
 			draw_text_transformed_colour(_guiWidth * 0.5, _guiHeight * 0.5, _text, 3, 3, 0, _colour, _colour, _colour, _colour, _alpha);
 		}
+		break;
 	}
 	
 	warningProgress -= WARNING_SPEED * warningSpeed;

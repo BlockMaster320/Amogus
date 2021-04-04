@@ -7,7 +7,7 @@ if (obj_GameManager.inGame)
 {
 	/*draw_text_transformed_colour(100, 100, username, 1, 1, 0, c_white, c_white, c_white, c_white, 1);*/
 	
-	if (camState = CAMERA.followPlayer)
+	if (camState = CAMERA.followPlayer and isAlive)
 	{
 	#region Light
 	

@@ -30,7 +30,7 @@ function message_receive_server(_socket, _buffer)
 		case messages.gameMeeting:
 		{
 			//Send a Message to Start a Meeting to All Clients
-			var _clientId = buffer_read(_buffer, buffer_u8);	//amogus who started the meetin - can be use later
+			var _clientId = buffer_read(_buffer, buffer_u8);	//amogus who started the meeting - used later
 			var _isReport = buffer_read(_buffer, buffer_u8);
 			message_game_meeting(serverBuffer, _clientId, _isReport);
 			with (obj_AmogusClient)
@@ -39,6 +39,7 @@ function message_receive_server(_socket, _buffer)
 			if (_isReport) warning(warningType.body, 1);
 			else warning(warningType.meeting, 1);
 			transition(menu.meeting, noone, true);
+			obj_Menu.caller = clientIdMap[? _clientId].nameId
 		}
 		break;
 		
@@ -83,6 +84,13 @@ function message_receive_server(_socket, _buffer)
 			}
 			
 			check_game_end();	//check for game end
+			
+			var impostorName
+			with (obj_AmogusClient)
+			{
+				if (isImpostor) impostorName = nameId
+			}
+			if (_amogus.clientId == oAmogusLocal.clientId) Died(impostorName)
 		}
 		break;
 		
@@ -134,10 +142,11 @@ function message_receive_server(_socket, _buffer)
 					{
 						for (var j = 0; j < collCount; j++)
 						{
-							if (!interactableStruct.switchPositions[i, j])
+							if (interactableStruct.switchPositions[i, j])
 								_lightsOn = false;
 						}
 					}
+					show_debug_message("\n");
 				}
 			}
 			global.lightsOn = _lightsOn;
@@ -203,12 +212,14 @@ function message_receive_client(_socket, _buffer)
 		
 		case messages.gameMeeting:	//start a meeting
 		{
-			var _clientId = buffer_read(_buffer, buffer_u8);	//amogus who started the meeting - can be use later
+			var _clientId = buffer_read(_buffer, buffer_u8);	//amogus who started the meeting - used later
 			var _isReport = buffer_read(_buffer, buffer_u8);
 			
 			if (_isReport) warning(warningType.body, 1);
 			else warning(warningType.meeting, 1);
 			transition(menu.meeting, noone, true);
+			
+			obj_Menu.caller = clientIdMap[? _clientId].nameId
 		}
 		break;
 		
@@ -253,12 +264,20 @@ function message_receive_client(_socket, _buffer)
 				interactableStruct.headId = _amogus.headId;
 				interactableStruct.bodyId = _amogus.bodyId;
 			}
+			
+			var impostorName
+			with (obj_AmogusClient)
+			{
+				if (isImpostor) impostorName = nameId
+			}
+			//show_debug_message(amogusclient)
+			//if (_amogus == oAmogusLocal) Died(impostorName)
+			if (_amogus.clientId == oAmogusLocal.clientId) Died(impostorName)
 		}
 		break;
 		
 		case messages.lights:	//change the light switches
 		{
-			show_debug_message("lel");
 			var _i = buffer_read(_buffer, buffer_u8);
 			var _j = buffer_read(_buffer, buffer_u8);
 			
@@ -274,7 +293,7 @@ function message_receive_client(_socket, _buffer)
 					{
 						for (var j = 0; j < collCount; j++)
 						{
-							if (!interactableStruct.switchPositions[i, j])
+							if (interactableStruct.switchPositions[i, j])
 								_lightsOn = false;
 						}
 					}
@@ -343,6 +362,7 @@ function message_receive_client(_socket, _buffer)
 			
 			obj_Menu.tasksNeeded = ds_map_size(clientIdMap) * TASKS_PER_AMOGUS;
 			game_setup();
+				
 		}
 		break;
 		
