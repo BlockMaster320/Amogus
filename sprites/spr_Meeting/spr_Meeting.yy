@@ -95,8 +95,8 @@
     "resourceType": "GMNineSliceData",
   },
   "parent": {
-    "name": "Sprites",
-    "path": "folders/Sprites.yy",
+    "name": "Events",
+    "path": "folders/Sprites/Events.yy",
   },
   "resourceVersion": "1.0",
   "name": "spr_Meeting",

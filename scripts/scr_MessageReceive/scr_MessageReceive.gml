@@ -31,11 +31,14 @@ function message_receive_server(_socket, _buffer)
 		{
 			//Send a Message to Start a Meeting to All Clients
 			var _clientId = buffer_read(_buffer, buffer_u8);	//amogus who started the meetin - can be use later
-			message_game_meeting(serverBuffer, _clientId);
+			var _isReport = buffer_read(_buffer, buffer_u8);
+			message_game_meeting(serverBuffer, _clientId, _isReport);
 			with (obj_AmogusClient)
 				network_send_packet(clientSocket, other.serverBuffer, buffer_tell(other.serverBuffer));
 			
-			 transition(menu.meeting, noone, true);
+			if (_isReport) warning(warningType.body);
+			else warning(warningType.meeting);
+			transition(menu.meeting, noone, true);
 		}
 		break;
 		
@@ -54,6 +57,30 @@ function message_receive_server(_socket, _buffer)
 			message_vote(serverBuffer, _voterId, _votedId);
 			with (obj_AmogusClient)
 				network_send_packet(clientSocket, other.serverBuffer, buffer_tell(other.serverBuffer));
+		}
+		break;
+		
+		case messages.kill:	//kill an amogus
+		{
+			var _clientId = buffer_read(_buffer, buffer_u8);
+			var _amogus = clientIdMap[?_clientId];
+			
+			var _interactableId = obj_GameManager.interactableIdCount ++;
+			message_kill(serverBuffer, _clientId, _interactableId)
+			with (obj_AmogusClient)
+				network_send_packet(clientSocket, other.serverBuffer, buffer_tell(other.serverBuffer));
+							
+			_amogus.isAlive = false;
+			var _body = instance_create_layer(_amogus.x, _amogus.y, "Interactables", obj_Interactable);
+			with (_body)
+			{
+				type = interactable.body;
+				interactableId = _interactableId;
+				interactableStruct = new Interactable(interactable.body);
+				interactableStruct.clientId = _amogus.clientId;
+				interactableStruct.headId = _amogus.headId;
+				interactableStruct.bodyId = _amogus.bodyId;
+			}
 		}
 		break;
 		
@@ -116,9 +143,12 @@ function message_receive_client(_socket, _buffer)
 		
 		case messages.gameMeeting:	//start a meeting
 		{
-			warning(warningType.meeting);
-			transition(menu.meeting, noone, true);
 			var _clientId = buffer_read(_buffer, buffer_u8);	//amogus who started the meeting - can be use later
+			var _isReport = buffer_read(_buffer, buffer_u8);
+			
+			if (_isReport) warning(warningType.body);
+			else warning(warningType.meeting);
+			transition(menu.meeting, noone, true);
 		}
 		break;
 		
@@ -143,6 +173,26 @@ function message_receive_client(_socket, _buffer)
 			else
 				obj_Menu.thrownOutAmogus = clientIdMap[? _throwOutAmogusId];
 			transition(menu.throwOut, noone, false);
+		}
+		break;
+		
+		case messages.kill:
+		{
+			var _clientId = buffer_read(_buffer, buffer_u8);
+			var _interactableId = buffer_read(_buffer, buffer_u8);
+			var _amogus = clientIdMap[?_clientId];
+							
+			_amogus.isAlive = false;
+			var _body = instance_create_layer(_amogus.x, _amogus.y, "Interactables", obj_Interactable);
+			with (_body)
+			{
+				type = interactable.body;
+				interactableId = _interactableId;
+				interactableStruct = new Interactable(interactable.body);
+				interactableStruct.clientId = _amogus.clientId;
+				interactableStruct.headId = _amogus.headId;
+				interactableStruct.bodyId = _amogus.bodyId;
+			}
 		}
 		break;
 		

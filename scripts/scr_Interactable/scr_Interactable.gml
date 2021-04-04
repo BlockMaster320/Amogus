@@ -16,7 +16,7 @@ function Interactable(_type) constructor
 			{
 				for (var j = collCount-1; j >= 0; j--)
 				{
-					switchPositions[i,j] = [(xOff * j) - (xOff * collCount / 2), (yOff * i) - (yOff * rowCount / 2), false]	//x, y, active
+					switchPositions[i,j] = false	//x, y, active
 				}
 			}
 		}
@@ -84,5 +84,13 @@ function Interactable(_type) constructor
 			}
 		}
 		break
+		
+		case interactable.body:
+		{
+			clientId = noone;
+			headId = 0;
+			bodyId = 0;
+		}
+		break;
 	}
 }

@@ -6,6 +6,8 @@ selectedNameId = 0;
 selectedHeadId = 0;
 selectedBodyId = 0;
 
+buttonIsSelected = false;
+
 //Text Fields
 charSet = "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM_-/.,&0123456789";
 textField = noone;
@@ -24,10 +26,16 @@ alarm[0] = CURSOR_BLINK_SPEED;	//alarm that makes the textCursor blink
 //Game Settings
 /*impostors = 1;*/
 
+//Set Surfaces
+surfaceText = noone;
+surfaceUI = noone;
+
+guiToUI = guiW / display_get_gui_width();
+
 //Transition
-transitionProgress = 0;
+transitionProgress = 0.5;
 transitionClosing = false;
-transitionMenu = noone;
+transitionMenu = menu.mainMenu;
 transitionFunction = noone;
 
 //Warning
