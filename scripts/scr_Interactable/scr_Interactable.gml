@@ -54,12 +54,6 @@ function Interactable(_type) constructor
 		}
 		break;
 		
-		case interactable.vent:
-		{
-			//ventPositions
-		}
-		break
-		
 		case interactable.shooter:
 		{
 			xRandomRange = 50
@@ -77,11 +71,16 @@ function Interactable(_type) constructor
 		{
 			yOff = 20
 			sliderCount = irandom_range(2,6)
-			sliderLength = 160
+			//sliderLength = 160
+			sliderLengthCrop = 110
+			activeSliderId = 0
 			for (var i = sliderCount-1; i >= 0; i--)
 			{
-			    sliderPositions[i] = [0,(yOff * i) - (yOff * (sliderCount - 1) / 2),false]	//x, y, active
-				handlePositions[i] = [choose(-sliderLength / 2,sliderLength / 2),(yOff * i) - (yOff * (sliderCount - 1) / 2),false]
+				var yy = (yOff * i) - (yOff * (sliderCount - 1) / 2)
+				var startX = choose(-sliderLengthCrop / 2,sliderLengthCrop / 2)
+			    sliderPositions[i] = [0,yy]	//x, y
+				handlePositions[i] = [startX,yy,false,irandom_range(1,4) * -sign(startX)]	//x, y, completed, speed
+				targetPositions[i] = [irandom_range(-startX * 0.7,startX * 0.5),yy,random_range(4,7)]	//x, y, sizeX
 			}
 		}
 		break

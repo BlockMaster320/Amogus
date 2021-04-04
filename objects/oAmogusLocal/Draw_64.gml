@@ -357,19 +357,75 @@ if (interactableObject != noone)
 		{
 			draw_sprite_stretched(sWires,0,0,0,windowW,windowH)
 			var sliderCount = interactableStruct.sliderCount
+			var sliderLengthCrop = interactableStruct.sliderLengthCrop / 2
+			var offset, width, sliderCompleted
+			var slidersCompleted = 0
+			
 			for (var i = 0; i < sliderCount; i++)
 			{
+				offset = 3 * windowToGui	//3 pixely
+				var targetPositions = interactableStruct.targetPositions[i]
+				width = targetPositions[2]
+				var xx = targetPositions[0] * windowToGui + windowW / 2 - width * windowToGui
+				var yy = targetPositions[1] * windowToGui + windowH / 2
+				
 				var sliderX = interactableStruct.sliderPositions[i][0] * windowToGui + windowW / 2
 				var sliderY = interactableStruct.sliderPositions[i][1] * windowToGui + windowH / 2
 				var handleX = interactableStruct.handlePositions[i][0] * windowToGui + windowW / 2
 				var handleY = interactableStruct.handlePositions[i][1] * windowToGui + windowH / 2
+				
+				var rX1 = xx - offset * width
+				var rY1 = yy - offset
+				var rX2 = xx + offset * width
+				var rY2 = yy + offset + windowToGui
+				var cayoteOffset = 8 * windowToGui
+				
+				if (interactableStruct.activeSliderId == i)
+				{
+					interactableStruct.handlePositions[i][0] += interactableStruct.handlePositions[i][3]
+					var targetHit = point_in_rectangle(handleX,handleY,rX1 - cayoteOffset,rY1,rX2 + cayoteOffset,rY2)
+					if (LMBpress)
+					{
+						LMBpress = false
+						if (targetHit)
+						{
+							interactableStruct.handlePositions[i][2] = true
+							interactableStruct.activeSliderId++
+						}
+						else interactableStruct.handlePositions[i][0] = infinity * -sign(interactableStruct.handlePositions[i][3])
+					}
+					if (abs(interactableStruct.handlePositions[i][0]) > abs(sliderLengthCrop))
+					{
+						for (var j = 0; j <= interactableStruct.activeSliderId; j++)
+						{
+							interactableStruct.handlePositions[j][0] = sliderLengthCrop * -sign(interactableStruct.handlePositions[j][3])
+							interactableStruct.handlePositions[j][2] = false
+						}
+						interactableStruct.activeSliderId = 0
+					}
+				}
 				draw_sprite_stretched(sSlider,0,sliderX - 128 * windowToGui / 2,sliderY - 16 * windowToGui / 2,128 * windowToGui,16 * windowToGui)
-				draw_sprite_stretched(sHandle,interactableStruct.handlePositions[i][2],handleX - 20 * windowToGui / 2,handleY - 20 * windowToGui / 2,20 * windowToGui,20 * windowToGui)
+				
+				sliderCompleted = interactableStruct.handlePositions[i][2]	//Proč tenhle řádek rozbíjí všechno?
+				if (sliderCompleted = false) draw_set_color(c_red)
+				else draw_set_color(c_green)
+				draw_set_alpha(0.4)
+				draw_rectangle(rX1,rY1,rX2,rY2,0)
+				draw_set_alpha(1)
+				
+				draw_sprite_stretched(sHandle,sliderCompleted,handleX - 20 * windowToGui / 2,handleY - 20 * windowToGui / 2,20 * windowToGui,20 * windowToGui)
+				slidersCompleted += sliderCompleted
+			}
+			
+			if (slidersCompleted = sliderCount)
+			{
+				taskCompleted = true
+				exitUI = true
 			}
 			
 			if (exitUI)
 			{
-				ExitMenu(true)
+				ExitMenu(taskCompleted)
 			}
 		}
 		break

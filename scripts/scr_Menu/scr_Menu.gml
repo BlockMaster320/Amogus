@@ -233,11 +233,11 @@ function game_setup()
 	}*/
 }
 
-function ExitMenu(deleteMemory)
+function ExitMenu(_taskCompleted)
 {
 	///@arg deleteMemory
 	inMenu = false
-	if (deleteMemory)
+	if (_taskCompleted)
 	{
 		var type = interactableObject.interactableStruct.type
 		interactableObject.interactableStruct = noone
