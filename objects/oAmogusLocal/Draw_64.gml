@@ -21,7 +21,7 @@ surface_set_target(textSurf)
 	if (camState = CAMERA.followPlayer and isAlive) gpu_set_blendmode_ext(bm_dest_alpha, bm_inv_src_alpha)
 	with (obj_AmogusClient)
 	{
-		if (isAlive)
+		if (isAlive && playerAlpha > 0)
 		{
 			var offX = 10
 			var offY = 28
@@ -145,27 +145,29 @@ if (interactableObject != noone && isAlive)
 					if (LMBpress and point_in_rectangle(mouseX,mouseY,xx - offset,yy - offset,xx + 20 * windowToGui + offset,yy + 20 * windowToGui + offset))
 					{
 						/*interactableStruct.switchPositions[i,j][2] = !interactableStruct.switchPositions[i,j][2]*/
+						//Send Message to Change the Ligth Switches
 						if (obj_GameManager.serverSide)
 						{
 							var _serverBuffer = obj_Server.serverBuffer;
-							message_amogus_create()
+							message_lights(_serverBuffer, i, j);
 							with (obj_AmogusClient)
-								network_send_packet(obj_Server.server, _serverBuffer, buffer_tell(_serverBuffer));
+								network_send_packet(clientSocket, _serverBuffer, buffer_tell(_serverBuffer));
 							
 							with (obj_Interactable)
 							{
 								if (type == interactable.lights)
-									interactableStruct.switchPositions[i,j] = !interactableStruct.switchPositions[i,j]
+									interactableStruct.switchPositions[i, j] = !interactableStruct.switchPositions[i,j]
 							}
 						}
 						else
 						{
-							var _clientBuffer = obj_Server.serverBuffer;
-							message_amogus_create()
+							var _clientBuffer = obj_Client.clientBuffer;
+							message_lights(_clientBuffer, i, j);
 							with (obj_AmogusClient)
-								network_send_packet(obj_Server.server, _serverBuffer, buffer_tell(_serverBuffer));
+								network_send_packet(clientSocket, _clientBuffer, buffer_tell(_clientBuffer));
 						}
 					}
+					
 					draw_sprite_stretched(sSwitch,pos,xx,yy,20 * windowToGui,20 * windowToGui)
 					if (pos = true) offSwitches++
 				}

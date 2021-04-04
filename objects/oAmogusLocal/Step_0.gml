@@ -95,6 +95,21 @@ if (obj_GameManager.inGame)
 						break
 						
 					case interactable.vent:
+						//Send Message to Change Amogus's Alpha
+						if (obj_GameManager.serverSide)
+						{
+							var _serverBuffer = obj_Server.serverBuffer;
+							message_amogus_alpha(_serverBuffer, clientId, 0);
+							with (obj_AmogusClient)
+								network_send_packet(clientSocket, _serverBuffer, buffer_tell(_serverBuffer));
+						}
+						else
+						{
+							var _clientBuffer = obj_Client.clientBuffer;
+							message_amogus_alpha(_clientBuffer, clientId, 0);
+							network_send_packet(obj_Client.client, _clientBuffer, buffer_tell(_clientBuffer));
+							
+						}
 						playerAlpha = 0
 						break
 				}
