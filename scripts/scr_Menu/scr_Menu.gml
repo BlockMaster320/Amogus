@@ -248,7 +248,13 @@ function game_setup()
 		interactableStruct = noone;
 		interactableInRange = noone;
 	}
-	obj_Menu.thrownOutAmogus = noone;
+	
+	with (obj_Menu)
+	{
+		thrownOutAmogus = noone;
+		meetingSoundPlayed = false
+		caller = noone
+	}
 	
 	/*
 	var _serverBuffer = obj_Server.serverBuffer;
@@ -268,12 +274,13 @@ function ExitMenu(_taskCompleted)
 	inMenu = false
 	if (_taskCompleted)
 	{
-		
+		audio_play_sound(sndTaskCompleted,0,0)
 		var type = interactableObject.interactableStruct.type
 		interactableObject.interactableStruct = noone
 		interactableObject.interactableStruct = new Interactable(type)
 		taskCompleted = false
 	}
+	else audio_play_sound(sndSucces,0,0)
 	interactableObject.amogus = noone;
 	interactableObject = noone
 	interactableStruct = noone;

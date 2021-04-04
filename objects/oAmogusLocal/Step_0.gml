@@ -40,6 +40,11 @@ if (obj_GameManager.inGame)
 			}
 			y += vsp
 		}
+		else
+		{
+			x += hsp
+			y += vsp
+		}
 	}
 	#endregion
 	
@@ -57,7 +62,7 @@ if (obj_GameManager.inGame)
 	#endregion
 	
 	//Search for Interactables
-	if (interactableObject == noone && isAlive && !isImpostor)
+	if (interactableObject == noone && isAlive /*&& !isImpostor*/)
 	{
 		interactableInRange = noone;
 		var nearestInteractable = instance_nearest(x,y,obj_Interactable)
@@ -66,6 +71,7 @@ if (obj_GameManager.inGame)
 			interactableInRange = nearestInteractable;
 			if (buttonInteract)
 			{
+				audio_play_sound(sndButton,0,0)
 				interactableObject = nearestInteractable;
 				interactableStruct = nearestInteractable.interactableStruct;
 				interactableObject.amogus = self;

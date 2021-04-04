@@ -241,6 +241,8 @@ switch (menuState)
 	
 	case menu.throwOut:
 	{
+		if (menuStatePrev != menu.throwOut) Ejected(thrownOutAmogus.nameId)
+		
 		draw_sprite_stretched(spr_BackgroundSpace, 0, 0, 0, _guiWidth, _guiHeight);
 		var _text = "No amogus has been voted out."
 		if (thrownOutAmogus != noone)
@@ -253,6 +255,7 @@ switch (menuState)
 		}
 		
 		draw_set_halign(fa_center);
+		draw_set_valign(fa_center);
 		draw_set_font(fntTextUI);
 		draw_text_transformed_colour(_guiWidth * 0.5, _guiHeight * 0.8, _text, 1, 1, 0,
 										c_white, c_white, c_white, c_white, 1);
@@ -290,6 +293,7 @@ switch (menuState)
 	}
 	break;
 }
+menuStatePrev = menuState
 
 //Set Cursor Sprite
 if (buttonIsSelected)
@@ -314,15 +318,17 @@ if (warningProgress > 0)
 	{
 		case warningType.meeting:
 		{
+			if (!meetingSoundPlayed) EmergencyMeeting(caller)
+			meetingSoundPlayed = true
 			draw_sprite_ext(spr_Meeting, 0, _guiWidth * 0.5, _guiHeight * 0.5, 4 * _scale, 4 * _scale, 0, c_white, 1);
-			
 		}
 		break;
 		
 		case warningType.body:
 		{
+			if (!meetingSoundPlayed) EmergencyMeeting(caller)
+			meetingSoundPlayed = true
 			draw_sprite_ext(spr_BodyReport, 0, _guiWidth * 0.5, _guiHeight * 0.5, 4 * _scale, 4 * _scale, 0, c_white, 1);
-			
 		}
 		break;
 	}
