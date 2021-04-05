@@ -9,6 +9,14 @@ function message_amogus_create(_buffer, _clientId, _nameId, _headId, _bodyId)
 	buffer_write(_buffer, buffer_u8, _bodyId);
 }
 
+function message_amogus_alpha(_buffer, _clientId, _alpha)
+{
+	buffer_seek(_buffer, buffer_seek_start, 0);
+	buffer_write(_buffer, buffer_u8, messages.amogusAlpha);
+	buffer_write(_buffer, buffer_u8, _clientId);
+	buffer_write(_buffer, buffer_u8, _alpha);
+}
+
 function message_game_start(_buffer, _impostorId, _continuation)
 {
 	buffer_seek(_buffer, buffer_seek_start, 0);
@@ -64,12 +72,19 @@ function message_kill(_buffer, _clientId, _interactableId)
 	buffer_write(_buffer, buffer_u8, _interactableId);
 }
 
-function message_lights(_buffer, _clientId, _interactableId)
+function message_task_progress(_buffer, _value)
 {
 	buffer_seek(_buffer, buffer_seek_start, 0);
-	buffer_write(_buffer, buffer_u8, messages.kill);
-	buffer_write(_buffer, buffer_u8, _clientId);
-	buffer_write(_buffer, buffer_u8, _interactableId);
+	buffer_write(_buffer, buffer_u8, messages.taskProgress);
+	buffer_write(_buffer, buffer_s8, _value);
+}
+
+function message_lights(_buffer, _i, _j)
+{
+	buffer_seek(_buffer, buffer_seek_start, 0);
+	buffer_write(_buffer, buffer_u8, messages.lights);
+	buffer_write(_buffer, buffer_u8, _i);
+	buffer_write(_buffer, buffer_u8, _j);
 }
 
 /*

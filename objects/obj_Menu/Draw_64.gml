@@ -31,11 +31,16 @@ if (!surface_exists(surfaceText))
 	surfaceText = surface_create(_guiWidth, _guiHeight);
 if (!surface_exists(surfaceUI))
 	surfaceUI = surface_create(guiW, guiH);
-	
+if (!surface_exists(surfaceUISmall))
+	surfaceUISmall = surface_create(guiW, guiH);
+
 surface_set_target(surfaceText);
 draw_clear_alpha(c_black, 0);
 surface_reset_target();
 surface_set_target(surfaceUI);
+draw_clear_alpha(c_black, 0);
+surface_reset_target();
+surface_set_target(surfaceUISmall);
 draw_clear_alpha(c_black, 0);
 surface_reset_target();
 surface_set_target(surfaceText);
@@ -175,7 +180,7 @@ switch (menuState)
 			//Start the Game
 			var _transitionFunction = function() {obj_GameManager.inGame = true; room_goto(rm_Game);};
 			transition(noone, _transitionFunction, true);
-			game_setup();
+			tasksNeeded = ds_map_size(obj_Server.clientIdMap) * TASKS_PER_AMOGUS;
 			
 			with (oAmogusLocal)
 			{
@@ -219,6 +224,26 @@ switch (menuState)
 	}
 	break;
 	
+	case noone:
+	{
+		if (classWarning && transitionProgress <= 0)
+		{
+			warning(warningType.class, 0.5);
+			classWarning = false;
+		}
+		
+		surface_reset_target();
+		surface_set_target(surfaceUISmall);
+		var _barWidth = _guiWidth * 0.2;
+		var _barHeight = _guiHeight * 0.13;
+		var _barX = _guiWidth * 0.5 - _barWidth;
+		var _barY = _guiHeight * 0.05;
+		var _barProgress = taskProgress / tasksNeeded;
+		draw_sprite_stretched(spr_Bar, 0, _barX * guiToUI, _barY * guiToUI, (_barWidth * 2) * guiToUI, _barHeight * guiToUI);
+		draw_sprite_stretched(spr_BarProgress, 0, _barX * guiToUI + 3, _barY * guiToUI + 3, (_barWidth * 2 * _barProgress) * guiToUI - 6, _barHeight * guiToUI - 8);
+	}
+	break;
+	
 	case menu.meeting:
 	{
 		//Amogus Info Table
@@ -244,6 +269,17 @@ switch (menuState)
 		if (menuStatePrev != menu.throwOut) Ejected(thrownOutAmogus.nameId)
 		
 		draw_sprite_stretched(spr_BackgroundSpace, 0, 0, 0, _guiWidth, _guiHeight);
+		var _menuStateTimer = get_menuState_timer(menu.throwOut);
+		var _menuProgress = _menuStateTimer - menuStateTimer;
+		
+		//Draw Thrown Out Amogus
+		if (thrownOutAmogus != noone)
+		{
+			draw_sprite_ext(spr_Body, thrownOutAmogus.bodyId * 3, _menuProgress * 3, _guiHeight * 0.5, 5, 5, _menuProgress * 2, c_white, 1);
+			draw_sprite_ext(spr_Head, thrownOutAmogus.headId, _menuProgress * 3, _guiHeight * 0.5, 5, 5, _menuProgress * 2, c_white, 1);
+		}
+		
+		//Draw Voted Amogus Text
 		var _text = "No amogus has been voted out."
 		if (thrownOutAmogus != noone)
 		{
@@ -253,14 +289,15 @@ switch (menuState)
 			else
 				_text = string(_name) + " wasn't an IMPOSTOR... retards."
 		}
+		var _count = floor(string_length(_text) * clamp((_menuProgress / _menuStateTimer) * 2.3, 0, 1));
+		var _textPart = string_copy(_text, 0, _count);
 		
 		draw_set_halign(fa_center);
-		draw_set_valign(fa_center);
 		draw_set_font(fntTextUI);
-		draw_text_transformed_colour(_guiWidth * 0.5, _guiHeight * 0.8, _text, 1, 1, 0,
+		draw_text_transformed_colour(_guiWidth * 0.5, _guiHeight * 0.8, _textPart, 1, 1, 0,
 										c_white, c_white, c_white, c_white, 1);
 		
-		if (menuStateTimer <= 0 && transitionProgress <= 0 && obj_GameManager.serverSide)
+		if (menuStateTimer <= 40 && transitionProgress <= 0 && obj_GameManager.serverSide)
 		{
 			if (!check_game_end())
 			{
@@ -304,6 +341,7 @@ else
 //Draw the Surfaces
 surface_reset_target();
 draw_surface_stretched(surfaceUI, 0, 0, _guiWidth, _guiHeight);
+draw_surface_stretched(surfaceUISmall, _guiWidth * 0.5 - (guiW * 3) * 0.5, 0, guiW * 3, guiH * 3);
 draw_surface(surfaceText, 0, 0);
 
 //Draw a Warning
@@ -331,9 +369,38 @@ if (warningProgress > 0)
 			draw_sprite_ext(spr_BodyReport, 0, _guiWidth * 0.5, _guiHeight * 0.5, 4 * _scale, 4 * _scale, 0, c_white, 1);
 		}
 		break;
+		
+		case warningType.class:
+		{
+			var _alpha = clamp((1 - warningProgress) * 2, 0, 0.4);
+			if (warningProgress < 0.4)
+				_alpha =  clamp(warningProgress * 3, 0, 0.4);
+			draw_set_alpha(_alpha);
+			draw_rectangle_colour(0, 0, _guiWidth, _guiHeight, c_black, c_black, c_black, c_black, false);
+			draw_set_alpha(1);
+			
+			var _text = "You are ";
+			var _colour = c_white;
+			if (oAmogusLocal.isImpostor)
+			{
+				_text += "IMPOSTOR.";
+				_colour = c_red;
+			}
+			else
+				_text += "CREWMATE.";
+			
+			draw_set_font(fnt_Menu1);
+			draw_set_halign(fa_center);
+			draw_set_valign(fa_middle);
+			_alpha = clamp((1 - warningProgress) * 2, 0, 1);
+			if (warningProgress < 0.4)
+				_alpha = warningProgress * 3;
+			draw_text_transformed_colour(_guiWidth * 0.5, _guiHeight * 0.5, _text, 3, 3, 0, _colour, _colour, _colour, _colour, _alpha);
+		}
+		break;
 	}
 	
-	warningProgress -= WARNING_SPEED;
+	warningProgress -= WARNING_SPEED * warningSpeed;
 }
 
 //Transition Between 2 Menu States

@@ -67,7 +67,7 @@ if (interactableObject != noone && isAlive)
 				with (obj_AmogusClient)
 					network_send_packet(clientSocket, _serverBuffer, buffer_tell(_serverBuffer));
 				
-				warning(warningType.meeting);
+				warning(warningType.meeting, 1);
 				transition(menu.meeting, noone, true);
 			}
 			
@@ -96,7 +96,7 @@ if (interactableObject != noone && isAlive)
 				with (obj_AmogusClient)
 					network_send_packet(clientSocket, _serverBuffer, buffer_tell(_serverBuffer));
 				
-				warning(warningType.body);
+				warning(warningType.body, 1);
 				transition(menu.meeting, noone, true);
 			}
 			
@@ -544,6 +544,8 @@ if (obj_GameManager.inGame)
 								interactableStruct.headId = _amogusNearest.headId;
 								interactableStruct.bodyId = _amogusNearest.bodyId;
 							}
+							
+							check_game_end();	//check for game end
 						}
 						
 						else

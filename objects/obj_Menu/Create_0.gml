@@ -29,6 +29,7 @@ alarm[0] = CURSOR_BLINK_SPEED;	//alarm that makes the textCursor blink
 //Set Surfaces
 surfaceText = noone;
 surfaceUI = noone;
+surfaceUISmall = noone;
 
 guiToUI = guiW / display_get_gui_width();
 
@@ -40,7 +41,9 @@ transitionFunction = noone;
 
 //Warning
 warningProgress = 0;
+warningSpeed = 1;
 warningType = noone;
+classWarning = true;	//tell the player wheter they're crewmate or impostor
 
 //Meeting
 thrownOutAmogus = noone;
@@ -49,6 +52,10 @@ thrownOutAmogus = noone;
 spawnX = 550;
 spawnY = 150;
 winnerSide = noone;
+
+//Task Completion
+tasksNeeded = 0;
+taskProgress = 0;
 
 //Sound
 soundDelay = -1
