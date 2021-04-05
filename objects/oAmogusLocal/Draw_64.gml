@@ -1,3 +1,7 @@
+//Get GUI Properties
+var _guiWidth = display_get_gui_width();
+var _guiHeight = display_get_gui_height();
+
 #region Text
 draw_set_halign(fa_center);
 draw_set_valign(fa_bottom);
@@ -49,6 +53,115 @@ shader_reset()
 var mouseX = device_mouse_x_to_gui(0)
 var mouseY = device_mouse_y_to_gui(0)
 
+//Set the Task Surface
+if (!surface_exists(surfaceUI))
+	surfaceUI = surface_create(guiW, guiH);
+if (!surface_exists(surfaceText))
+	surfaceText = surface_create(_guiWidth, _guiHeight);
+surface_set_target(surfaceUI);
+draw_clear_alpha(c_black, 0);
+surface_reset_target();
+surface_set_target(surfaceText);
+draw_clear_alpha(c_black, 0);
+surface_reset_target();
+
+//Killing && Body Report
+if (obj_GameManager.inGame)
+{
+	var _mouseX = window_mouse_get_x();
+	var _mouseY = window_mouse_get_y();
+
+	//Killing
+	if (isAlive && isImpostor)
+	{
+		var _ableToKill = false;
+		var _killButtonSelected = false;
+		var _amogusNearest = instance_nearest(x, y, obj_AmogusClient);
+		if (_amogusNearest != noone && !_amogusNearest.isImpostor && _amogusNearest.isAlive)
+		{
+			if (point_distance(x, y, _amogusNearest.x, _amogusNearest.y) < KILL_RANGE)
+			{
+				_ableToKill = true;
+				if (point_in_rectangle(_mouseX, _mouseY, _guiWidth * 0.55, _guiHeight * 0.72, _guiWidth * 0.77, _guiHeight))
+				{
+					_killButtonSelected = true;
+					if (mouse_check_button_pressed(mb_left))
+					{
+						Killed(_amogusNearest.nameId)
+						
+						//Send Message to Kill the Amogus
+						if (obj_GameManager.serverSide)
+						{
+							var _interactableId = obj_GameManager.interactableIdCount ++;
+							var _serverBuffer = obj_Server.serverBuffer;
+							message_kill(_serverBuffer, _amogusNearest.clientId, _interactableId)
+							with (obj_AmogusClient)
+								network_send_packet(clientSocket, _serverBuffer, buffer_tell(_serverBuffer));
+							
+							_amogusNearest.isAlive = false;
+							var _body = instance_create_layer(_amogusNearest.x, _amogusNearest.y, "Interactables", obj_Interactable);
+							with (_body)
+							{
+								type = interactable.body;
+								interactableId = _interactableId;
+								interactableStruct = new Interactable(interactable.body);
+								interactableStruct.clientId = _amogusNearest.clientId;
+								interactableStruct.headId = _amogusNearest.headId;
+								interactableStruct.bodyId = _amogusNearest.bodyId;
+							}
+							
+							check_game_end();	//check for game end
+						}
+						
+						else
+						{
+							var _clientBuffer = obj_Client.clientBuffer;
+							buffer_seek(_clientBuffer, buffer_seek_start, 0);
+							buffer_write(_clientBuffer, buffer_u8, messages.kill);
+							buffer_write(_clientBuffer, buffer_u8, _amogusNearest.clientId);
+							
+							network_send_packet(obj_Client.client, _clientBuffer, buffer_tell(_clientBuffer));
+						}
+					}
+				}
+			}
+		}
+		
+		var _colour = (_ableToKill) ? c_white : c_grey;
+		draw_sprite_ext(spr_Kill, _killButtonSelected, _guiWidth * 0.8, _guiHeight, 3, 3, 0, _colour, 1);
+		if (_killButtonSelected)
+			obj_Menu.buttonIsSelected = true;
+	}
+	
+	//Body Reporting
+	if (isAlive)
+	{
+		var _ableToReport = false;
+		var _reportButtonSelected = false;
+		if (interactableInRange != noone && interactableInRange.type = interactable.body)
+		{
+			_ableToReport = true;
+			if (point_in_rectangle(_mouseX, _mouseY, _guiWidth * 0.77, _guiHeight * 0.72, _guiWidth, _guiHeight))
+			{
+				_reportButtonSelected = true;
+				if (mouse_check_button_pressed(mb_left))
+				{
+					interactableObject = interactableInRange;
+					interactableStruct = interactableInRange.interactableStruct;
+					interactableObject.amogus = self;
+					inMenu = true
+				}
+			}
+		}
+		
+		var _colour = (_ableToReport) ? c_white : c_grey;
+		draw_sprite_ext(spr_Report, _reportButtonSelected, _guiWidth, _guiHeight, 3, 3, 0, _colour, 1);
+		if (_reportButtonSelected)
+			obj_Menu.buttonIsSelected = true;
+	}
+}
+
+//Interact With Interactables
 if (interactableObject != noone && isAlive)
 {
 	if (LMBpress) audio_play_sound(sndButton,0,0)
@@ -144,7 +257,6 @@ if (interactableObject != noone && isAlive)
 					var offset = interactableStruct.clickOffset
 					if (LMBpress and point_in_rectangle(mouseX,mouseY,xx - offset,yy - offset,xx + 20 * windowToGui + offset,yy + 20 * windowToGui + offset))
 					{
-						/*interactableStruct.switchPositions[i,j][2] = !interactableStruct.switchPositions[i,j][2]*/
 						//Send Message to Change the Ligth Switches
 						if (obj_GameManager.serverSide)
 						{
@@ -161,10 +273,10 @@ if (interactableObject != noone && isAlive)
 						}
 						else
 						{
+							show_debug_message("ghehehe");
 							var _clientBuffer = obj_Client.clientBuffer;
 							message_lights(_clientBuffer, i, j);
-							with (obj_AmogusClient)
-								network_send_packet(clientSocket, _clientBuffer, buffer_tell(_clientBuffer));
+							network_send_packet(obj_Client.client, _clientBuffer, buffer_tell(_clientBuffer));
 						}
 					}
 					
@@ -172,8 +284,12 @@ if (interactableObject != noone && isAlive)
 					if (pos = true) offSwitches++
 				}
 			}
-			if (offSwitches > 0) global.lightsOn = false
-			else global.lightsOn = true
+			
+			if (obj_GameManager.serverSide)
+			{
+				if (offSwitches > 0) global.lightsOn = false
+				else global.lightsOn = true
+			}
 			
 			if (exitUI) ExitMenu(false)
 		}
@@ -363,6 +479,22 @@ if (interactableObject != noone && isAlive)
 			
 			if (exitUI)
 			{
+				//Send Message to Change Amogus's Alpha
+				if (obj_GameManager.serverSide)
+				{
+					var _serverBuffer = obj_Server.serverBuffer;
+					message_amogus_alpha(_serverBuffer, clientId, 1);
+					with (obj_AmogusClient)
+						network_send_packet(clientSocket, _serverBuffer, buffer_tell(_serverBuffer));
+				}
+				else
+				{
+					var _clientBuffer = obj_Client.clientBuffer;
+					message_amogus_alpha(_clientBuffer, clientId, 1);
+					network_send_packet(obj_Client.client, _clientBuffer, buffer_tell(_clientBuffer));
+							
+				}
+				
 				playerAlpha = 1
 				ExitMenu(false)
 			}
@@ -494,104 +626,148 @@ if (interactableObject != noone && isAlive)
 			}
 		}
 		break
-	}
-}
-
-if (obj_GameManager.inGame)
-{
-	//Get GUI Properties
-	var _guiWidth = display_get_gui_width();
-	var _guiHeight = display_get_gui_height();
-	
-	var _mouseX = window_mouse_get_x();
-	var _mouseY = window_mouse_get_y();
-
-	//Killing
-	if (isAlive && isImpostor)
-	{
-		var _ableToKill = false;
-		var _killButtonSelected = false;
-		var _amogusNearest = instance_nearest(x, y, obj_AmogusClient);
-		if (_amogusNearest != noone && !_amogusNearest.isImpostor && _amogusNearest.isAlive)
+		
+		case interactable.simonSays:
 		{
-			if (point_distance(x, y, _amogusNearest.x, _amogusNearest.y) < KILL_RANGE)
+			//Set Button Properties
+			var _buttonWidth = 100;
+			var _buttonSpacing = 20;
+			var _buttonX = _guiWidth * 0.5 - (_buttonWidth + _buttonSpacing) * 1.5;
+			var _buttonY = _guiHeight * 0.5 - (_buttonWidth + _buttonSpacing) * 1.5;
+			
+			//Draw Middle Panel
+			var _panelOffset = 100;
+			var _panelX = _buttonX - _panelOffset;
+			var _panelY = _buttonY - _panelOffset * 0.5;
+			var _panelWidth = (_buttonWidth + _buttonSpacing) * 3 + _panelOffset * 2;
+			var _panelHeight = _guiHeight - _panelY;
+			
+			draw_set_alpha(0.4);
+			draw_rectangle_colour(0, 0, _guiWidth, _guiHeight, c_black, c_black, c_black, c_black, false);
+			draw_set_alpha(1);
+			surface_set_target(surfaceUI);
+			draw_sprite_stretched(spr_Panel, 0, _panelX * guiToUI, _panelY * guiToUI, _panelWidth * guiToUI, _panelHeight  * guiToUI);
+			
+			//Get Struct Variables
+			var _orderArray = interactableStruct.buttonOrderArray;
+			var _state = interactableStruct.state;
+			var _showTime = interactableStruct.showTime;
+			
+			var _progress = interactableStruct.progress;
+			
+			var _clickIndex = interactableStruct.clickIndex;
+			var _showIndex = interactableStruct.showIndex
+			
+			//Do Certain Action When the Timer Is 0
+			if (interactableStruct.timer == 0)
 			{
-				_ableToKill = true;
-				if (point_in_rectangle(_mouseX, _mouseY, _guiWidth * 0.55, _guiHeight * 0.72, _guiWidth * 0.77, _guiHeight))
+				//Button Show
+				if (_state == 0)
 				{
-					_killButtonSelected = true;
-					if (mouse_check_button_pressed(mb_left))
+					if (_showIndex == _progress)
 					{
-						Killed(_amogusNearest.nameId)
-						
-						//Send Message to Kill the Amogus
-						if (obj_GameManager.serverSide)
-						{
-							var _interactableId = obj_GameManager.interactableIdCount ++;
-							var _serverBuffer = obj_Server.serverBuffer;
-							message_kill(_serverBuffer, _amogusNearest.clientId, _interactableId)
-							with (obj_AmogusClient)
-								network_send_packet(clientSocket, _serverBuffer, buffer_tell(_serverBuffer));
-							
-							_amogusNearest.isAlive = false;
-							var _body = instance_create_layer(_amogusNearest.x, _amogusNearest.y, "Interactables", obj_Interactable);
-							with (_body)
-							{
-								type = interactable.body;
-								interactableId = _interactableId;
-								interactableStruct = new Interactable(interactable.body);
-								interactableStruct.clientId = _amogusNearest.clientId;
-								interactableStruct.headId = _amogusNearest.headId;
-								interactableStruct.bodyId = _amogusNearest.bodyId;
-							}
-							
-							check_game_end();	//check for game end
-						}
-						
-						else
-						{
-							var _clientBuffer = obj_Client.clientBuffer;
-							buffer_seek(_clientBuffer, buffer_seek_start, 0);
-							buffer_write(_clientBuffer, buffer_u8, messages.kill);
-							buffer_write(_clientBuffer, buffer_u8, _amogusNearest.clientId);
-							
-							network_send_packet(obj_Client.client, _clientBuffer, buffer_tell(_clientBuffer));
-						}
+						_showIndex = 0;
+						_state = 1;
+					}
+					else
+					{
+						_showIndex ++;
+						interactableStruct.timer = _showTime;
 					}
 				}
-			}
-		}
-		
-		var _colour = (_ableToKill) ? c_white : c_grey;
-		draw_sprite_ext(spr_Kill, _killButtonSelected, _guiWidth * 0.8, _guiHeight, 3, 3, 0, _colour, 1);
-		if (_killButtonSelected)
-			obj_Menu.buttonIsSelected = true;
-	}
-	
-	//Body Reporting
-	if (isAlive)
-	{
-		var _ableToReport = false;
-		var _reportButtonSelected = false;
-		if (interactableInRange != noone && interactableInRange.type = interactable.body)
-		{
-			_ableToReport = true;
-			if (point_in_rectangle(_mouseX, _mouseY, _guiWidth * 0.77, _guiHeight * 0.72, _guiWidth, _guiHeight))
-			{
-				_reportButtonSelected = true;
-				if (mouse_check_button_pressed(mb_left))
+				
+				//Wrong Button Signal
+				if (_state == 2)
 				{
-					interactableObject = interactableInRange;
-					interactableStruct = interactableInRange.interactableStruct;
-					interactableObject.amogus = self;
-					inMenu = true
+					_state = 0;
+					interactableStruct.timer = _showTime;
 				}
 			}
+			var _showButton = _orderArray[_showIndex];
+			
+			//Draw && Interact With the Buttons
+			var _columns = interactableStruct.buttonColumns;
+			for (var _i = 0; _i < sqr(_columns); _i ++)
+			{
+				var _x = _buttonX + (_buttonWidth + _buttonSpacing) * (_i % _columns) + _buttonSpacing * 0.5;
+				var _y = _buttonY + (_buttonWidth + _buttonSpacing) * (_i div _columns);
+				
+				var _isAbled = _state == 1;
+				if (button(_x, _y, _buttonWidth, _buttonWidth, "", buttonType.vote, _isAbled, true))
+				{
+					if (_i == _orderArray[_clickIndex])	//clicked on the right button
+					{
+						if (_clickIndex == _progress)	//end the cycle
+						{
+							if (_progress == interactableStruct.buttonNumber - 1)	//end the task
+							{
+								exitUI = true;
+								taskCompleted = true;
+							}
+							else
+							{
+								_progress ++;
+								_clickIndex = 0;
+								_state = 0;
+								interactableStruct.timer = _showTime;
+							}
+						}
+						else
+							_clickIndex ++;
+					}
+					else	//clicked on the wrong button
+					{
+						_progress = 0;
+						_clickIndex = 0;
+						_state = 2;
+						interactableStruct.timer = _showTime * 2;
+					}
+				}
+				surface_reset_target();
+				surface_set_target(surfaceUI);
+				
+				//Draw Highlighted Button
+				if (_state == 0 && _i == _showButton && interactableStruct.timer > 10)
+					draw_sprite_stretched(spr_ButtonSmall, 3, _x * guiToUI, _y * guiToUI, _buttonWidth * guiToUI, _buttonWidth * guiToUI);	//draw selected button
+				if (_state == 2 && interactableStruct.timer > 10)
+					draw_sprite_stretched(spr_ButtonSmall, 4, _x * guiToUI, _y * guiToUI, _buttonWidth * guiToUI, _buttonWidth * guiToUI);	//draw selected button
+			}
+			surface_reset_target();
+			surface_set_target(surfaceText);
+			
+			//Draw Light Bulbs
+			var _bulbNumber = interactableStruct.buttonNumber;
+			var _bulbSpacing = 55;
+			var _bulbX = _guiWidth * 0.5 - (_bulbNumber * _bulbSpacing) * 0.5;
+			for (var _i = 0; _i < _bulbNumber; _i ++)
+			{
+				var _x = _bulbX + _bulbSpacing * _i + _bulbSpacing * 0.5;
+				var _y = _buttonY + (_buttonWidth + _buttonSpacing) * _columns + 40;
+				var _index = _progress > _i;
+				draw_sprite_ext(spr_LightBulb, _index, _x, _y, 4, 4, 0, c_white, 1);
+			}
+			surface_reset_target();
+			
+			//Set the Struct Varibles Back
+			if (interactableStruct.timer > 0)
+				interactableStruct.timer --;
+			interactableStruct.progress = _progress;
+			interactableStruct.state = _state;
+			interactableStruct.clickIndex = _clickIndex;
+			interactableStruct.showIndex = _showIndex;
+			
+			if (exitUI)
+			{
+				interactableStruct.timer = interactableStruct.showTime;
+				interactableStruct.state = 0;
+				interactableStruct.clickIndex = 0;
+				ExitMenu(taskCompleted)
+			}
 		}
-		
-		var _colour = (_ableToReport) ? c_white : c_grey;
-		draw_sprite_ext(spr_Report, _reportButtonSelected, _guiWidth, _guiHeight, 3, 3, 0, _colour, 1);
-		if (_reportButtonSelected)
-			obj_Menu.buttonIsSelected = true;
+		break;
 	}
 }
+
+//Draw the Task Surface
+draw_surface_stretched(surfaceUI, 0, 0, _guiWidth, _guiHeight);
+draw_surface_stretched(surfaceText, 0, 0, _guiWidth, _guiHeight);
