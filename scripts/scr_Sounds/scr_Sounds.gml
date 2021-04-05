@@ -43,6 +43,10 @@ function Ejected(name){
 		case NAME.Vojta:
 			snd = choose(VojtaDeath,VojtaDeath3,VojtaDeath4,VojtaEject,VojtaEject2)
 			break
+			
+		case NAME.Johi:
+			snd = JohiDeath
+			break
 	}
 	audio_play_sound(sndEjected,0,0)
 	DelaySound(snd,60)
@@ -82,7 +86,11 @@ function Died(killer){
 			break
 			
 		case NAME.Vojta:
-			snd = choose(VojtaKill,VojtaKill2,VojtaKill3)
+			snd = choose(VojtaKill,VojtaKill2,VojtaKill3,VojtaKill4,VojtaKill5)
+			break
+			
+		case NAME.Johi:
+			snd = choose(JohiEmergency,JohiKill,JohiKill2)
 			break
 	}
 	audio_play_sound(sndKill,0,0)
@@ -125,6 +133,10 @@ function Killed(corpse){
 		case NAME.Vojta:
 			snd = choose(VojtaDeath,VojtaDeath2,VojtaDeath3,VojtaDeath4)
 			break
+			
+		case NAME.Johi:
+			snd = choose(JohiDeath)
+			break
 	}
 	audio_play_sound(sndKill,0,0)
 	DelaySound(snd,80)
@@ -165,6 +177,10 @@ function EmergencyMeeting(caller){
 			
 		case NAME.Vojta:
 			snd = choose(VojtaEmergency,VojtaEmergency2)
+			break
+			
+		case NAME.Johi:
+			snd = choose(JohiEmergency)
 			break
 	}
 	audio_play_sound(sndEmergencyMeeting,0,0)

@@ -1,3 +1,5 @@
+var lightsPrev = global.lightsOn
+
 //Get GUI Properties
 var _guiWidth = display_get_gui_width();
 var _guiHeight = display_get_gui_height();
@@ -164,8 +166,6 @@ if (obj_GameManager.inGame)
 //Interact With Interactables
 if (interactableObject != noone && isAlive)
 {
-	if (LMBpress) audio_play_sound(sndButton,0,0)
-	
 	switch (interactableObject.type)
 	{
 		case interactable.emergencyButton:
@@ -327,8 +327,11 @@ if (interactableObject != noone && isAlive)
 			}
 			
 			//Interaction
+			var offset_ = offset - windowToGui //Correction to account for sWireSocket
+			
 			if (LMBpress)
 			{
+				audio_play_sound(sndButton,0,0)
 				var nearestWire = noone
 				var smallestDist = infinity
 				var dist = infinity
@@ -354,10 +357,10 @@ if (interactableObject != noone && isAlive)
 				var wireX = selectedWire[0] * windowToGui + (windowW / 2)
 				var wireY = selectedWire[1] * windowToGui + (windowH / 2)
 				draw_primitive_begin(pr_trianglefan)
-					draw_vertex(wireX,wireY - offset)
-					draw_vertex(mouseX,mouseY - offset)
-					draw_vertex(mouseX,mouseY + offset)
-					draw_vertex(wireX,wireY + offset)
+					draw_vertex(wireX,wireY - offset_)
+					draw_vertex(mouseX,mouseY - offset_)
+					draw_vertex(mouseX,mouseY + offset_)
+					draw_vertex(wireX,wireY + offset_)
 				draw_primitive_end()
 				
 				draw_sprite_stretched(sWireSocket,0,mouseX - offset - windowToGui,mouseY - offset - windowToGui,10 * windowToGui,10 * windowToGui)
@@ -367,6 +370,7 @@ if (interactableObject != noone && isAlive)
 			
 			if (LMBrelease)
 			{
+				audio_play_sound(sndSliderHit,0,0)
 				audio_play_sound(sndButton,0,0)
 				var nearestGoal = noone
 				var smallestDist = infinity
@@ -390,12 +394,11 @@ if (interactableObject != noone && isAlive)
 				{
 					draw_set_color(make_color_hsv(interactableStruct.selectedWireID * hueOffset,150,255))
 					surface_set_target(wiresSurf)
-						offset -= windowToGui	//Correction to account for sWireSocket
 						draw_primitive_begin(pr_trianglefan)
-							draw_vertex(wireX,wireY - offset)
-							draw_vertex(goalX,goalY - offset)
-							draw_vertex(goalX,goalY + offset)
-							draw_vertex(wireX,wireY + offset)
+							draw_vertex(wireX,wireY - offset_)
+							draw_vertex(goalX,goalY - offset_)
+							draw_vertex(goalX,goalY + offset_)
+							draw_vertex(wireX,wireY + offset_)
 						draw_primitive_end()
 					surface_reset_target()
 					interactableStruct.completedWires++
@@ -429,7 +432,7 @@ if (interactableObject != noone && isAlive)
 		case interactable.vent:
 		{
 			var minDistance = 30
-			var maxDistance = 400
+			var maxDistance = 600
 			//Closest dir
 			var dir//, dirCorrected, correctedClosestDir
 			var mouseDir = point_direction(x,y,mouse_x,mouse_y)
@@ -463,6 +466,7 @@ if (interactableObject != noone && isAlive)
 						scale *= 1.5
 						if (LMBpress)
 						{
+							audio_play_sound(sndButton,0,0)
 							x = global.ventPositions[i][0]
 							y = global.ventPositions[i][1]
 							ResetCameraPos()
@@ -510,9 +514,13 @@ if (interactableObject != noone && isAlive)
 			var yy = interactableStruct.targetPositionY * windowToGui + windowH / 2
 			
 			var offset = 10
+			
+			if (LMBpress) audio_play_sound(sndButton,0,0)
+			
 			if (LMBpress && point_in_rectangle(mouseX,mouseY,xx - 10 * windowToGui,yy - 10 * windowToGui,xx + 10 * windowToGui,yy + 10 * windowToGui))
 			{
 				audio_play_sound(sndSucces,0,0)
+				audio_play_sound(sndTargetHit,0,0)
 				interactableStruct.succesfulShots++
 				interactableStruct.resetCooldown = -1
 			}
@@ -586,6 +594,7 @@ if (interactableObject != noone && isAlive)
 						if (targetHit)
 						{
 							audio_play_sound(sndSucces,0,0)
+							audio_play_sound(sndSliderHit,0,0)
 							interactableStruct.handlePositions[i][2] = true
 							interactableStruct.activeSliderId++
 						}
@@ -618,6 +627,41 @@ if (interactableObject != noone && isAlive)
 			{
 				taskCompleted = true
 				exitUI = true
+			}
+			
+			if (exitUI)
+			{
+				ExitMenu(taskCompleted)
+			}
+		}
+		break
+		
+		case interactable.sliderWait:
+		{
+			var xx = windowW / 2 - 80 * windowToGui
+			var yy = windowH / 2 - 16 * windowToGui
+			
+			if (LMBpress) audio_play_sound(sndButton,0,0)
+			
+			if (LMB)
+			{
+				interactableStruct.progress = lerp(interactableStruct.progress,1,interactableStruct.loadSpeed)
+				if (!audio_is_playing(sndLoading)) audio_play_sound(sndLoading,0,0)
+				audio_sound_pitch(sndLoading,interactableStruct.progress + 0.2)
+			}
+			if (!LMB) interactableStruct.progress = 0
+			draw_sprite_stretched(sWires,0,0,0,windowW,windowH)
+			draw_sprite_stretched(sSlider,0,xx,yy, 160 * windowToGui, 16 * windowToGui)
+			draw_sprite_stretched(sHandle,LMB,windowW / 2 - 20 * windowToGui,yy + 40 * windowToGui, 20 * windowToGui, 20 * windowToGui)
+			
+			var col = make_color_hsv(interactableStruct.progress * 70 - 20, 180, 255)
+			draw_sprite_part_ext(sSlider,1,0,0, interactableStruct.progress * 160, 16 ,xx,yy,windowToGui,windowToGui,col,1)
+			
+			if (interactableStruct.progress > 0.95)
+			{
+				exitUI = true
+				taskCompleted = true
+				audio_play_sound(sndLoadingDone,0,0)
 			}
 			
 			if (exitUI)
@@ -695,6 +739,7 @@ if (interactableObject != noone && isAlive)
 				var _isAbled = _state == 1;
 				if (button(_x, _y, _buttonWidth, _buttonWidth, "", buttonType.vote, _isAbled, true))
 				{
+					audio_play_sound(sndButton,0,0)
 					if (_i == _orderArray[_clickIndex])	//clicked on the right button
 					{
 						if (_clickIndex == _progress)	//end the cycle
@@ -728,7 +773,9 @@ if (interactableObject != noone && isAlive)
 				
 				//Draw Highlighted Button
 				if (_state == 0 && _i == _showButton && interactableStruct.timer > 10)
+				{
 					draw_sprite_stretched(spr_ButtonSmall, 3, _x * guiToUI, _y * guiToUI, _buttonWidth * guiToUI, _buttonWidth * guiToUI);	//draw selected button
+				}
 				if (_state == 2 && interactableStruct.timer > 10)
 					draw_sprite_stretched(spr_ButtonSmall, 4, _x * guiToUI, _y * guiToUI, _buttonWidth * guiToUI, _buttonWidth * guiToUI);	//draw selected button
 			}
@@ -747,6 +794,12 @@ if (interactableObject != noone && isAlive)
 				draw_sprite_ext(spr_LightBulb, _index, _x, _y, 4, 4, 0, c_white, 1);
 			}
 			surface_reset_target();
+			
+			if (interactableStruct.timer == _showTime)
+			{
+				audio_play_sound(sndShiftButton,0,0)
+				audio_sound_pitch(sndShiftButton,_showButton / 9 + 0.5)
+			}
 			
 			//Set the Struct Varibles Back
 			if (interactableStruct.timer > 0)
@@ -771,3 +824,5 @@ if (interactableObject != noone && isAlive)
 //Draw the Task Surface
 draw_surface_stretched(surfaceUI, 0, 0, _guiWidth, _guiHeight);
 draw_surface_stretched(surfaceText, 0, 0, _guiWidth, _guiHeight);
+
+if (lightsPrev != global.lightsOn) audio_play_sound(sndLights,0,0)
