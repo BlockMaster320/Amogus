@@ -29,16 +29,20 @@ function button(_x, _y, _width, _height, _text, _type, _isAbled, _small)
 		var _mouseWindowY = window_mouse_get_y();
 		if (point_in_rectangle(_mouseWindowX, _mouseWindowY, _x1, _y1, _x2, _y2))
 		{
-			buttonIsSelected = true;
+			obj_Menu.buttonIsSelected = true;
 			if (obj_Menu.transitionProgress < 0.5)
 			{
-				draw_sprite_stretched(_sprite, 1, _x1 * guiToUI, _y1 * guiToUI, _width * guiToUI, _height * guiToUI);	//draw selected button
 				/*draw_rectangle_colour(_x1, _y1, _x2, _y2, _colour2, _colour2, _colour2, _colour2, false);*/
 				if (mouse_check_button_pressed(mb_left))
 				{
 					audio_play_sound(sndButton,0,0)
 					_returnValue = true;
 				}
+				
+				if (mouse_check_button(mb_left))
+					draw_sprite_stretched(_sprite, 2, _x1 * guiToUI, _y1 * guiToUI, _width * guiToUI, _height * guiToUI);	//draw selected button
+				else
+					draw_sprite_stretched(_sprite, 1, _x1 * guiToUI, _y1 * guiToUI, _width * guiToUI, _height * guiToUI);	//draw selected button
 			}
 			
 			if (obj_Menu.transitionProgress >= 0.5 || mouse_check_button(mb_left))

@@ -126,9 +126,13 @@ function message_receive_server(_socket, _buffer)
 			var _i = buffer_read(_buffer, buffer_u8);
 			var _j = buffer_read(_buffer, buffer_u8);
 			
+			/*show_debug_message("kekk");*/
 			message_lights(serverBuffer, _i, _j);
 			with (obj_AmogusClient)
+			{
 				network_send_packet(clientSocket, other.serverBuffer, buffer_tell(other.serverBuffer));
+				/*show_debug_message(clientSocket);*/
+			}
 			
 			var _lightsOn = true;
 			with (obj_Interactable)
@@ -146,7 +150,6 @@ function message_receive_server(_socket, _buffer)
 								_lightsOn = false;
 						}
 					}
-					show_debug_message("\n");
 				}
 			}
 			global.lightsOn = _lightsOn;
@@ -280,7 +283,7 @@ function message_receive_client(_socket, _buffer)
 		{
 			var _i = buffer_read(_buffer, buffer_u8);
 			var _j = buffer_read(_buffer, buffer_u8);
-			
+			/*show_debug_message("yop");*/
 			var _lightsOn = true;
 			with (obj_Interactable)
 			{

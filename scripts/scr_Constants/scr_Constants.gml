@@ -73,5 +73,6 @@ enum interactable
 	vent,
 	shooter,
 	sliderCatch,
+	simonSays,
 	body
 }

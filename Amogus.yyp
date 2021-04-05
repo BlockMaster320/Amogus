@@ -79,6 +79,7 @@
     {"id":{"name":"spr_Panel","path":"sprites/spr_Panel/spr_Panel.yy",},"order":3,},
     {"id":{"name":"scr_Draw","path":"scripts/scr_Draw/scr_Draw.yy",},"order":4,},
     {"id":{"name":"TomasDeath2","path":"sounds/TomasDeath2/TomasDeath2.yy",},"order":1,},
+    {"id":{"name":"spr_LightBulb","path":"sprites/spr_LightBulb/spr_LightBulb.yy",},"order":8,},
     {"id":{"name":"obj_Amogus","path":"objects/obj_Amogus/obj_Amogus.yy",},"order":3,},
     {"id":{"name":"JachymEject","path":"sounds/JachymEject/JachymEject.yy",},"order":2,},
     {"id":{"name":"JachymEject3","path":"sounds/JachymEject3/JachymEject3.yy",},"order":4,},
