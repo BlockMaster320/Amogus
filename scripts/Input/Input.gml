@@ -28,7 +28,7 @@ function UIinput(enabled)	{
 		LMBrelease =	mouse_check_button_released(mb_left)
 		LMB =			mouse_check_button(mb_left)
 	
-		exitUI =		keyboard_check_pressed(ord("E")) or keyboard_check_pressed(vk_escape) or keyboard_check_pressed(vk_enter)
+		exitUI =		keyboard_check_pressed(ord("E")) or keyboard_check_pressed(ord("F")) or keyboard_check_pressed(vk_escape) or keyboard_check_pressed(vk_enter)
 	}
 	else
 	{

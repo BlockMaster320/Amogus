@@ -74,3 +74,8 @@ alarm[0] = POSITION_UPDATE;
 //Meeting
 hasVoted = false;
 voteArray = [];	//array storing IDs of aoguses who voted for the amogus
+
+//Set Task Surface
+surfaceUI = noone;
+surfaceText = noone;
+guiToUI = guiW / display_get_gui_width();

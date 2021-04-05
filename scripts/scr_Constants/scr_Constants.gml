@@ -42,7 +42,7 @@ enum warningType
 #macro CURSOR_BLINK_SPEED 25
 #macro TRANSITION_SPEED 0.014
 #macro WARNING_SPEED 0.012
-#macro NAME_NUMBER 8
+#macro NAME_NUMBER 9
 
 enum NAME
 {
@@ -53,7 +53,8 @@ enum NAME
 	OkMan,
 	Adam,
 	Vojta,
-	Tom
+	Tom,
+	Johi
 }
 
 //Amogus
@@ -73,5 +74,6 @@ enum interactable
 	vent,
 	shooter,
 	sliderCatch,
+	simonSays,
 	body
 }

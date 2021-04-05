@@ -85,6 +85,24 @@ function Interactable(_type) constructor
 		}
 		break
 		
+		case interactable.simonSays:
+		{
+			buttonColumns = 3;
+			buttonNumber = 7;
+			buttonOrderArray = [];
+			for (var _i = 0; _i < buttonNumber; _i ++)
+				buttonOrderArray[_i] = irandom_range(0, sqr(buttonColumns) - 1);
+			
+			progress = 0;
+			state = 0;	//0 - button show, 1 - button clicking, 2 - wrong button signal
+			showTime = 25;
+			timer = showTime;
+			
+			clickIndex = 0;
+			showIndex = 0;
+		}
+		break;
+		
 		case interactable.body:
 		{
 			clientId = noone;
