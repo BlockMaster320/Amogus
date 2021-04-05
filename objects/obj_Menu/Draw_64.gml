@@ -266,6 +266,8 @@ switch (menuState)
 	
 	case menu.throwOut:
 	{
+		if (menuStatePrev != menu.throwOut) Ejected(thrownOutAmogus.nameId)
+		
 		draw_sprite_stretched(spr_BackgroundSpace, 0, 0, 0, _guiWidth, _guiHeight);
 		var _menuStateTimer = get_menuState_timer(menu.throwOut);
 		var _menuProgress = _menuStateTimer - menuStateTimer;
