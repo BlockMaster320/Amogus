@@ -4,7 +4,7 @@ if (0.01 > random(100) and room = rm_Menu  and !audio_is_playing(Waiting)) audio
 
 if (soundDelay = 0)
 {
-	audio_sound_gain(soundID,5,0)
+	audio_sound_gain(soundID,8,0)
 	audio_play_sound(soundID,0,0)
 }
 soundDelay--

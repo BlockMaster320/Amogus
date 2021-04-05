@@ -134,6 +134,7 @@ function message_receive_server(_socket, _buffer)
 				/*show_debug_message(clientSocket);*/
 			}
 			
+			var lightsPrev = global.lightsOn
 			var _lightsOn = true;
 			with (obj_Interactable)
 			{
@@ -153,6 +154,8 @@ function message_receive_server(_socket, _buffer)
 				}
 			}
 			global.lightsOn = _lightsOn;
+			
+			if (lightsPrev != global.lightsOn) audio_play_sound(sndLights,0,0)
 		}
 		break;
 		
@@ -284,6 +287,7 @@ function message_receive_client(_socket, _buffer)
 			var _i = buffer_read(_buffer, buffer_u8);
 			var _j = buffer_read(_buffer, buffer_u8);
 			/*show_debug_message("yop");*/
+			var lightsPrev = global.lightsOn
 			var _lightsOn = true;
 			with (obj_Interactable)
 			{
@@ -303,6 +307,8 @@ function message_receive_client(_socket, _buffer)
 				}
 			}
 			global.lightsOn = _lightsOn;
+			
+			if (lightsPrev != global.lightsOn) audio_play_sound(sndLights,0,0)
 		}
 		break;
 		

@@ -103,6 +103,13 @@ function Interactable(_type) constructor
 		}
 		break;
 		
+		case interactable.sliderWait:
+		{
+			loadSpeed = random_range(0.0001,0.05)
+			progress = 0	//0 - 1
+		}
+		break
+		
 		case interactable.body:
 		{
 			clientId = noone;

@@ -112,6 +112,15 @@ if (obj_GameManager.inGame)
 						}
 						playerAlpha = 0
 						break
+						
+					case interactable.shooter:
+						/*p = part_type_create()
+						
+						part_type_life(p,20,40)
+						part_type_color2(p,c_red,c_black)
+						part_type_size(p,windowToGui*5,windowToGui*8,-0.01,0)
+						part_type_gravity(p,0.1,0)*/
+						break
 				}
 			}
 		}

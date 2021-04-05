@@ -8,7 +8,7 @@ function id_get_head(_id)
 /// Function storing names of avatar named IDs.
 function id_get_name(_id)
 {
-	static nameArray = ["Ondra", "Q-ba", "Jahim", "Katt", "OkMan", "A Adam", "Vojta", "Tomas"];
+	static nameArray = ["Ondra", "Q-ba", "Jahim", "Katt", "OkMan", "A Adam", "Vojta", "Tomas","Johi"];
 	return nameArray[_id];
 }
 
