@@ -75,5 +75,6 @@ enum interactable
 	shooter,
 	sliderCatch,
 	simonSays,
+	sliderWait,
 	body
 }
