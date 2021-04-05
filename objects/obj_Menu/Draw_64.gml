@@ -295,7 +295,7 @@ switch (menuState)
 		draw_text_transformed_colour(_guiWidth * 0.5, _guiHeight * 0.8, _textPart, 1, 1, 0,
 										c_white, c_white, c_white, c_white, 1);
 		
-		if (menuStateTimer <= 0 && transitionProgress <= 0 && obj_GameManager.serverSide)
+		if (menuStateTimer <= 40 && transitionProgress <= 0 && obj_GameManager.serverSide)
 		{
 			if (!check_game_end())
 			{
