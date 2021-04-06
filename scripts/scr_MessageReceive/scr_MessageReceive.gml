@@ -367,11 +367,10 @@ function message_receive_client(_socket, _buffer)
 				transition(noone, _transitionFunction, true);
 			}
 			else
-				transition(noone, noone, true);
+				transition(noone, function() {game_setup();}, true);
 			
-			obj_Menu.tasksNeeded = ds_map_size(clientIdMap) * TASKS_PER_AMOGUS;
-			game_setup();
-				
+			with (obj_Menu)
+				tasksNeeded = (ds_map_size(obj_Client.clientIdMap) - impostors) * TASKS_PER_AMOGUS;
 		}
 		break;
 		
