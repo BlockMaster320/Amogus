@@ -49,6 +49,9 @@ inMenu = false
 taskCompleted = false
 
 global.lightsOn = true
+global.activeTasks = array_create(0)
+global.ventPositions = array_create(0)
+global.lightPositions = array_create(0)
 
 playerAlpha = 1
 

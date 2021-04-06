@@ -4,6 +4,36 @@ var lightsPrev = global.lightsOn
 var _guiWidth = display_get_gui_width();
 var _guiHeight = display_get_gui_height();
 
+#region Draw arrows to tasks
+if (!isImpostor)
+{
+	var dir, alpha, xx, yy, dist, showArray, color
+	var offset = 50
+	var scale = windowToGui * 0.5
+	if (!global.lightsOn)
+	{
+		color = c_yellow
+		showArray = global.lightPositions
+	}
+	else
+	{
+		color = c_white
+		showArray = global.activeTasks
+	}
+	for (var i = 0; i < array_length(showArray); i++)
+	{
+		dist = point_distance(x,y,showArray[i].x,showArray[i].y)
+		dir = point_direction(x,y,showArray[i].x,showArray[i].y)
+		alpha = lerp(-.5,1,dist / 120)
+		scale = clamp(lerp(2,1,dist / 80) - lerp(0,.5,dist / 700),0.3,2) * windowToGui
+		xx = (x - camX + lengthdir_x(offset,dir)) * windowToGui
+		yy = (y - camY + lengthdir_y(offset,dir)) * windowToGui
+		//draw_sprite_general(sArrow,0,0,0,20 * windowToGui,20 * windowToGui,xx,yy,1,1,dir,c_white,c_white,c_white,c_white,1)
+		draw_sprite_ext(sArrow,0,xx,yy,scale,scale,dir-90,color,alpha)
+	}
+}
+#endregion
+
 #region Text
 draw_set_halign(fa_center);
 draw_set_valign(fa_bottom);
@@ -257,6 +287,8 @@ if (interactableObject != noone && isAlive)
 					var offset = interactableStruct.clickOffset
 					if (LMBpress and point_in_rectangle(mouseX,mouseY,xx - offset,yy - offset,xx + 20 * windowToGui + offset,yy + 20 * windowToGui + offset))
 					{
+						audio_play_sound(sndButton,0,0)
+						
 						//Send Message to Change the Ligth Switches
 						if (obj_GameManager.serverSide)
 						{
@@ -657,7 +689,7 @@ if (interactableObject != noone && isAlive)
 			var col = make_color_hsv(interactableStruct.progress * 70 - 20, 180, 255)
 			draw_sprite_part_ext(sSlider,1,0,0, interactableStruct.progress * 160, 16 ,xx,yy,windowToGui,windowToGui,col,1)
 			
-			if (interactableStruct.progress > 0.95)
+			if (interactableStruct.progress > 0.97)
 			{
 				exitUI = true
 				taskCompleted = true

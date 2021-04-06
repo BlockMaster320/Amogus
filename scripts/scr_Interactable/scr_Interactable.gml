@@ -2,7 +2,7 @@ function Interactable(_type) constructor
 {
 	type = _type;
 	/*sprite = spr_ButtonTest;*/
-	distance = 30;
+	distance = 50;
 	switch (_type)
 	{
 		case interactable.lights:

@@ -35,8 +35,7 @@ function draw_amogus_table(_x, _y, _meeting)
 		var _isAlive = _amogus.isAlive;
 		var _infoX = _x + _infoSpacingX - (_infoSpacingX * 2 + _infoWidth) * (_i % 2 == 0);
 		var _infoY = _y + (_infoHeight + _infoSpacingY) * (_i div 2);
-		
-		
+
 		surface_reset_target();
 		surface_set_target(surfaceUI);
 		draw_sprite_stretched(spr_TextField, 0, _infoX * guiToUI, _infoY * guiToUI, _infoWidth * guiToUI, _infoHeight * guiToUI)
@@ -237,6 +236,8 @@ function check_game_end()
 /// Function setting up the game at start || continuation of the game.
 function game_setup()
 {
+	array_delete(global.activeTasks,0,array_length(global.activeTasks)+1)
+	
 	with (oAmogusLocal)
 	{
 		x = obj_Menu.spawnX + lengthdir_x(random(30), random(360));
@@ -277,6 +278,7 @@ function ExitMenu(_taskCompleted)
 	{
 		audio_play_sound(sndTaskCompleted,0,0)
 		var type = interactableObject.interactableStruct.type
+		interactableObject.usable = false
 		interactableObject.interactableStruct = noone
 		interactableObject.interactableStruct = new Interactable(type)
 		taskCompleted = false
