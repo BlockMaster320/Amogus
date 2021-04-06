@@ -278,11 +278,12 @@ function ExitMenu(_taskCompleted)
 	{
 		audio_play_sound(sndTaskCompleted,0,0)
 		var type = interactableObject.interactableStruct.type
+		interactableObject.usable = false
 		interactableObject.interactableStruct = noone
 		interactableObject.interactableStruct = new Interactable(type)
 		taskCompleted = false
 		
-		/*if (obj_GameManager.serverSide)
+		if (obj_GameManager.serverSide)
 		{
 			obj_Menu.taskProgress ++;
 			var _serverBuffer = obj_Server.serverBuffer;
@@ -297,7 +298,7 @@ function ExitMenu(_taskCompleted)
 			var _clientBuffer = obj_Client.clientBuffer;
 			message_task_progress(_clientBuffer, 1);
 			network_send_packet(obj_Client.client, _clientBuffer, buffer_tell(_clientBuffer));
-		}*/
+		}
 	}
 	else audio_play_sound(sndSucces,0,0)
 	interactableObject.amogus = noone;
