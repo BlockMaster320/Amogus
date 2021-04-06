@@ -1,3 +1,6 @@
+MovementInput(!inMenu);
+UIinput(inMenu)
+
 if (obj_GameManager.inGame)
 {
 	//Set the Tile Map
@@ -8,8 +11,6 @@ if (obj_GameManager.inGame)
 	}
 	
 	//Movement
-	MovementInput(!inMenu);
-	UIinput(inMenu)
 	if (interactableObject == noone && obj_Menu.menuState == noone)
 	{
 		hsp = (right - left) * spd
@@ -62,11 +63,17 @@ if (obj_GameManager.inGame)
 	#endregion
 	
 	//Search for Interactables
-	if (interactableObject == noone && isAlive /*&& !isImpostor*/)
+	if (interactableObject == noone && isAlive)
 	{
 		interactableInRange = noone;
 		var nearestInteractable = instance_nearest(x,y,obj_Interactable)
-		if (point_distance(x, y, nearestInteractable.x, nearestInteractable.y) < nearestInteractable.interactableStruct.distance && nearestInteractable.amogus == noone)
+		var canInteract = false
+		if (!isImpostor)
+		{
+			if (nearestInteractable.usable or (nearestInteractable.type >= 5 and nearestInteractable.type <= 7) or (nearestInteractable.type = interactable.lights and !global.lightsOn)) canInteract = true
+		}
+		if (isImpostor and nearestInteractable.type >= 5 and nearestInteractable.type <= 9) canInteract = true
+		if (point_distance(x, y, nearestInteractable.x, nearestInteractable.y) < nearestInteractable.interactableStruct.distance && nearestInteractable.amogus == noone and canInteract)
 		{
 			interactableInRange = nearestInteractable;
 			if (buttonInteract)
@@ -113,14 +120,17 @@ if (obj_GameManager.inGame)
 						playerAlpha = 0
 						break
 						
-					case interactable.shooter:
-						/*p = part_type_create()
+					/*case interactable.shooter:
+						pSys = part_system_create()
+					
+						p = part_type_create()
 						
 						part_type_life(p,20,40)
-						part_type_color2(p,c_red,c_black)
-						part_type_size(p,windowToGui*5,windowToGui*8,-0.01,0)
-						part_type_gravity(p,0.1,0)*/
-						break
+						part_type_color2(p,c_red,c_white)
+						part_type_size(p,windowToGui*0.5,windowToGui,-0.01,0)
+						part_type_gravity(p,0.1,90)
+						part_type_speed(p,1,2,0,0)
+						break*/
 				}
 			}
 		}

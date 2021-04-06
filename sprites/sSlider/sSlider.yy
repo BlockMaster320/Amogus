@@ -99,7 +99,7 @@
       0,
     ],
     "resourceVersion": "1.0",
-    "loadedVersion": null,
+    "loadedVersion": {},
     "resourceType": "GMNineSliceData",
   },
   "parent": {

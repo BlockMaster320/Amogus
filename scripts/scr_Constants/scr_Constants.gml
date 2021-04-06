@@ -67,14 +67,14 @@ enum NAME
 //Interactable
 enum interactable
 {
-	emergencyButton,
-	camera,
-	lights,
-	wires,
-	vent,
-	shooter,
+	shooter,			//Tasks
 	sliderCatch,
 	simonSays,
+	wires,
 	sliderWait,
-	body
+	emergencyButton,	//Non tasks
+	body,
+	camera,
+	lights,				//Impostrorr
+	vent
 }
