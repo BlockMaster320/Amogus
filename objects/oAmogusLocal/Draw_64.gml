@@ -102,7 +102,7 @@ if (obj_GameManager.inGame)
 {
 	var _mouseX = window_mouse_get_x();
 	var _mouseY = window_mouse_get_y();
-
+	
 	//Killing
 	if (isAlive && isImpostor)
 	{
@@ -771,9 +771,13 @@ if (interactableObject != noone && isAlive)
 				var _isAbled = _state == 1;
 				if (button(_x, _y, _buttonWidth, _buttonWidth, "", buttonType.vote, _isAbled, true))
 				{
-					audio_play_sound(sndButton,0,0)
+					/*audio_play_sound(sndButton,0,0)*/
 					if (_i == _orderArray[_clickIndex])	//clicked on the right button
 					{
+						var _pitch = get_pitch_lick(_clickIndex);
+						audio_sound_pitch(sndTargetHit, _pitch);
+						audio_play_sound(sndTargetHit, 0, 0);
+						
 						if (_clickIndex == _progress)	//end the cycle
 						{
 							if (_progress == interactableStruct.buttonNumber - 1)	//end the task
@@ -792,12 +796,13 @@ if (interactableObject != noone && isAlive)
 						else
 							_clickIndex ++;
 					}
-					else	//clicked on the wrong button
+					else	//clicked on a wrong button
 					{
 						_progress = 0;
 						_clickIndex = 0;
 						_state = 2;
 						interactableStruct.timer = _showTime * 2;
+						audio_sound_pitch(sndTargetHit, 1);
 					}
 				}
 				surface_reset_target();
@@ -829,8 +834,10 @@ if (interactableObject != noone && isAlive)
 			
 			if (interactableStruct.timer == _showTime)
 			{
+				var _pitch = get_pitch_lick(_showIndex);
+				audio_sound_pitch(sndShiftButton, _pitch);
 				audio_play_sound(sndShiftButton,0,0)
-				audio_sound_pitch(sndShiftButton,_showButton / 9 + 0.5)
+				/*audio_sound_pitch(sndShiftButton,_showButton / 9 + 0.5)*/
 			}
 			
 			//Set the Struct Varibles Back

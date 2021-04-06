@@ -24,7 +24,7 @@ textCursorIsVisible = true;
 alarm[0] = CURSOR_BLINK_SPEED;	//alarm that makes the textCursor blink
 
 //Game Settings
-/*impostors = 1;*/
+impostors = 1;
 
 //Set Surfaces
 surfaceText = noone;
@@ -65,3 +65,4 @@ meetingSoundPlayed = false
 caller = noone
 audio_play_sound(sndAmbience,0,1)
 audio_sound_gain(sndAmbience,0,0)
+audio_play_sound(snd_Amogus, 0, false);

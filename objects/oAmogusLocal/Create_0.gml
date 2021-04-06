@@ -47,6 +47,7 @@ interactableInRange = noone;
 
 inMenu = false
 taskCompleted = false
+taskSetup = true;
 
 global.lightsOn = true
 global.activeTasks = array_create(0)

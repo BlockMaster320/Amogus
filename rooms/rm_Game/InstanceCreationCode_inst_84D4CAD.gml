@@ -1,1 +1,1 @@
-type = interactable.shooter;
+type = interactable.simonSays;

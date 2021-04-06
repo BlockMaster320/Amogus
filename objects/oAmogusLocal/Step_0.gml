@@ -3,6 +3,27 @@ UIinput(inMenu)
 
 if (obj_GameManager.inGame)
 {
+	//Set Up Tasks
+	if (taskSetup)
+	{
+		var _taskArray = [];
+		with (obj_Interactable)
+			if (type < 5) array_push(_taskArray, self);
+	
+		repeat (TASKS_PER_AMOGUS)
+		{
+			var _index =  irandom_range(0, array_length(_taskArray) - 1);
+			var _task = _taskArray[_index];
+			with (_task)
+			{
+				usable = true;
+				array_push(global.activeTasks, self);
+			}
+			array_delete(_taskArray, _index, 1);
+		}
+		taskSetup = false;
+	}
+	
 	//Set the Tile Map
 	if (gameStartSetup)
 	{
@@ -73,6 +94,7 @@ if (obj_GameManager.inGame)
 			if (nearestInteractable.usable or (nearestInteractable.type >= 5 and nearestInteractable.type <= 7) or (nearestInteractable.type = interactable.lights and !global.lightsOn)) canInteract = true
 		}
 		if (isImpostor and nearestInteractable.type >= 5 and nearestInteractable.type <= 9) canInteract = true
+		canInteract = true;
 		if (point_distance(x, y, nearestInteractable.x, nearestInteractable.y) < nearestInteractable.interactableStruct.distance && nearestInteractable.amogus == noone and canInteract)
 		{
 			interactableInRange = nearestInteractable;

@@ -249,6 +249,8 @@ function game_setup()
 		interactableObject = noone;
 		interactableStruct = noone;
 		interactableInRange = noone;
+		
+		taskSetup = true;
 	}
 	
 	with (obj_Menu)
