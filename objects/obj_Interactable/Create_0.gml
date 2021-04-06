@@ -3,5 +3,5 @@ interactableId = obj_GameManager.interactableIdCount ++;
 type = 0;
 interactableStruct = noone;
 amogus = noone;	//amogus currently interacting with the interactable
+usable = false
 
-global.ventPositions = array_create(0)
