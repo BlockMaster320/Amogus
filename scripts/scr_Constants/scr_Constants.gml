@@ -62,7 +62,7 @@ enum NAME
 #macro windowToGui window_get_width() / guiW
 #macro guiToWindow guiW / window_get_width()
 #macro KILL_RANGE 50
-#macro TASKS_PER_AMOGUS 1
+#macro TASKS_PER_AMOGUS 5
 
 //Interactable
 enum interactable

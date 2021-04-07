@@ -160,13 +160,25 @@ switch (menuState)
 		var _cylinderWidth = sprite_get_width(spr_AmogusSelection);
 		var _cylinderY = _selectionY + _selectionSpacing + 40;
 		draw_sprite_stretched(spr_AmogusSelection, 0, _selectionX * guiToUI, _cylinderY * guiToUI, _cylinderWidth, (_guiHeight - _cylinderY) * guiToUI);	//draw not selected button
-		surface_reset_target();
-		surface_set_target(surfaceText);
+		
+		//Draw Game Info
+		draw_set_halign(fa_right);
+		draw_set_valign(fa_bottom);
+		draw_text_transformed_colour(_guiWidth - 5, _guiHeight - 5, "Amogus v. b.1.0\nHyperCubic Studio 2021",
+									 0.5, 0.5, 0, c_white, c_white, c_white, c_white, 1);
+		
+		//Play Music
+		if (transitionProgress < 0.05 && !audio_is_playing(snd_MusicEarrape) && !audio_is_playing(snd_RickRoll))
+			audio_play_sound(snd_MusicEarrape, 0, false);
 	}
 	break;
 	
 	case menu.lobby:
 	{
+		//Stop the Music
+		audio_stop_sound(snd_MusicEarrape);
+		/*audio_stop_sound(snd_RickRoll);*/
+		
 		//Draw Amoguses Info Table
 		draw_amogus_table(_guiWidth * 0.5, 100, false);
 		
@@ -178,9 +190,9 @@ switch (menuState)
 		if (button(_buttonX, _buttonY, _buttonWidth, _buttonHeight, "START THE GAME", buttonType.menu, _isAbled, false))
 		{
 			//Start the Game
-			var _transitionFunction = function() {obj_GameManager.inGame = true; room_goto(rm_Game);};
+			var _transitionFunction = function() {obj_GameManager.inGame = true; room_goto(rm_Game); game_setup();};
 			transition(noone, _transitionFunction, true);
-			tasksNeeded = ds_map_size(obj_Server.clientIdMap) * TASKS_PER_AMOGUS;
+			tasksNeeded = (ds_map_size(obj_Server.clientIdMap) - impostors) * TASKS_PER_AMOGUS;
 			
 			with (oAmogusLocal)
 			{
@@ -204,10 +216,18 @@ switch (menuState)
 				message_game_start(_serverBuffer, _impostor.clientId, false);
 				network_send_packet(clientSocket, _serverBuffer, buffer_tell(_serverBuffer));
 			}
-			
-			//Set Up the Game
-			game_setup()
 		}
+		
+		//Rick Roll hehehe
+		var _buttonX = _guiWidth * 0.9 - _buttonWidth * 0.5;
+		var _buttonY = _guiHeight * 0.9 - _buttonHeight * 0.5;
+		if (button(_buttonX, _buttonY, _buttonWidth, _buttonHeight, "DON'T CLICK", buttonType.menu, true, false))
+		{
+			audio_stop_sound(snd_MusicEarrape);
+			audio_play_sound(snd_RickRoll, 0, false);
+		}
+		surface_reset_target();
+		surface_set_target(surfaceText);
 		
 		//Draw Waiting for Amoguses Text
 		if (!_isAbled)
@@ -226,6 +246,9 @@ switch (menuState)
 	
 	case noone:
 	{
+		if (audio_is_playing(snd_RickRoll))
+			audio_stop_sound(snd_RickRoll);
+		
 		if (classWarning && transitionProgress <= 0)
 		{
 			warning(warningType.class, 0.5);
