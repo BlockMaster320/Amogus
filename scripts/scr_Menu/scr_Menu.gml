@@ -54,8 +54,12 @@ function draw_amogus_table(_x, _y, _meeting)
 		
 		draw_text_transformed_colour(_infoX + _infoWidth - _textPadding, _infoY + _textPadding, _name,
 									 1, 1, 0, c_white, c_white, c_white, c_white, 1);
-		draw_sprite_part_ext(spr_Body, _amogus.bodyId * 3, 4, 0, 500, 21, _infoX + 7, _infoY - 20, 6, 6, c_white, 1);
-		draw_sprite_ext(spr_Head, _amogus.headId, _infoX + 62, _infoY + 78, 6, 6, 0, c_white, 1);
+		var _alpha = (_amogus.isAlive) ? 1 : 0.8;
+		draw_sprite_part_ext(spr_Body, _amogus.bodyId * 3, 4, 0, 500, 21, _infoX + 7, _infoY - 20, 6, 6, c_white, _alpha);
+		draw_sprite_ext(spr_Head, _amogus.headId, _infoX + 62, _infoY + 78, 6, 6, 0, c_white, _alpha);
+		
+		if (!_amogus.isAlive)
+			draw_sprite_ext(spr_Cross, 0, _infoX + 62, _infoY + 78, 6, 6, 0, c_white, 1);
 		
 		//Emergeny Meeting Voting
 		if (_meeting)

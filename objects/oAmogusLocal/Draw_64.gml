@@ -103,18 +103,29 @@ if (obj_GameManager.inGame)
 	var _mouseX = window_mouse_get_x();
 	var _mouseY = window_mouse_get_y();
 	
+	var _scale = _guiWidth / 700;
+	var _widthKill = sprite_get_width(spr_Kill) * _scale;
+	var _widthReport = sprite_get_width(spr_Report) * _scale;
+	var _spacing = 15 * _scale;
+	var _padding = 15 * _scale;
+	
+	var _width1 = _widthReport + _padding + _spacing * 0.5;
+	var _width2 = _width1 + _widthKill + _spacing * 0.5;
+	var _height = sprite_get_height(spr_Kill) * _scale + _padding * 1.5;
+	
 	//Killing
 	if (isAlive && isImpostor)
 	{
 		var _ableToKill = false;
 		var _killButtonSelected = false;
 		var _amogusNearest = instance_nearest(x, y, obj_AmogusClient);
+		
 		if (_amogusNearest != noone && !_amogusNearest.isImpostor && _amogusNearest.isAlive)
 		{
 			if (point_distance(x, y, _amogusNearest.x, _amogusNearest.y) < KILL_RANGE)
 			{
 				_ableToKill = true;
-				if (point_in_rectangle(_mouseX, _mouseY, _guiWidth * 0.55, _guiHeight * 0.72, _guiWidth * 0.77, _guiHeight))
+				if (point_in_rectangle(_mouseX, _mouseY, _guiWidth - _width2, _guiHeight - _height, _guiWidth - _width1, _guiHeight))
 				{
 					_killButtonSelected = true;
 					if (mouse_check_button_pressed(mb_left))
@@ -160,7 +171,8 @@ if (obj_GameManager.inGame)
 		}
 		
 		var _colour = (_ableToKill) ? c_white : c_grey;
-		draw_sprite_ext(spr_Kill, _killButtonSelected, _guiWidth * 0.8, _guiHeight, 3, 3, 0, _colour, 1);
+		var _x = _guiWidth - _width1 - _spacing * 0.5;
+		draw_sprite_ext(spr_Kill, _killButtonSelected, _x, _guiHeight - _padding, _scale, _scale, 0, _colour, 1);
 		if (_killButtonSelected)
 			obj_Menu.buttonIsSelected = true;
 	}
@@ -168,12 +180,12 @@ if (obj_GameManager.inGame)
 	//Body Reporting
 	if (isAlive)
 	{
-		var _ableToReport = false;
+		var _ableToReport = true;
 		var _reportButtonSelected = false;
-		if (interactableInRange != noone && interactableInRange.type = interactable.body)
-		{
+		/*if (interactableInRange != noone && interactableInRange.type = interactable.body)
+		{*/
 			_ableToReport = true;
-			if (point_in_rectangle(_mouseX, _mouseY, _guiWidth * 0.77, _guiHeight * 0.72, _guiWidth, _guiHeight))
+			if (point_in_rectangle(_mouseX, _mouseY, _guiWidth - _width1, _guiHeight - _height, _guiWidth, _guiHeight))
 			{
 				_reportButtonSelected = true;
 				if (mouse_check_button_pressed(mb_left))
@@ -184,10 +196,10 @@ if (obj_GameManager.inGame)
 					inMenu = true
 				}
 			}
-		}
+		/*}*/
 		
 		var _colour = (_ableToReport) ? c_white : c_grey;
-		draw_sprite_ext(spr_Report, _reportButtonSelected, _guiWidth, _guiHeight, 3, 3, 0, _colour, 1);
+		draw_sprite_ext(spr_Report, _reportButtonSelected, _guiWidth - _padding, _guiHeight - _padding, _scale, _scale, 0, _colour, 1);
 		if (_reportButtonSelected)
 			obj_Menu.buttonIsSelected = true;
 	}
@@ -706,13 +718,13 @@ if (interactableObject != noone && isAlive)
 		case interactable.simonSays:
 		{
 			//Set Button Properties
-			var _buttonWidth = 100;
-			var _buttonSpacing = 20;
+			var _buttonWidth = _guiWidth * 0.07;
+			var _buttonSpacing = _guiWidth * 0.02;
 			var _buttonX = _guiWidth * 0.5 - (_buttonWidth + _buttonSpacing) * 1.5;
 			var _buttonY = _guiHeight * 0.5 - (_buttonWidth + _buttonSpacing) * 1.5;
 			
 			//Draw Middle Panel
-			var _panelOffset = 100;
+			var _panelOffset = _guiWidth * 0.07;
 			var _panelX = _buttonX - _panelOffset;
 			var _panelY = _buttonY - _panelOffset * 0.5;
 			var _panelWidth = (_buttonWidth + _buttonSpacing) * 3 + _panelOffset * 2;
