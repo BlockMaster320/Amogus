@@ -177,7 +177,6 @@ switch (menuState)
 	{
 		//Stop the Music
 		audio_stop_sound(snd_MusicEarrape);
-		/*audio_stop_sound(snd_RickRoll);*/
 		
 		//Draw Amoguses Info Table
 		draw_amogus_table(_guiWidth * 0.5, 100, false);
@@ -289,7 +288,7 @@ switch (menuState)
 	
 	case menu.throwOut:
 	{
-		if (menuStatePrev != menu.throwOut) Ejected(thrownOutAmogus.nameId)
+		if (menuStatePrev != menu.throwOut && thrownOutAmogus != noone) Ejected(thrownOutAmogus.nameId)
 		
 		draw_sprite_stretched(spr_BackgroundSpace, 0, 0, 0, _guiWidth, _guiHeight);
 		var _menuStateTimer = get_menuState_timer(menu.throwOut);

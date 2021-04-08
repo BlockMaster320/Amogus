@@ -1,1 +1,1 @@
-type = interactable.lights;
+type = interactable.emergencyButton;

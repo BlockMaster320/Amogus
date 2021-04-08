@@ -4,6 +4,11 @@ var lightsPrev = global.lightsOn
 var _guiWidth = display_get_gui_width();
 var _guiHeight = display_get_gui_height();
 
+if (obj_GameManager.inGame)
+{
+	
+}
+
 #region Draw arrows to tasks
 if (!isImpostor)
 {
@@ -180,10 +185,10 @@ if (obj_GameManager.inGame)
 	//Body Reporting
 	if (isAlive)
 	{
-		var _ableToReport = true;
+		var _ableToReport = false;
 		var _reportButtonSelected = false;
-		/*if (interactableInRange != noone && interactableInRange.type = interactable.body)
-		{*/
+		if (interactableInRange != noone && interactableInRange.type = interactable.body)
+		{
 			_ableToReport = true;
 			if (point_in_rectangle(_mouseX, _mouseY, _guiWidth - _width1, _guiHeight - _height, _guiWidth, _guiHeight))
 			{
@@ -196,7 +201,7 @@ if (obj_GameManager.inGame)
 					inMenu = true
 				}
 			}
-		/*}*/
+		}
 		
 		var _colour = (_ableToReport) ? c_white : c_grey;
 		draw_sprite_ext(spr_Report, _reportButtonSelected, _guiWidth - _padding, _guiHeight - _padding, _scale, _scale, 0, _colour, 1);

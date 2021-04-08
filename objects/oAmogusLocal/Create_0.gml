@@ -13,9 +13,6 @@ cam = view_camera[0]
 targetX = 0
 targetY = 0
 
-rW = room_width
-rH = room_height
-
 #macro guiW 320
 #macro guiH 180
 
@@ -39,6 +36,7 @@ tilemap = noone
 lightSurf = surface_create(guiW + off*2,guiH + off*2)
 darkenSurf = surface_create(guiW + off*2,guiH + off*2)
 textSurf = surface_create(windowW,windowH)
+spaceSurf = noone;
 
 //Interactables
 interactableObject = noone;

@@ -1,1 +1,1 @@
-type = interactable.vent;
+type = interactable.sliderCatch;

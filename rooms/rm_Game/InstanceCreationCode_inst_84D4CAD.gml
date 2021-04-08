@@ -1,1 +1,1 @@
-type = interactable.sliderWait;
+type = interactable.simonSays;
