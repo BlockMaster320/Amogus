@@ -3,6 +3,7 @@ enum messages	//values representing types of network messages
 {
 	connect,
 	amogusCreate,
+	amogusDestroy,
 	amogusAlpha,
 	gameStart,
 	gameEnd,

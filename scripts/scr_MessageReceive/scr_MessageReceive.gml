@@ -239,6 +239,10 @@ function message_receive_client(_socket, _buffer)
 				hasVoted = true;
 			with (clientIdMap[? _votedId])
 				array_push(voteArray, _voterId);
+			
+			//Play SUS Sound
+			var _sound = choose(snd_Sus1, snd_Sus2, snd_Sus3);
+			audio_play_sound(_sound, 0, false);
 		}
 		break;
 		
@@ -334,6 +338,17 @@ function message_receive_client(_socket, _buffer)
 		}
 		break;
 		
+		case messages.amogusDestroy:
+		{
+			var _clientId = buffer_read(_buffer, buffer_u8);
+			var _amogusClient = clientIdMap[? _clientId];
+			
+			instance_destroy(_amogusClient);
+			ds_map_delete(clientIdMap, _amogusClient.clientId);
+			/*ds_map_delete(clientMap, _socket);*/
+		}
+		break;
+		
 		case messages.amogusAlpha:	//change amogus's alpha
 		{
 			var _clientId = buffer_read(_buffer, buffer_u8);
@@ -367,7 +382,9 @@ function message_receive_client(_socket, _buffer)
 				transition(noone, _transitionFunction, true);
 			}
 			else
-				transition(noone, function() {game_setup();}, true);
+				transition(noone, noone, true);
+			
+			game_setup();
 			
 			with (obj_Menu)
 				tasksNeeded = (ds_map_size(obj_Client.clientIdMap) - impostors) * TASKS_PER_AMOGUS;

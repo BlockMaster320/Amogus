@@ -36,6 +36,7 @@ tilemap = noone
 lightSurf = surface_create(guiW + off*2,guiH + off*2)
 darkenSurf = surface_create(guiW + off*2,guiH + off*2)
 textSurf = surface_create(windowW,windowH)
+spaceSurf = noone;
 
 //Interactables
 interactableObject = noone;

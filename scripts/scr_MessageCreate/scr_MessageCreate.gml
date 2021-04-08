@@ -9,6 +9,13 @@ function message_amogus_create(_buffer, _clientId, _nameId, _headId, _bodyId)
 	buffer_write(_buffer, buffer_u8, _bodyId);
 }
 
+function message_amogus_destroy(_buffer, _clientId)
+{
+	buffer_seek(_buffer, buffer_seek_start, 0);
+	buffer_write(_buffer, buffer_u8, messages.amogusDestroy);
+	buffer_write(_buffer, buffer_u8, _clientId);
+}
+
 function message_amogus_alpha(_buffer, _clientId, _alpha)
 {
 	buffer_seek(_buffer, buffer_seek_start, 0);

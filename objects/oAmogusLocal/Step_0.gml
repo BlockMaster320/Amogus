@@ -1,26 +1,17 @@
 MovementInput(!inMenu);
 UIinput(inMenu)
 
+//ez
+rW = room_width
+rH = room_height
+
 if (obj_GameManager.inGame)
 {
+	alarm[1] = 20;
 	//Set Up Tasks
 	if (taskSetup)
 	{
-		var _taskArray = [];
-		with (obj_Interactable)
-			if (type < 5) array_push(_taskArray, self);
-	
-		repeat (TASKS_PER_AMOGUS)
-		{
-			var _index =  irandom_range(0, array_length(_taskArray) - 1);
-			var _task = _taskArray[_index];
-			with (_task)
-			{
-				usable = true;
-				array_push(global.activeTasks, self);
-			}
-			array_delete(_taskArray, _index, 1);
-		}
+
 		taskSetup = false;
 	}
 	
@@ -73,8 +64,8 @@ if (obj_GameManager.inGame)
 	#region Camera
 	if (camState = CAMERA.followPlayer)
 	{
-		targetX = clamp(x - (guiW/2),0,room_width - guiW)
-		targetY = clamp(y - (guiH/2),0,room_height - guiH)
+		targetX = clamp(x - (guiW/2),0,rW - guiW)
+		targetY = clamp(y - (guiH/2),0,rH - guiH)
 	}
     
 	camX = lerp(camX,targetX,.15)
@@ -94,7 +85,7 @@ if (obj_GameManager.inGame)
 			if (nearestInteractable.usable or (nearestInteractable.type >= 5 and nearestInteractable.type <= 7) or (nearestInteractable.type = interactable.lights and !global.lightsOn)) canInteract = true
 		}
 		if (isImpostor and nearestInteractable.type >= 5 and nearestInteractable.type <= 9) canInteract = true
-		canInteract = true;
+		
 		if (point_distance(x, y, nearestInteractable.x, nearestInteractable.y) < nearestInteractable.interactableStruct.distance && nearestInteractable.amogus == noone and canInteract)
 		{
 			interactableInRange = nearestInteractable;
