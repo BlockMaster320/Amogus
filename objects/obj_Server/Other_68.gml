@@ -40,7 +40,17 @@ switch (_type)
 	case network_type_disconnect:	//disconnect a client in case of closing the game not using the in-game quit button
 	{
 		var _socket = async_load[? "socket"];
+		var _amogusClient = clientMap[? _socket];
+		
+		message_amogus_destroy(serverBuffer, _amogusClient.clientId);
+		with (obj_AmogusClient)
+			network_send_packet(other.server, other.serverBuffer, buffer_tell(other.serverBuffer));
+		
+		instance_destroy(_amogusClient);
+		ds_map_delete(clientIdMap, _amogusClient.clientId);
 		ds_map_delete(clientMap, _socket);
+		if (obj_Menu.menuState != menu.lobby)
+			check_game_end();
 	}
 	break;
 

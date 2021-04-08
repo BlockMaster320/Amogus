@@ -49,8 +49,8 @@ classWarning = true;	//tell the player wheter they're crewmate or impostor
 thrownOutAmogus = noone;
 
 //Game
-spawnX = 550;
-spawnY = 150;
+spawnX = 640;
+spawnY = 128;
 winnerSide = noone;
 
 //Task Completion

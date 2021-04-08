@@ -94,6 +94,7 @@ if (obj_GameManager.inGame)
 	if (interactableInRange != noone && isAlive)
 	{
 		draw_set_halign(fa_center);
+		draw_set_valign(fa_top);
 		draw_set_font(fntTextUI)
 		var _spriteHeight = sprite_get_height(spr_ButtonTest);
 		draw_text_transformed_colour(interactableInRange.x, interactableInRange.y + _spriteHeight * 0.5 + 10,

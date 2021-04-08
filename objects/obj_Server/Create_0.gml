@@ -1,5 +1,5 @@
 //Create a Server
-server = network_create_server(network_socket_tcp, 6510, 10);
+server = network_create_server(network_socket_tcp, 6610, 10);
 if (server < 0) show_message("Failed to create a server.");
 
 //Create a Server Buffer

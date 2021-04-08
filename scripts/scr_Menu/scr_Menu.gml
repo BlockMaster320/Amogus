@@ -54,8 +54,12 @@ function draw_amogus_table(_x, _y, _meeting)
 		
 		draw_text_transformed_colour(_infoX + _infoWidth - _textPadding, _infoY + _textPadding, _name,
 									 1, 1, 0, c_white, c_white, c_white, c_white, 1);
-		draw_sprite_part_ext(spr_Body, _amogus.bodyId * 3, 4, 0, 500, 21, _infoX + 7, _infoY - 20, 6, 6, c_white, 1);
-		draw_sprite_ext(spr_Head, _amogus.headId, _infoX + 62, _infoY + 78, 6, 6, 0, c_white, 1);
+		var _alpha = (_amogus.isAlive) ? 1 : 0.8;
+		draw_sprite_part_ext(spr_Body, _amogus.bodyId * 3, 4, 0, 500, 21, _infoX + 7, _infoY - 20, 6, 6, c_white, _alpha);
+		draw_sprite_ext(spr_Head, _amogus.headId, _infoX + 62, _infoY + 78, 6, 6, 0, c_white, _alpha);
+		
+		if (!_amogus.isAlive)
+			draw_sprite_ext(spr_Cross, 0, _infoX + 62, _infoY + 78, 6, 6, 0, c_white, 1);
 		
 		//Emergeny Meeting Voting
 		if (_meeting)
@@ -72,31 +76,37 @@ function draw_amogus_table(_x, _y, _meeting)
 			//Vote for a Amogus
 			if (_isAlive)
 			{
-				var _isAbled = oAmogusLocal.isAlive;
-				if (button(_buttonX, _buttonY, _buttonWidth, _buttonHeight, "SUS", buttonType.vote, _isAbled, true)
-					&& !oAmogusLocal.hasVoted)
+				var _isAbled = (oAmogusLocal.isAlive && !oAmogusLocal.hasVoted);
+				if (_amogus.clientId != oAmogusLocal.clientId)
 				{
-					var _voterId =  oAmogusLocal.clientId;
-					oAmogusLocal.hasVoted = true;
-				
-					//Send Message to All Amoguses
-					if (obj_GameManager.serverSide)
+					if (button(_buttonX, _buttonY, _buttonWidth, _buttonHeight, "SUS", buttonType.vote, _isAbled, true)
+						&& !oAmogusLocal.hasVoted)
 					{
-						with (_amogus)
-							array_push(voteArray, _voterId);
+						var _voterId =  oAmogusLocal.clientId;
+						oAmogusLocal.hasVoted = true;
+				
+						//Send Message to All Amoguses
+						if (obj_GameManager.serverSide)
+						{
+							with (_amogus)
+								array_push(voteArray, _voterId);
 					
-						var _serverBuffer = obj_Server.serverBuffer;
-						message_vote(_serverBuffer, _voterId, _amogus.clientId);
-						with (obj_AmogusClient)
-							network_send_packet(clientSocket, _serverBuffer, buffer_tell(_serverBuffer));
-					}
+							var _serverBuffer = obj_Server.serverBuffer;
+							message_vote(_serverBuffer, _voterId, _amogus.clientId);
+							with (obj_AmogusClient)
+								network_send_packet(clientSocket, _serverBuffer, buffer_tell(_serverBuffer));
+							
+							var _sound = choose(snd_Sus1, snd_Sus2, snd_Sus3);
+							audio_play_sound(_sound, 0, false);
+						}
 				
-					//Send Message to the Server
-					else if (obj_GameManager.serverSide == false)
-					{
-						var _clientBuffer = obj_Client.clientBuffer;
-						message_vote(_clientBuffer, _voterId, _amogus.clientId);
-						network_send_packet(obj_Client.client, _clientBuffer, buffer_tell(_clientBuffer));
+						//Send Message to the Server
+						else if (obj_GameManager.serverSide == false)
+						{
+							var _clientBuffer = obj_Client.clientBuffer;
+							message_vote(_clientBuffer, _voterId, _amogus.clientId);
+							network_send_packet(obj_Client.client, _clientBuffer, buffer_tell(_clientBuffer));
+						}
 					}
 				}
 			
@@ -240,6 +250,7 @@ function game_setup()
 	
 	with (oAmogusLocal)
 	{
+		show_debug_message("heheh");
 		x = obj_Menu.spawnX + lengthdir_x(random(30), random(360));
 		y = obj_Menu.spawnY + lengthdir_y(random(30), random(360));
 		
@@ -310,6 +321,6 @@ function ExitMenu(_taskCompleted)
 
 function ResetCameraPos()
 {
-	camX = clamp(x - (guiW/2),0,room_width - guiW)
-	camY = clamp(y - (guiH/2),0,room_height - guiH)
+	camX = clamp(x - (guiW/2),0,rW - guiW)
+	camY = clamp(y - (guiH/2),0,rH - guiH)
 }
