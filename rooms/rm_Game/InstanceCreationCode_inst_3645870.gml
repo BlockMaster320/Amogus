@@ -1,0 +1,1 @@
+type = interactable.sliderCatch;

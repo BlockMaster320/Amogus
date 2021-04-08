@@ -1,4 +1,4 @@
 type = interactable.camera;
 interactableStruct = new Interactable(type);
-interactableStruct.camPosX = 496
-interactableStruct.camPosY = 96
+interactableStruct.camPosX = 1400
+interactableStruct.camPosY = 272

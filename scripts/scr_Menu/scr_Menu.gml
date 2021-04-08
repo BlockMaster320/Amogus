@@ -314,6 +314,6 @@ function ExitMenu(_taskCompleted)
 
 function ResetCameraPos()
 {
-	camX = clamp(x - (guiW/2),0,rW - guiW)
-	camY = clamp(y - (guiH/2),0,rH - guiH)
+	camX = clamp(x - (guiW/2),0,room_width - guiW)
+	camY = clamp(y - (guiH/2),0,room_height - guiH)
 }
