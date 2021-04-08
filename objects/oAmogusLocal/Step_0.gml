@@ -73,8 +73,8 @@ if (obj_GameManager.inGame)
 	#region Camera
 	if (camState = CAMERA.followPlayer)
 	{
-		targetX = clamp(x - (guiW/2),0,room_width - guiW)
-		targetY = clamp(y - (guiH/2),0,room_height - guiH)
+		targetX = clamp(x - (guiW/2),0,rW - guiW)
+		targetY = clamp(y - (guiH/2),0,rH - guiH)
 	}
     
 	camX = lerp(camX,targetX,.15)
