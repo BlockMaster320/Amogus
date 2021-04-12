@@ -18,6 +18,7 @@
     {"id":{"name":"spr_Arrow","path":"sprites/spr_Arrow/spr_Arrow.yy",},"order":11,},
     {"id":{"name":"sLight","path":"sprites/sLight/sLight.yy",},"order":7,},
     {"id":{"name":"AdamDeath2","path":"sounds/AdamDeath2/AdamDeath2.yy",},"order":1,},
+    {"id":{"name":"spr_Map","path":"sprites/spr_Map/spr_Map.yy",},"order":9,},
     {"id":{"name":"KatkaKill","path":"sounds/KatkaKill/KatkaKill.yy",},"order":4,},
     {"id":{"name":"sndLoadingDone","path":"sounds/sndLoadingDone/sndLoadingDone.yy",},"order":19,},
     {"id":{"name":"TomasKill","path":"sounds/TomasKill/TomasKill.yy",},"order":5,},

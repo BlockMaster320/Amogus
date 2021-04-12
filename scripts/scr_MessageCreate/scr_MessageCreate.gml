@@ -47,6 +47,12 @@ function message_game_meeting(_buffer, _clientId, _isReport)
 	buffer_write(_buffer, buffer_bool, _isReport);
 }
 
+function message_game_new(_buffer)
+{
+	buffer_seek(_buffer, buffer_seek_start, 0);
+	buffer_write(_buffer, buffer_u8, messages.gameNew);
+}
+
 function message_vote(_buffer, _voterId, _votedId)
 {
 	buffer_seek(_buffer, buffer_seek_start, 0);
