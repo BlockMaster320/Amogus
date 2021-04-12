@@ -155,17 +155,17 @@ switch (menuState)
 		draw_sprite_ext(spr_Head, selectedHeadId, _selectionX + 10, _selectionY + _selectionSpacing + 25,
 						7, 7, 0, c_white, 1);
 		
-		surface_reset_target();
-		surface_set_target(surfaceUI);
-		var _cylinderWidth = sprite_get_width(spr_AmogusSelection);
-		var _cylinderY = _selectionY + _selectionSpacing + 40;
-		draw_sprite_stretched(spr_AmogusSelection, 0, _selectionX * guiToUI, _cylinderY * guiToUI, _cylinderWidth, (_guiHeight - _cylinderY) * guiToUI);	//draw not selected button
-		
 		//Draw Game Info
 		draw_set_halign(fa_right);
 		draw_set_valign(fa_bottom);
 		draw_text_transformed_colour(_guiWidth - 5, _guiHeight - 5, "Amogus v. b.1.0\nHyperCubic Studio 2021",
 									 0.5, 0.5, 0, c_white, c_white, c_white, c_white, 1);
+		
+		surface_reset_target();
+		surface_set_target(surfaceUI);
+		var _cylinderWidth = sprite_get_width(spr_AmogusSelection);
+		var _cylinderY = _selectionY + _selectionSpacing + 40;
+		draw_sprite_stretched(spr_AmogusSelection, 0, _selectionX * guiToUI, _cylinderY * guiToUI, _cylinderWidth, (_guiHeight - _cylinderY) * guiToUI);	//draw not selected button
 		
 		//Play Music
 		if (transitionProgress < 0.05 && !audio_is_playing(snd_MusicEarrape) && !audio_is_playing(snd_RickRoll))
@@ -191,7 +191,7 @@ switch (menuState)
 			//Start the Game
 			var _transitionFunction = function() {obj_GameManager.inGame = true; room_goto(rm_Game); game_setup();};
 			transition(noone, _transitionFunction, true);
-			tasksNeeded = (ds_map_size(obj_Server.clientIdMap) - impostors) * TASKS_PER_AMOGUS;
+			tasksNeeded = get_tasks_needed();
 			
 			with (oAmogusLocal)
 			{
@@ -347,8 +347,24 @@ switch (menuState)
 		draw_rectangle_colour(0, 0, _guiWidth, _guiHeight, c_black, c_black, c_black, c_black, false);
 		draw_set_font(fntTextUI)
 		draw_set_halign(fa_center);
+		draw_set_valign(fa_middle);
 		draw_text_transformed_colour(_guiWidth * 0.5, _guiHeight * 0.6, _text, 1, 1, 0,
 									 c_white, c_white, c_white, c_white, 1);
+		
+		var _x = _guiWidth * 0.5 - _buttonWidth * 0.5;
+		var _y = _guiHeight * 0.8;
+		var _isAbled = obj_GameManager.serverSide;
+		if (button(_x, _y, _buttonWidth, _buttonHeight, "NEW GAME", buttonType.menu, _isAbled, false))
+		{
+			var _function = function() {game_new();};
+			transition(menu.lobby, _function, true);
+			
+			//Send a Message to Start a New Game to All Amoguses
+			var _serverBuffer = obj_Server.serverBuffer;
+			message_game_new(_serverBuffer);
+			with (obj_AmogusClient)
+				network_send_packet(clientSocket, _serverBuffer, buffer_tell(_serverBuffer));
+		}
 	}
 	break;
 }

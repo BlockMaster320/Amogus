@@ -10,7 +10,7 @@ if (obj_GameManager.inGame)
 }
 
 #region Draw arrows to tasks
-if (!isImpostor)
+if (!isImpostor && isAlive)
 {
 	var dir, alpha, xx, yy, dist, showArray, color
 	var offset = 50
@@ -125,7 +125,7 @@ if (obj_GameManager.inGame)
 		var _killButtonSelected = false;
 		var _amogusNearest = instance_nearest(x, y, obj_AmogusClient);
 		
-		if (_amogusNearest != noone && !_amogusNearest.isImpostor && _amogusNearest.isAlive)
+		if (_amogusNearest != noone && !_amogusNearest.isImpostor && _amogusNearest.isAlive && killTimer == 0 && obj_Menu.menuState == noone)
 		{
 			if (point_distance(x, y, _amogusNearest.x, _amogusNearest.y) < KILL_RANGE)
 			{
@@ -136,6 +136,7 @@ if (obj_GameManager.inGame)
 					if (mouse_check_button_pressed(mb_left))
 					{
 						Killed(_amogusNearest.nameId)
+						killTimer = KILL_COOLDOWN;
 						
 						//Send Message to Kill the Amogus
 						if (obj_GameManager.serverSide)
@@ -177,10 +178,23 @@ if (obj_GameManager.inGame)
 		
 		var _colour = (_ableToKill) ? c_white : c_grey;
 		var _x = _guiWidth - _width1 - _spacing * 0.5;
-		draw_sprite_ext(spr_Kill, _killButtonSelected, _x, _guiHeight - _padding, _scale, _scale, 0, _colour, 1);
+		var _y = _guiHeight - _padding;
+		var _heightKill = sprite_get_height(spr_Kill) * _scale;
+		draw_sprite_ext(spr_Kill, _killButtonSelected, _x, _y, _scale, _scale, 0, _colour, 1);
+		/*draw_circle_sector(_x - _widthKill * 0.5, _y - _heightKill * 0.5, _scale * 15, killTimer / KILL_COOLDOWN, 10, c_dkgrey);*/
+		if (killTimer > 0)
+		{
+			draw_set_halign(fa_center);
+			draw_set_valign(fa_middle);
+			draw_set_font(fnt_Menu1);
+			draw_text_transformed_colour(_x - _widthKill * 0.5, _y - _heightKill * 0.5 - 10, string(round(killTimer / 60)), _scale * 1.5, _scale * 1.5, 0, c_white, c_white, c_white, c_white, 1);
+		}
+		
 		if (_killButtonSelected)
 			obj_Menu.buttonIsSelected = true;
 	}
+	if (killTimer > 0)	//increase killTimer
+		killTimer = clamp(killTimer - 1, 0, infinity);
 	
 	//Body Reporting
 	if (isAlive)
@@ -208,6 +222,16 @@ if (obj_GameManager.inGame)
 		if (_reportButtonSelected)
 			obj_Menu.buttonIsSelected = true;
 	}
+	
+	//Draw Game Map
+	var _mapScale = floor(_scale);	//draw the map
+	draw_sprite_ext(spr_Map, 0, _guiWidth - _padding, _padding, _mapScale, _mapScale, 0, c_white, 0.8);
+	
+	var _mapWidth = sprite_get_width(spr_Map) * _mapScale;	//draw the amogus on the map
+	var _mapToRoom = _mapWidth / room_width;
+	var _playerMapX = (_guiWidth - _mapWidth - _padding) + _mapToRoom * x;
+	var _playerMapY = _padding + _mapToRoom * y - _mapScale * 2;
+	draw_circle_colour(_playerMapX, _playerMapY, 4 * _mapScale, c_white, c_white, false);
 }
 
 //Interact With Interactables

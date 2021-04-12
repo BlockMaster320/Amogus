@@ -127,18 +127,21 @@ function draw_amogus_table(_x, _y, _meeting)
 		var _sameNumberOfVotes = false;
 		with (obj_Amogus)
 		{
-			if (_amogusGone == noone)
-				_amogusGone = self;
-			else if (array_length(voteArray) == array_length(_amogusGone.voteArray))
-				_sameNumberOfVotes = true;
-			else if (array_length(voteArray) > array_length(_amogusGone.voteArray))
+			if (array_length(voteArray) > 0)
 			{
-				_amogusGone = self;
-				_sameNumberOfVotes = false;
+				if (_amogusGone == noone)
+					_amogusGone = self;
+				else if (array_length(voteArray) == array_length(_amogusGone.voteArray))
+					_sameNumberOfVotes = true;
+				else if (array_length(voteArray) > array_length(_amogusGone.voteArray))
+				{
+					_amogusGone = self;
+					_sameNumberOfVotes = false;
+				}
 			}
 		}
 		
-		if (!_sameNumberOfVotes)	//don't throw out anyone when there're more amoguses with the same number of votes
+		if (!_sameNumberOfVotes && _amogusGone != noone)	//don't throw out anyone when there're more amoguses with the same number of votes
 		{
 			thrownOutAmogus = _amogusGone;
 			thrownOutAmogus.isAlive = false;
@@ -150,7 +153,7 @@ function draw_amogus_table(_x, _y, _meeting)
 		var _thrownOutAmogusId = (thrownOutAmogus == noone) ? noone : thrownOutAmogus.clientId;
 		message_throwOut(_serverBuffer, _thrownOutAmogusId);
 		with (obj_AmogusClient)
-		network_send_packet(clientSocket, _serverBuffer, buffer_tell(_serverBuffer));
+			network_send_packet(clientSocket, _serverBuffer, buffer_tell(_serverBuffer));
 	}
 }
 
@@ -248,19 +251,18 @@ function game_setup()
 {
 	array_delete(global.activeTasks,0,array_length(global.activeTasks)+1)
 	
+	with (obj_Amogus)
+	{
+		hasVoted = false;
+		voteArray = [];
+	}
+	
 	with (oAmogusLocal)
 	{
-		show_debug_message("heheh");
 		x = obj_Menu.spawnX + lengthdir_x(random(30), random(360));
 		y = obj_Menu.spawnY + lengthdir_y(random(30), random(360));
 		
-		hasVoted = false;
-		voteArray = [];
-		
-		interactableObject = noone;
-		interactableStruct = noone;
-		interactableInRange = noone;
-		
+		ExitMenu(false);
 		taskSetup = true;
 	}
 	
@@ -282,6 +284,43 @@ function game_setup()
 	}*/
 }
 
+function game_new()
+{
+	with (obj_Amogus)
+	{
+		isAlive = true;
+		isImpostor = false;
+		hasVoted = false;
+		playerAlpha = 1;
+		tilemap = noone;
+	}
+	
+	with (oAmogusLocal)
+	{
+		gameStartSetup = true;
+		killTimer = KILL_COOLDOWN;
+	}
+	
+	with (obj_Menu)
+	{
+		winnerSide = noone;
+		thrownOutAmogus = noone;
+		taskProgress = 0;
+		classWarning = true;
+		
+		audio_play_sound(sndAmbience,0,1)
+		audio_sound_gain(sndAmbience,0,0)
+		audio_play_sound(snd_Amogus, 0, false);
+	}
+	obj_GameManager.inGame = false;
+	
+	global.lightsOn = true
+	global.activeTasks = array_create(0)
+	global.ventPositions = array_create(0)
+	global.lightPositions = array_create(0)
+	
+	room_goto(rm_Menu);
+}
 
 function ExitMenu(_taskCompleted)
 {
@@ -289,6 +328,17 @@ function ExitMenu(_taskCompleted)
 	inMenu = false
 	if (_taskCompleted)
 	{
+		//Delete the Task from activeTasks
+		for (var _i = 0; _i < array_length(global.activeTasks); _i ++)
+		{
+			var _task = global.activeTasks[_i];
+			show_debug_message(_task.interactableId);
+			show_debug_message(interactableObject.interactableId);
+			show_debug_message("\n");
+			if (_task.interactableId == interactableObject.interactableId)
+				array_delete(global.activeTasks, _i, 1);
+		}
+		
 		audio_play_sound(sndTaskCompleted,0,0)
 		var type = interactableObject.interactableStruct.type
 		interactableObject.usable = false
@@ -314,7 +364,8 @@ function ExitMenu(_taskCompleted)
 		}
 	}
 	else audio_play_sound(sndSucces,0,0)
-	interactableObject.amogus = noone;
+	if (interactableObject != noone)
+		interactableObject.amogus = noone;
 	interactableObject = noone
 	interactableStruct = noone;
 }
@@ -323,4 +374,10 @@ function ResetCameraPos()
 {
 	camX = clamp(x - (guiW/2),0,rW - guiW)
 	camY = clamp(y - (guiH/2),0,rH - guiH)
+}
+
+function get_tasks_needed()
+{
+	var _clientIdMap = (obj_GameManager.serverSide) ? obj_Server.clientIdMap : obj_Client.clientIdMap;
+	return (ds_map_size(_clientIdMap) - obj_Menu.impostors) * (TASKS_PER_AMOGUS - 1);
 }

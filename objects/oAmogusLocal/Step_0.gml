@@ -7,6 +7,7 @@ rH = room_height
 
 if (obj_GameManager.inGame)
 {
+	alarm[1] = 20;
 	//Set Up Tasks
 	if (taskSetup)
 	{
@@ -33,6 +34,7 @@ if (obj_GameManager.inGame)
 	{
 		tilemap = layer_tilemap_get_id("Walls");
 		camera_set_view_size(cam, guiW, guiH);
+		gameStartSetup = false;
 	}
 	
 	//Movement

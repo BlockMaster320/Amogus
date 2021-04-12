@@ -2,7 +2,7 @@
 function message_receive_server(_socket, _buffer)
 {
 	var _message = buffer_read(_buffer, buffer_u8);
-	var _amogusClient = clientMap[? _socket];
+	/*var _amogusClient = clientMap[? _socket];*/
 	switch (_message)
 	{
 		case messages.connect:
@@ -10,13 +10,14 @@ function message_receive_server(_socket, _buffer)
 			var _nameId = buffer_read(_buffer, buffer_u8);
 			var _headId = buffer_read(_buffer, buffer_u8);
 			var _bodyId = buffer_read(_buffer, buffer_u8);
+			var _amogusClient = clientMap[? _socket];
 			with(_amogusClient)
 			{
 				nameId = _nameId;
 				headId = _headId;
 				bodyId = _bodyId;
 			}
-				
+			
 			//Send Message to Create the Amogus on Other Clients' Sides
 			message_amogus_create(serverBuffer, _amogusClient.clientId, _amogusClient.nameId, _amogusClient.headId, _amogusClient.bodyId);
 			with (obj_AmogusClient)
@@ -72,6 +73,12 @@ function message_receive_server(_socket, _buffer)
 				network_send_packet(clientSocket, other.serverBuffer, buffer_tell(other.serverBuffer));
 							
 			_amogus.isAlive = false;
+			if (_amogus.clientId == oAmogusLocal.clientId)
+			{
+				with (oAmogusLocal)
+					ExitMenu(false);
+			}
+			
 			var _body = instance_create_layer(_amogus.x, _amogus.y, "Interactables", obj_Interactable);
 			with (_body)
 			{
@@ -166,7 +173,7 @@ function message_receive_server(_socket, _buffer)
 			var _x = buffer_read(_buffer, buffer_u16);
 			var _y = buffer_read(_buffer, buffer_u16);
 			
-			var _amogusClient = clientMap[?_clientId];
+			var _amogusClient = clientIdMap[?_clientId];
 			with (_amogusClient)
 			{
 				originalX = x;
@@ -229,6 +236,13 @@ function message_receive_client(_socket, _buffer)
 		}
 		break;
 		
+		case messages.gameNew:	//start a new game
+		{
+			var _function = function() {game_new();};
+			transition(menu.lobby, _function, true);
+		}
+		break;
+		
 		case messages.vote:
 		{
 			var _voterId = buffer_read(_buffer, buffer_u8);
@@ -248,11 +262,15 @@ function message_receive_client(_socket, _buffer)
 		
 		case messages.throwOut:	//throw out voted amogus
 		{
-			var _throwOutAmogusId = buffer_read(_buffer, buffer_s8);
-			if (_throwOutAmogusId == noone)
+			var _clientId = buffer_read(_buffer, buffer_s8);
+			if (_clientId == noone)
 				obj_Menu.thrownOutAmogus = noone;
 			else
-				obj_Menu.thrownOutAmogus = clientIdMap[? _throwOutAmogusId];
+			{
+				var _amogusClient = clientIdMap[? _clientId];
+				obj_Menu.thrownOutAmogus = _amogusClient;
+				_amogusClient.isAlive = false;
+			}
 			transition(menu.throwOut, noone, false);
 		}
 		break;
@@ -264,6 +282,12 @@ function message_receive_client(_socket, _buffer)
 			var _amogus = clientIdMap[?_clientId];
 							
 			_amogus.isAlive = false;
+			if (_amogus.clientId == oAmogusLocal.clientId)
+			{
+				with (oAmogusLocal)
+					ExitMenu(false);
+			}
+			
 			var _body = instance_create_layer(_amogus.x, _amogus.y, "Interactables", obj_Interactable);
 			with (_body)
 			{
@@ -345,6 +369,8 @@ function message_receive_client(_socket, _buffer)
 			
 			instance_destroy(_amogusClient);
 			ds_map_delete(clientIdMap, _amogusClient.clientId);
+			
+			obj_Menu.tasksNeeded = get_tasks_needed();
 			/*ds_map_delete(clientMap, _socket);*/
 		}
 		break;
@@ -387,7 +413,7 @@ function message_receive_client(_socket, _buffer)
 			game_setup();
 			
 			with (obj_Menu)
-				tasksNeeded = (ds_map_size(obj_Client.clientIdMap) - impostors) * TASKS_PER_AMOGUS;
+				tasksNeeded = get_tasks_needed();
 		}
 		break;
 		
