@@ -38,8 +38,10 @@ function string_input(_string, _charSet)
 				if (keyboard_check(vk_control))
 				{
 					var _clipboardString = clipboard_get_text();
-					_string = string_insert(_clipboardString, _string, textCursorPosition + 1);
-					textCursorPosition += string_length(_clipboardString);
+					//_string = string_insert(_clipboardString, _string, textCursorPosition + 1);
+					//textCursorPosition += string_length(_clipboardString);
+					_string = _clipboardString
+					textCursorPosition = string_length(_clipboardString)
 				}
 			}
 		}

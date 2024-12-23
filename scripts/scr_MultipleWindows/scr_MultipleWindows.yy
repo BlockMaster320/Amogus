@@ -1,12 +1,13 @@
 {
-  "isDnD": false,
-  "isCompatibility": false,
-  "parent": {
-    "name": "Extensions",
-    "path": "folders/Extensions.yy",
+  "$GMScript":"v1",
+  "%Name":"scr_MultipleWindows",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"scr_MultipleWindows",
+  "parent":{
+    "name":"Extensions",
+    "path":"folders/Extensions.yy",
   },
-  "resourceVersion": "1.0",
-  "name": "scr_MultipleWindows",
-  "tags": [],
-  "resourceType": "GMScript",
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

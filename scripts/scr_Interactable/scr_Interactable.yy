@@ -1,12 +1,13 @@
 {
-  "isDnD": false,
-  "isCompatibility": false,
-  "parent": {
-    "name": "Structs",
-    "path": "folders/Scripts/Structs.yy",
+  "$GMScript":"v1",
+  "%Name":"scr_Interactable",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"scr_Interactable",
+  "parent":{
+    "name":"Structs",
+    "path":"folders/Scripts/Structs.yy",
   },
-  "resourceVersion": "1.0",
-  "name": "scr_Interactable",
-  "tags": [],
-  "resourceType": "GMScript",
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

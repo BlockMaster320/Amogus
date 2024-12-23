@@ -197,13 +197,10 @@ function get_menuState_timer(_menuState)
 	{
 		case menu.meeting:
 			return 30 * 60;
-			break;
 		case menu.throwOut:
 			return 6 * 60;
-			break;
 		default:
 			return 0;
-			break;
 	}
 }
 
